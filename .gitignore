@@ -21,4 +21,4 @@ pnpm-debug.log*
 .DS_Store
 
 # google maps api key
-src/data/map-api-keys.js
+src/data/map-api-key.js
