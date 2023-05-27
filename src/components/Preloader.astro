@@ -1,0 +1,29 @@
+<!-- might need to do something to disable scroll while preloader is showing -->
+
+<div class="loader loader--hidden">This is the preloader</div>
+
+<style>
+
+    .loader {
+        position: fixed;
+        inset: 0;
+        background-color: #ccc;
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: opacity 0.75s, visibility 0.75s;
+    }
+
+    .loader::after {
+        content: '- the after';
+        /* animation stuff goes here */
+    }
+
+    .loader--hidden {
+        opacity: 0;
+        visibility: hidden;
+    }
+    
+</style>

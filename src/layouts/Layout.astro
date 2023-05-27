@@ -1,35 +1,120 @@
 ---
+import Preloader from '../components/Preloader.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+// global custom styles
+import '../styles/global.css';
+
 export interface Props {
 	title: string;
+    bodyClass?: string;
 }
 
-const { title } = Astro.props;
+// probably set isLoaded true unless we specifically set it false
+// i.e. when we want to use a preloader
+
+const { title, bodyClass = '' } = Astro.props;
+
 ---
+
+
 
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="generator" content={Astro.generator} />
-		<title>{title}</title>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="generator" content={Astro.generator} />
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <!-- bootstrap icons is a separate cdn link -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+
+    <!-- google fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400family=Libre+Baskerville@weight:400&display=swap" rel="stylesheet"> -->
+    <!-- keep this link in for now, but probably going to go wth the bootstrap system ui stack -->
+    <!-- NB google fonts automatically supplies regular, so weights and styles only need to be specified if you want more than regular  -->
+    <link href="https://fonts.googleapis.com/css2?family=Martel&display=swap" rel="stylesheet">
+
+    <!-- google material icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!-- custom styles -->
+    <!-- probably don't need reset, there's one built into bootstrap -->
+    <!-- <link rel="stylesheet" href="jwc-reset.css"> -->
+    <!-- <link rel="stylesheet" href="style.css"> -->
+
+	<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+	<!-- cdn scripts -->
+
+	<!-- polyfill probably only required for ie support for google maps javascript api -->
+	<!-- this probably needs to be is:inline, because of the query parameter -->
+	<!-- and probably stick a defer on it while we're at it -->
+    <script is:inline src="https://polyfill.io/v3/polyfill.min.js?features=default" defer></script>
+
+	<!-- same goes for the bootstrap js -->
+	<!-- bootstrap js -->
+	<script is:inline src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous" defer></script>
+
+	
+
+	<title>{title}</title>
+
 	</head>
-	<body>
+
+	<body class:list={bodyClass}>
+
+		<Preloader />
+        <Header />
+        <!-- put any css to control min-height and flex-grow of body, main, header and footer in global.css -->
+        <!-- don't try to do it in the markup with bootstrap, seriously -->
 		<slot />
+		<Footer />
+		
 	</body>
+	
 </html>
-<style is:global>
-	:root {
-		--accent: 124, 58, 237;
-		--accent-gradient: linear-gradient(45deg, rgb(var(--accent)), #da62c4 30%, white 60%);
-	}
-	html {
-		font-family: system-ui, sans-serif;
-		background-color: #F6F6F6;
-	}
-	code {
-		font-family: Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono,
-			Bitstream Vera Sans Mono, Courier New, monospace;
-	}
+
+<style>
+
+/* various classes that can be applied by passing a prop bodyClass to the Layout layout */
+/* each one applies a different background image */
+/* maybe there might be other variations as well in the future, say bg colour */
+
+.body-aboutus {
+    /* fallback image if image-set is not supported */
+    background-image: url('/images/herd-in-field-1440x810.jpg');
+    background-attachment: fixed;
+    background-size: cover;
+
+    /* Re: 1x, 2x - browser will choose  the image that most closely matched the device dpr*/
+    /* regardless of viewport width */
+    /* this is probably ok for our purposes since these images don't display at widths less than 768 */
+    /* (see media query below and also in EmptySection component style) */
+    /* and the average tablet is going to be more than 1x dpr */
+
+    background-image: -webkit-image-set(
+        url('/images/herd-in-field-1440x810.jpg') 1x,
+        url('/images/herd-in-field-2560x1440.jpg') 2x
+    );
+    background-image: image-set(
+        url('/images/herd-in-field-1440x810.jpg') 1x,
+        url('/images/herd-in-field-2560x1440.jpg') 2x
+    );
+
+}
+
+/* checked in devtools > network, browser will not download any of the above images if this media query is met */
+
+@media (max-width: 768px) {
+    .body-aboutus {
+        background: none;
+    }
+}
+
 </style>

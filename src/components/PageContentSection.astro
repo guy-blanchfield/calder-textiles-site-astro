@@ -1,0 +1,86 @@
+---
+
+export interface Props {
+    heading: string;
+    bgColour?: string;
+}
+
+const { heading, bgColour = "var(--lightbluegrey)" } = Astro.props;
+---
+
+<!-- nb big padding-y in the custom css, bootstrap wouldn't cut it -->
+<section class="section-pagecontent px-5">
+
+    <div class="container">
+
+        <!-- content div just to keep everything together -->
+        <!-- makes it easier to set padding -->
+        <div class="section-pagecontent__content p-3">
+
+            <h2 class="section-pagecontent__heading display-4 py-5 serif">{heading}</h2>
+
+            <div class="row">
+
+                <!-- using padding-end (pe-5) to reduce the line length slightly -->
+            
+                <div class="col-md-5 pe-5">
+                    <div class="section-pagecontent__text">
+                        <slot name="page-content" />
+                    </div>
+                    
+                </div>
+
+                <!-- probably always gonna need this slot but leave it conditional for now -->
+                <!-- margin-top here if it's not large, i.e. if it's stacking -->
+
+                <!-- Offsets: -->
+                <!-- Move columns to the right using .offset-md-* classes. -->
+                <!-- These classes increase the left margin of a column by * columns. -->
+                <!-- For example, .offset-md-4 moves .col-md-4 over four columns. -->
+
+                <!-- Basically the offset is controlling the horizontal gap between the two 'page-contents' -->
+                <!-- originally was offset-lg-2 and offset-md-1 -->
+                <!-- 2 was a bit much -->
+
+                <!-- using padding-end (pe-5) to reduce the line length slightly -->
+                
+                {Astro.slots.has('page-content-2') && (
+                    
+                    <div class="col-md-5 offset-md-1 mt-5 mt-md-0 pe-5">
+                        <div class="section-pagecontent__text">
+                            <slot name="page-content-2" />
+                        </div>
+                    </div>
+                )}
+
+            </div>
+
+        </div>
+
+        
+
+    </div>
+
+</section>
+
+<style define:vars={{bgColour}}>
+
+.section-pagecontent {
+    color: hsl(var(--white));
+    background-color: hsl(var(--bgColour));
+    /* background-color: rgb(127, 141, 150); */
+    /* background-color: #7f8d96; */
+
+    /* big padding here! */
+    /* careful that it doesn't clash with bs px that's in the markup */
+    padding-top: 6rem;
+    /* more at the bottom to make up for the py-5 that's on the heading */
+    padding-bottom: 8rem;
+}
+
+.section-pagecontent__heading {
+    /* font-family now handled by .serif utility, see after the :root stuff in global.css */
+    /* font-family: 'Georgia, serif'; */
+}
+
+</style>

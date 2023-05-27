@@ -2,11 +2,11 @@
 import Layout from '../layouts/Layout.astro';
 import Hero from '../components/Hero.astro';
 import PageContentSection from '../components/PageContentSection.astro';
-import PictureSection from '../components/PictureSection.astro';
+import EmptySection from '../components/EmptySection.astro';
 import ContactSection from '../components/ContactSection.astro';
 ---
 
-<Layout title="Welcome to Calder Textiles">
+<Layout title="About Us : Calder Textiles" bodyClass="body-aboutus">
 	<main>
 		
 		<Hero imageBase="sheep" imageAlt="Some Sheep">
@@ -15,9 +15,9 @@ import ContactSection from '../components/ContactSection.astro';
 			<Fragment slot="hero-para">One of the UK's foremost woollen yarn spinners with a world-wide reputation for excellence.</Fragment>
 		</Hero>
 
-		<PageContentSection heading="The Home Page" bgColour="var(--lightbluegrey)">
+		<PageContentSection heading="About Us" bgColour="var(--lightbluegrey)">
 			<Fragment slot="page-content">
-				<p>Here is some content for the home page, it's not really about anything. It's ultimately meaningless. Stop reading, it's a waste of time.</p>
+				<p>Here is some content for the about us page, it's not really about anything. It's ultimately meaningless. Stop reading, it's a waste of time.</p>
 				<p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Blanditiis fugiat quaerat, maxime beatae illum molestias libero odit! Enim repudiandae, facilis dignissimos nulla amet nam ratione.</p>
 			</Fragment>
 
@@ -27,7 +27,7 @@ import ContactSection from '../components/ContactSection.astro';
 			</Fragment>
 		</PageContentSection>
 
-		<PictureSection imageBase="herd-in-field" />
+		<EmptySection />
 
 		<ContactSection />
 

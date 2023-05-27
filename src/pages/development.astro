@@ -1,0 +1,115 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Hero from '../components/Hero.astro';
+import PageContentSection from '../components/PageContentSection.astro';
+import ContactSection from '../components/ContactSection.astro';
+
+// diagram images
+
+const diagramBase = "development-diagram"
+
+const diagramSrcset1 = `/images/${diagramBase}-no-arrow-1.png 250w, /images/${diagramBase}-1.png 500w`;
+const diagramSrcset2 = `/images/${diagramBase}-no-arrow-2.png 250w, /images/${diagramBase}-2.png 500w`;
+const diagramSrcset3 = `/images/${diagramBase}-no-arrow-3.png 250w, /images/${diagramBase}-3.png 500w`;
+
+const diagramFallback1 = `/images/${diagramBase}-1.png 500w`;
+const diagramFallback2 = `/images/${diagramBase}-2.png 500w`;
+const diagramFallback3 = `/images/${diagramBase}-3.png 500w`;
+
+---
+
+<Layout title="Development : Calder Textiles">
+	<main>
+
+		<Hero imageBase="sheep" imageAlt="Some Sheep">
+			<!-- using Fragment here, span also works, but fragment produces tidier markup -->
+			<Fragment slot="hero-heading">We work across all requirements with absolute dedication.</Fragment>
+			<!-- <Fragment slot="hero-para">One of the UK's foremost woollen yarn spinners with a world-wide reputation for excellence.</Fragment> -->
+		</Hero>
+
+		<PageContentSection heading="Development">
+
+			<Fragment slot="page-content">
+				<p>A key area of our operation is to develop new ranges with and
+					for our customers.</p>
+				<p>We work very closely with our customers whether we are
+					creating new shades, be that natural heathers, dyed heathers,
+					stipples or a new colour bank.</p>
+			</Fragment>
+
+			<Fragment slot="page-content-2">
+				<p>We also look at the make-up of the yarn, count and raw
+					materials to see how texture can play a part. We can also
+					experiment with different fibres such as Alpaca and Cashmere.</p>
+			</Fragment>
+
+		</PageContentSection>
+
+		<!-- just do this diagram bit ad hoc for now it's the only one of its kind -->
+		<!-- so probably doesn't justify a component -->
+
+		<!-- probably something like this -->
+
+		<section class="section-diagram">
+			<div class="container">
+				<div class="row no-gutters p-5">
+					<div class="col-sm-4 px-0 align-self-center mybordered">
+						<img
+							srcset={diagramSrcset1}
+							sizes="(max-width: 768px) 250px,
+									500px"
+							src={diagramFallback1}
+							alt="Description of diagram 1" 
+							class="section-diagram__img" 
+						/>
+					</div>
+
+					<div class="col-sm-4 px-0 align-self-center mybordered">
+						<img
+							srcset={diagramSrcset2}
+							sizes="(max-width: 768px) 250px,
+									500px"
+							src={diagramFallback2}
+							alt="Description of diagram 2" 
+							class="section-diagram__img" 
+						/>
+					</div>
+
+					<div class="col-sm-4 px-0 align-self-center mybordered">
+						<img
+							srcset={diagramSrcset3}
+							sizes="(max-width: 768px) 250px,
+									500px"
+							src={diagramFallback3}
+							alt="Description of diagram 3"
+							class="section-diagram__img" 
+						/>
+					</div>
+				</div>
+				
+				
+
+			</div>
+		</section>
+
+		<ContactSection />
+
+	</main>
+</Layout>
+
+<style>
+
+.section-diagram {
+	background-color: hsl(240, 2%, 90%);
+}
+
+.section-diagram__img {
+	max-width: 100%;
+	border: 1px solid yellow;
+}
+
+.mybordered {
+	border: 1px solid hotpink;
+}
+
+</style>

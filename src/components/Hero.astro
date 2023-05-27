@@ -1,0 +1,207 @@
+---
+
+// now doing the Picture element as a separate component
+import PictureFullWidth from '../components/PictureFullWidth.astro';
+
+// some prop drilling required to get the imageBase from the page that calls it
+// through to the pictureFullWidth component
+
+export interface Props {
+    imageBase: string;
+    imageAlt: string;
+}
+
+
+
+const { imageBase, imageAlt } = Astro.props;
+
+
+// gonna try the astro image integration for this
+// https://docs.astro.build/en/guides/integrations-guide/image/
+
+// "According to the new docs, it appears that plain img tags won't work with files in the src directory if you're using @astrojs/image."
+
+// so uh maybe not use image integration!?
+// maybe add it later, once everything's working, and @astrojs/image is less experimental!
+
+
+// according to: https://stackoverflow.com/questions/34695899/why-is-react-js-removing-the-srcset-tag-on-img
+
+// "Webpack resolves the imports of images (or require) as a string (the uri of the image). 
+// The image data will just be fetched when the browser requests it and the browser will decide which image it needs according to srcSet."
+
+// so hopefully astro will do something similar
+
+// tried putting images in src and using import as recommended
+
+// can't do dynamic imports (no variables or template literals allowed - has to be a static path)
+// but you could use a glob to grab all the image paths in the images/content folder
+// then filter them using js once they're into an object or array or collection maybe
+// think this still means importing everything, even if they are only paths
+
+// might just stick the images in public for now!
+
+---
+
+<!-- using the bs min-vh-100 for the hero, hero class shouldn't need a negative margin as the nav is now sticky not fixed -->
+<div class="hero min-vh-100">
+    
+    <PictureFullWidth imageBase={imageBase} imageAlt={imageAlt} pictureClasses="hero__picture" imageClasses="hero__image" lazyLoad={false}/>
+
+    <!-- a div that fits perfectly over the image -->
+    <!-- and has an alpha gradient background to darken the image to make the text more legible -->
+    <!-- contains the text div, which contains a heading and a para -->
+    <!-- could probably get by without the text container, but keep it for flexibility -->
+
+    <!-- display flex on the overlay so we can align its content vertically -->
+    <!-- might need extra padding to shunt it down a bit -->
+    <!-- try pt-5 on the hero__text -->
+    <!-- only px here otherwise it overides the custom padding-top that we need to adjust for the nav -->
+    <div class="hero__overlay d-flex align-items-center px-5">
+
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+
+                    <!-- put extra padding here, not on the col div -->
+                    <!-- probably needs shifting down a fair bit more, do it in the custom css -->
+                    <div class="hero__text p-3">
+                        <!-- display-x for a slightly more opinionated heading style -->
+                        <!-- tried bootstrap line-height here, not gonna fly -->
+                        <!-- do it in custom if you must -->
+                        <h1 class="hero__heading display-5 serif">
+                            <slot name="hero-heading" />
+                        </h1>
+
+                        {Astro.slots.has('hero-para') && (
+                            <p class="hero__para fs-5">
+                                <slot name="hero-para" />
+                            </p>
+                        )}
+
+                    </div>
+
+                    
+                </div>
+
+                <!-- dont need the 2nd column to make the first one take half the space  -->
+                <!--
+                <div class="col-md-6">
+
+                    <div class="nothero__text p-5">
+
+                        <h1>Some other heading</h1>
+                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis sint totam debitis? Sapiente labore sit quasi excepturi debitis saepe temporibus inventore, error delectus totam. Atque, officia. Rerum quas autem neque, voluptatem optio consectetur? Unde quibusdam quae eaque voluptas dolorum, blanditiis maxime fugiat harum aliquam quas nemo accusamus repellat dolorem laboriosam.</p>
+
+                    </div>
+
+                    
+                </div>
+                -->
+
+
+            </div>
+
+        </div>
+
+    </div>
+   
+</div>
+
+
+<style>
+
+/* OK, any styles that are going to be used inside the pictureFullWidth component */
+/* need to be declared in the pictureFullWidth component, because of the scoping thing */
+/* i.e. if you declare them here, they won't work inside the pictureFullWidth component */
+
+/* it's a bit messy, I'd prefer to have all the hero__ stuff together, but hey */
+
+/* see: https://stackoverflow.com/questions/31267425/use-the-html-img-tag-as-a-background-image-instead-of-the-css-background-image */
+.hero {
+
+/* display: inline-block; */
+overflow: hidden;
+position: relative;
+/* width 100% because it needs to fill its parent (it's behaving like a background) */
+
+/* create new stacking context for the hero, so that picture can act as background-image */
+/* isolation: isolate; */
+/* maybe just try to use universal z-index for now */
+
+/* if we do this with grid, we don't need 'position' to make z-index work */
+/* so that might be worth looking into */
+/* see kp's video on grid stacking: */
+/* https://www.youtube.com/watch?v=z2kuC7w9emE&t=405s */
+
+/* give this a background of --accent so it'll be forgiving if the image and overlay don't match up */
+/* --accent is the nav bar colour */
+background-color: var(--accent);
+
+/* border: 1px solid blue; */
+
+}
+
+/* hero__picture and hero__image moved to PictureFullWidth component */
+
+.hero__overlay {
+position: absolute;
+z-index: 1;
+/* probably want width and height not min-width, min-height */
+/* firstly to match the image exactly, secondly to stick to the dimensions of the hero, which has min-vh-100 */
+width: 100%;
+height: 100%;
+/* background: linear-gradient(to left, hsl(0 0 0 / 0.9), hsl(0 0 0 / 0)); */
+background: linear-gradient(to right top, hsl(0 0% 0% / .5), hsl(0 0% 0% / 0));
+
+/* importantly we need padding-top to be the height of the navbar (which is position fixed) */
+/* try 6rem for now, it's an approximation */
+/* remember to adjust if py value on navbar changes */
+padding-top: 6rem;
+
+/* border: 1px solid green; */
+}
+
+.hero__text {
+/* padding-top: 100px; */
+/* might not need z-index and position here now it's going inside the overlay */
+/* z-index: 1; */
+/* position: relative; */
+
+color: hsl(var(--white));
+
+/* border: 1px solid firebrick; */
+}
+
+.hero__heading {
+/*  font-family is handled by the utility class 'serif' now */
+/* see above, under the :root stuff */
+/* font-family: 'Times New Roman', Times, Georgia, serif; */
+/* font-family: 'Martel', 'Georgia', serif; */
+/* font-weight redundant here bc bs class display-4 has font-weight 300 */
+/* font-weight: normal; */
+/* font-family: 'EB Garamond', serif; */
+/* font-family: 'Libre Baskerville', serif; */
+/* set font-size with bootstrap fs- class, just for practice! */
+/* font-size: 3.3rem; */
+/* letter-spacing: 0.1rem; */
+
+/* NB we're currently using a <br> in the heading slot so the max-width might be redundant - keep in for now */
+max-width: 20ch;
+
+/* line-height: 1.5; */
+}
+
+@media(min-width: 768px) {
+    .hero__heading {
+        /* leave this for now */
+        /* line-height: 1.5; */
+    }
+}
+
+.hero__para {
+max-width: 50ch;
+line-height: 1.75rem;
+}
+
+</style>

@@ -1,0 +1,70 @@
+/* :root for global custom properties (variables) */
+
+:root {
+
+    /* try overriding the bootstrap body-font variable here */
+    /* see: https://www.youtube.com/watch?v=_7jrFQsaxT0 */
+    
+    /* yeah the below works fine, but let's see if we can get away with the default bs sytem ui stack */
+    /* --bs-body-font-family: 'Roboto', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; */
+    
+    /* colours */
+    
+    --darkergrey: 220 5% 20%;
+    --midbluegrey: 204 9% 43%;
+    /* --lightbluegrey: 203 9% 54%; this was the original colourpicker value from the pdf screen grab */ 
+    /* try increasing saturation, who knows what the colour profile's up to on this laptop */
+    /* higher hue = bluer, lower hue = greener */
+    --lightbluegrey: 200 15% 54%;
+    /* --lightbluegrey-rgb: 127, 141, 150; */
+    --darkblue: 225 16% 23%;
+    --darkerblue: 223% 13% 16%;
+    
+    --white: 0 0% 100%;
+    /* offwhite from the lightbluegrey */
+    --offwhite: 203 9% 83%;
+    
+    --text: hsl(var(--darkergrey));
+    --muted: hsl(var(--lightbluegrey));
+    --accent: hsl(var(--darkblue));
+    
+}
+
+/* to make sure the page takes up full height, in the event of there not being */
+/* enough content to fill the height */
+
+body { 
+    min-height: 100vh; 
+    /* margin: 0;  */
+
+    display: flex; 
+    flex-direction: column; 
+}
+
+/* main fills all the space between header & footer */
+main { 
+    flex: 1; 
+    /* shorthand for: flex-grow: 1, flex-shrink 0, flex-basis 0 */
+    /* default values are: 0 1 auto */
+
+    /* NB body flex-direction is column so these all relate to the vertical */
+}
+
+header{ 
+    /* leave any height settings on header until the hero is in, no telling what it might do */
+    /* min-height: 6rem;  */
+}
+
+footer {
+    /* min-height: 50px;  */
+}
+
+/* ------------ end min-height stuff ------------ */
+
+
+/* let's have a utility class for the serif font */
+/* otherwise we have to update every heading class */
+/* everytime we decide to change the font */
+.serif {
+    font-family: 'Martel', 'Georgia', serif;
+}

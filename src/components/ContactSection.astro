@@ -1,0 +1,76 @@
+---
+
+import GoogleMap from '../components/GoogleMap.astro';
+
+---
+
+
+<section class="section-contact p-5">
+
+    <div class="container">
+
+        <div class="row">
+            <div class="col-lg-5 d-flex align-items-center"> 
+                <div class="section-contact__contact-content">
+                    <h3 class="section-contact__heading fs-1 pb-4 serif">Contact Us</h3>
+                    <p class="section-contact__intro fw-bold py-2">Talk to us. You can depend on our experienced sales team. 
+                        Their knowledge will provide you with the ideal yarn solution and a 
+                        successful working relationship, wherever you are in the world.</p>
+
+                    <p class="section-contact__address"><span class="fw-bold">Calder Textiles Ltd</span><br>
+                        Dewsbury Mills<br>
+                        Thornhill Road<br>
+                        Dewsbury<br>
+                        WF12 9QE<br>
+                        United Kingdom</p>
+
+                    <p class="section-contact__details">
+                        <span class="fw-bold">T</span> +44 (0)1924 456 411<br>
+                        <span class="fw-bold">F</span> +44 (0)1924 487 387<br>
+                        <span class="fw-bold">E</span> <a href="&#109;&#97;&#105;&#108;&#116;&#111;:&#116;&#105;&#109;.Booth&#64;&#99;&#97;&#108;&#100;&#101;&#114;textiles.com" class="section-contact__email">&#116;&#105;&#109;.Booth&#64;&#99;&#97;&#108;&#100;&#101;&#114;textiles.com</a>
+                    </p>
+
+                </div>
+            </div>
+            <div class="col-lg-7 pt-5 pt-lg-0">
+                    <!-- google maps here -->
+                    <!-- div is in the GoogleMap component -->
+                    <GoogleMap />
+                <!-- </div> -->
+            </div>
+        </div>
+
+    </div>
+
+</section>
+
+<style>
+
+.section-contact {
+    /* needs a white background, now there's a fixed backgound image on body */
+    background-color: hsl(var(--white));
+}
+
+.section-contact__contact-content {
+    color: hsl(var(--darkergrey) / 0.85);
+}
+
+
+.section-contact__heading {
+    /* font-family now handled by .serif utility, see after the :root stuff */
+    /* font-family: Georgia, serif; */
+    color: hsl(var(--lightbluegrey));
+
+}
+
+.section-contact__intro {
+    line-height: 1.3rem;
+    max-width: 42ch;
+}
+
+.section-contact__email {
+   color: hsl(var(--muted));
+   text-decoration: none;
+}
+
+</style>

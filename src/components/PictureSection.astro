@@ -1,0 +1,45 @@
+---
+
+import PictureFullWidth from './PictureFullWidth.astro';
+
+// some prop drilling required to get the imageBase from the page that calls it
+// through to the pictureFullWidth component
+
+export interface Props {
+    imageBase: string;
+    imageAlt?: string;
+}
+
+
+
+const { imageBase, imageAlt = '' } = Astro.props;
+
+---
+
+
+<section class="section-picture">
+
+    <PictureFullWidth imageBase={imageBase} pictureClasses="bigpicture__picture" imageClasses="bigpicture__image" />
+
+</section>
+
+
+
+<style>
+
+.section-picture {
+    /* position: relative; */
+    height: 30rem;
+    /* border: 1px solid hotpink; */
+    overflow: hidden;
+}
+
+@media(max-width: 768px) {
+
+    .section-picture {
+        height: 0;
+    }
+
+}
+
+</style>

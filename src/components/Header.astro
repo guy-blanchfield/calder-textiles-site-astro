@@ -1,0 +1,208 @@
+---
+
+//import { Image, Picture } from '@astrojs/image/components';
+import Logo from '../images/design/logo-from-pdf.png';
+
+// const curentPath = new URL(Astro.request.url).pathname;
+// or shorthand
+const currentPath = Astro.url.pathname;
+
+---
+
+<header>
+
+    <!-- is it worth doing nav as a separate component? -->
+
+    <!-- Navbar -->
+    <!-- -lg means this navbar will do hamburger at screen sizes below large (992) -->
+    <!-- py-3 means padding of 3 on the y axis -->
+    <!-- fixed-top does what you'd expect - fixes it to the top -->
+    <!-- probably better than sticky in this case so the hero starts from the top of page with min-vh-100, this allows the nav to go over it not shunt it down -->
+    <!-- tried expand-md, too small to fit the menu in -->
+    <nav class="navbar navbar-expand-lg navbar-dark py-1 fixed-top navbar-caldertextiles">
+        <!-- -fluid is ok, but try -xxl so it goes to max width of 1320 -->
+        <!-- nah, too small, let's risk fluid -->
+        <div class="container-fluid">
+
+            <!-- was h1 with logo image, but probably does more harm than good in SEO terms -->
+            <!-- The lead part of the hero text should probably be the h1 -->
+            <a class="navbar-brand" href="./">
+                <img src={Logo} alt="Calder Textiles" width="197" height="68">
+            </a>
+
+            <!-- in between the brand link and the navbar collapse we need the hamburger -->
+            <button 
+                class="navbar-toggler" 
+                type="button" 
+                data-bs-toggle="collapse" 
+                data-bs-target="#navmenu"
+            >
+                <!-- <span class="navbar-toggler-icon"></span> -->
+
+                <!-- try google material icons -->
+                <!-- consider installing astro-icons and integrating google material icons with that --> 
+                <!-- just to see how it works -->
+                <span class="material-icons">menu</span>
+            </button>
+            <!-- NB! id="navmenu" not #navmenu! -->
+            <div class="collapse navbar-collapse" id="navmenu">
+                <!-- ul with a class of navbar-nav bc it's the navbar navigation -->
+                <!-- and ms-auto (margin-start auto) pushes it right with the magic of margin auto -->
+                <ul class="navbar-nav ms-auto me-2">
+                    <!-- and each li needs a class of nav-item -->
+
+                    <!-- see here for aria-current info: -->
+                    <!-- https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-current -->
+                    <!-- aria-current attribute goes on the <a> not the <li> -->
+                    <!-- use something like const pathname = new URL(Astro.request.url).pathname -->
+                    <!-- see also: https://petermekhaeil.com/til/astro-url/ -->
+                    <!-- astro.url is equivalent to new URL(Astro.request.url) -->
+                    <!-- https://docs.astro.build/en/reference/api-reference/#astrourl -->
+                    <li class="nav-item active">
+                       <!-- and each link needs a class of nav-link -->
+                       <a href="./aboutus" class="nav-link" aria-current={currentPath === "/aboutus" ? "page" : false}>About Us</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="./products" class="nav-link" aria-current={currentPath === "/products" ? "page" : false}>Products</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="./development" class="nav-link" aria-current={currentPath === "/development" ? "page" : false}>Development</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="./sustainability" class="nav-link" aria-current={currentPath === "/sustainability" ? "page" : false}>Sustainability</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="./contact" class="nav-link" aria-current={currentPath === "/contact" ? "page" : false}>Contact</a>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+    </nav>
+
+    <!-- maybe the image in here as hero? maybe it belongs in main? nah put hero image in main, keep header for nav and maybe search -->
+    <!-- mdn says: The <header> HTML element represents introductory content, typically a group of introductory or navigational aids -->
+
+</header>
+
+
+<!-- google material icon toggle script -->
+<!-- should be ok to bundle -->
+<script>
+
+    // material icons 'uses a typographic feature called ligatures, which allows rendering of an icon glyph simply by using its textual name'
+    // so changing the text changes the icon
+    const hamburgerMenuButton = document.querySelector('.navbar-toggler');
+    const hamburgerMenuButtonSpan = document.querySelector('.navbar-toggler span');
+
+    hamburgerMenuButton.addEventListener('click', () => {
+        hamburgerMenuButtonSpan.textContent = hamburgerMenuButtonSpan.textContent === 'menu' ? 'close' : 'menu';
+    });
+</script>
+
+<style>
+        
+        .navbar-caldertextiles {
+    background-color: var(--accent);
+    /* background-color: red; */
+}
+
+/* nav-item needs a position relative for the fancy link hover to work */
+/* .navbar-caldertextiles .nav-item {
+    position: relative;
+} */
+
+/* the separators in the navmenu list */
+/* use adjacent sibling selector (+) so that only the ::befores that immediately follow a nav-item get the separator */
+/* i.e. not the first item in the list */
+/* could use not first-child, but this seems a bit more elegant */
+
+/* only need this at lg and above */
+/* 992px see: https://getbootstrap.com/docs/5.3/layout/breakpoints/ */
+
+@media(min-width: 992px) {
+
+    .navbar-caldertextiles .nav-item + .nav-item::before {
+        content: '|';
+        font-size: 0.7rem;
+        font-weight: bold;
+        padding: 0rem 0.5rem;
+        color: var(--muted);
+        /* position relative so we can nudge it up a bit - it sits on the baseline otherwise */
+        position: relative;
+        top: -0.1rem;
+    }
+    
+    /* try forcing the nav-link to display: inline */
+    .navbar-caldertextiles .nav-link {
+        display: inline;
+        /* also set colour while we're at it */
+        color: hsl(var(--offwhite));
+
+        /* navlink position relative so the ::after can be positioned absolute */
+        position: relative;
+    }
+    
+    .navbar-caldertextiles .nav-link:not([aria-current="page"])::after {
+        content: '';
+        position: absolute;
+        background-color: var(--muted);
+        height: 1px;
+        width: calc(100% - 1rem);
+        /* width: 100%; */
+        border-radius: 2px;
+        bottom: 0;
+        left: var(--bs-navbar-nav-link-padding-x);
+        /* var(--bs-navbar-nav-link-padding-x) is 0.5rem */
+
+        transform: scaleX(0);
+        transition: transform 200ms ease-in-out;
+    }
+
+    .navbar-caldertextiles .nav-link:hover::after {
+        transform: scaleX(1);
+    }
+
+}
+
+
+.navbar-caldertextiles .nav-link:hover, .navbar-caldertextiles .nav-link:focus-visible {
+    color: hsl(var(--white));
+}
+
+.navbar-caldertextiles .nav-link:focus-visible {
+    outline: none;
+    background-color: hsl(var(--white) / 0.1);
+}
+
+.navbar-caldertextiles .nav-link[aria-current="page"] {
+    color: var(--muted);
+}
+
+/* can't find an appropriate class with which to select the mobile nav */
+/* a combination of .show and .collpasing seems a bit hacky */
+
+.navbar-caldertextiles .show .nav-link, .navbar-caldertextiles .collapsing .nav-link {
+    /* this'll need adjusting when the proper logo goes in */
+   padding-left: 2rem;
+}
+
+/* get rid of the border on the toggle button */
+.navbar-caldertextiles .navbar-toggler {
+    border: none;
+    border-radius: 0;
+}
+
+/* to make the focus outline thinner */
+.navbar-caldertextiles .navbar-toggler:focus {
+    box-shadow: none;
+}
+
+.navbar-caldertextiles .navbar-toggler:focus-visible {
+    box-shadow: 0 0 0 0.1rem hsl(var(--lightbluegrey) / 0.5);
+    /* use a thin border instead */
+    /* nah, border shifts it on focus */
+}
+
+</style>
