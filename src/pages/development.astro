@@ -8,13 +8,26 @@ import ContactSection from '../components/ContactSection.astro';
 
 const diagramBase = "development-diagram"
 
-const diagramSrcset1 = `/images/${diagramBase}-no-arrow-1.png 250w, /images/${diagramBase}-1.png 500w`;
-const diagramSrcset2 = `/images/${diagramBase}-no-arrow-2.png 250w, /images/${diagramBase}-2.png 500w`;
-const diagramSrcset3 = `/images/${diagramBase}-no-arrow-3.png 250w, /images/${diagramBase}-3.png 500w`;
+// tried this with img srcset sizes, no good, use picture instead
+// picture is the obvious choice, just wanted to try and figure out how sizes works
 
-const diagramFallback1 = `/images/${diagramBase}-1.png 500w`;
-const diagramFallback2 = `/images/${diagramBase}-2.png 500w`;
-const diagramFallback3 = `/images/${diagramBase}-3.png 500w`;
+const diagramSrcsetMob1 = `/images/${diagramBase}-no-arrow-1.png`;
+const diagramSrcsetMob2 = `/images/${diagramBase}-no-arrow-2.png`;
+const diagramSrcsetMob3 = `/images/${diagramBase}-no-arrow-3.png`;
+
+const diagramSrcset1 = `/images/${diagramBase}-1.png`;
+const diagramSrcset2 = `/images/${diagramBase}-2.png`;
+const diagramSrcset3 = `/images/${diagramBase}-3.png`;
+
+const diagramFallback1 = `/images/${diagramBase}-1.png`;
+const diagramFallback2 = `/images/${diagramBase}-2.png`;
+const diagramFallback3 = `/images/${diagramBase}-3.png`;
+
+// max-width here should match max-width in the css media query (see below in the style section)
+// (where the ::after is added)
+
+const diagramMediaMax = "(max-width: 576px)";
+const diagramMediaMin = "(min-width: 577px)";
 
 ---
 
@@ -48,47 +61,51 @@ const diagramFallback3 = `/images/${diagramBase}-3.png 500w`;
 		<!-- just do this diagram bit ad hoc for now it's the only one of its kind -->
 		<!-- so probably doesn't justify a component -->
 
-		<!-- probably something like this -->
+		<!-- picture seems to be the best solution for this -->
 
 		<section class="section-diagram">
 			<div class="container">
 				<div class="row no-gutters p-5">
-					<div class="col-sm-4 px-0 align-self-center mybordered">
-						<img
-							srcset={diagramSrcset1}
-							sizes="(max-width: 768px) 250px,
-									500px"
-							src={diagramFallback1}
-							alt="Description of diagram 1" 
-							class="section-diagram__img" 
-						/>
+					<div class="col-sm-4 px-0 align-self-center section-diagram__col">
+						<picture>
+							<source media={diagramMediaMax} srcset={diagramSrcsetMob1} >
+							<source media={diagramMediaMin} srcset={diagramSrcset1} >
+
+							<img 
+								src={diagramFallback1}
+								alt="Description of diagram 1" 
+								class="section-diagram__img" 
+							/>
+						</picture>
+						
 					</div>
 
-					<div class="col-sm-4 px-0 align-self-center mybordered">
-						<img
-							srcset={diagramSrcset2}
-							sizes="(max-width: 768px) 250px,
-									500px"
-							src={diagramFallback2}
-							alt="Description of diagram 2" 
-							class="section-diagram__img" 
-						/>
+					<div class="col-sm-4 px-0 align-self-center section-diagram__col">
+						<picture>
+							<source media={diagramMediaMax} srcset={diagramSrcsetMob2} >
+							<source media={diagramMediaMin} srcset={diagramSrcset2} >
+
+							<img 
+								src={diagramFallback2}
+								alt="Description of diagram 2" 
+								class="section-diagram__img" 
+							/>
+						</picture>
 					</div>
 
-					<div class="col-sm-4 px-0 align-self-center mybordered">
-						<img
-							srcset={diagramSrcset3}
-							sizes="(max-width: 768px) 250px,
-									500px"
-							src={diagramFallback3}
-							alt="Description of diagram 3"
-							class="section-diagram__img" 
-						/>
+					<div class="col-sm-4 px-0 align-self-center section-diagram__col">
+						<picture>
+							<source media={diagramMediaMax} srcset={diagramSrcsetMob3} >
+							<source media={diagramMediaMin} srcset={diagramSrcset3} >
+
+							<img 
+								src={diagramFallback3}
+								alt="Description of diagram 3" 
+								class="section-diagram__img" 
+							/>
+						</picture>
 					</div>
 				</div>
-				
-				
-
 			</div>
 		</section>
 
@@ -103,13 +120,33 @@ const diagramFallback3 = `/images/${diagramBase}-3.png 500w`;
 	background-color: hsl(240, 2%, 90%);
 }
 
-.section-diagram__img {
-	max-width: 100%;
-	border: 1px solid yellow;
+@media (max-width: 576px) {
+	.section-diagram__col:not(:last-child)::after {
+		content: '';
+		display: block;
+		/* display: flex; */
+		/* width: 50px; */
+		/* height: 75px; */
+		width: 100%;
+		/* think we need to use padding-bootom here instead of height */
+		/* if we want to use a percentage value */
+		/* it's a percentage of the width btw! */
+		padding-bottom: 20%;
+		/* height: 50px; */
+		margin: 0 auto;
+		/* align-items: center; */
+		/* justify-content: center; */
+		background-image: url('/images/development-diagram-arrow-down.png');
+		background-size: contain;
+		background-repeat: no-repeat;
+		background-position: center;
+		/* border: 1px solid lawngreen; */
+	}
 }
 
-.mybordered {
-	border: 1px solid hotpink;
+.section-diagram__img {
+	max-width: 100%;
+	/* border: 1px solid yellow; */
 }
 
 </style>
