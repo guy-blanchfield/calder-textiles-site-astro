@@ -1,0 +1,12 @@
+---
+
+export interface Props {
+    mainClasses?: string
+}
+
+const { mainClasses = '' } = Astro.props;
+---
+
+<main class:list={mainClasses} id="main-content">
+    <slot />
+</main>

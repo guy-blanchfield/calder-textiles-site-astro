@@ -1,6 +1,7 @@
 ---
 import Preloader from '../components/Preloader.astro';
 import Header from '../components/Header.astro';
+import Main from '../components/Main.astro';
 import Footer from '../components/Footer.astro';
 
 // global custom styles
@@ -42,6 +43,8 @@ const { title, bodyClass = '' } = Astro.props;
 
     <!-- google material icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- google material symbols -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
 
     <!-- custom styles -->
     <!-- probably don't need reset, there's one built into bootstrap -->
@@ -73,7 +76,9 @@ const { title, bodyClass = '' } = Astro.props;
         <Header />
         <!-- put any css to control min-height and flex-grow of body, main, header and footer in global.css -->
         <!-- don't try to do it in the markup with bootstrap, seriously -->
+        <Main>
 		<slot />
+        </Main>
 		<Footer />
 		
 	</body>
@@ -85,6 +90,8 @@ const { title, bodyClass = '' } = Astro.props;
 /* various classes that can be applied by passing a prop bodyClass to the Layout layout */
 /* each one applies a different background image */
 /* maybe there might be other variations as well in the future, say bg colour */
+
+/* maybe this should go in global.css? */
 
 .body-aboutus {
     /* fallback image if image-set is not supported */

@@ -1,7 +1,13 @@
 ---
 
 //import { Image, Picture } from '@astrojs/image/components';
-import Logo from '../images/design/logo-from-pdf.png';
+// import Logo from '../images/design/logo-from-pdf.png';
+import Logo from '../images/design/logo-from-pdf-trim.png';
+
+const logoSize = {
+    width: 140,
+    height: 51
+}
 
 // const curentPath = new URL(Astro.request.url).pathname;
 // or shorthand
@@ -9,7 +15,9 @@ const currentPath = Astro.url.pathname;
 
 ---
 
-<header>
+<header class="sticky-top">
+
+    <div id="skip" class="visually-hidden"><a href="#main-content">Skip to Main Content</a></div>
 
     <!-- is it worth doing nav as a separate component? -->
 
@@ -19,15 +27,18 @@ const currentPath = Astro.url.pathname;
     <!-- fixed-top does what you'd expect - fixes it to the top -->
     <!-- probably better than sticky in this case so the hero starts from the top of page with min-vh-100, this allows the nav to go over it not shunt it down -->
     <!-- tried expand-md, too small to fit the menu in -->
-    <nav class="navbar navbar-expand-lg navbar-dark py-1 fixed-top navbar-caldertextiles">
+    <!-- was fixed-top, trying sticky-top -->
+    <!-- NB! sticky-top needs to be on the header -->
+    <!-- because sticky won't work if it's on an only child of the parent -->
+    <nav class="navbar navbar-expand-lg navbar-dark py-1 navbar-caldertextiles">
         <!-- -fluid is ok, but try -xxl so it goes to max width of 1320 -->
         <!-- nah, too small, let's risk fluid -->
         <div class="container-fluid">
 
             <!-- was h1 with logo image, but probably does more harm than good in SEO terms -->
             <!-- The lead part of the hero text should probably be the h1 -->
-            <a class="navbar-brand" href="./">
-                <img src={Logo} alt="Calder Textiles" width="197" height="68">
+            <a class="navbar-brand navbar-caldertextiles__logo" href="./">
+                <img src={Logo} alt="Calder Textiles" width={logoSize.width} height={logoSize.height} class="navbar-caldertextiles__logo-img">
             </a>
 
             <!-- in between the brand link and the navbar collapse we need the hamburger -->
@@ -103,7 +114,10 @@ const currentPath = Astro.url.pathname;
 
 <style>
         
-        .navbar-caldertextiles {
+.navbar-caldertextiles {
+    /* set a height for the navbar and we can use the same value to calculate hero height and main top margin or padding */
+    /* the height variable should probably be declared in global.css */
+    min-height: var(--navbar-height);
     background-color: var(--accent);
     /* background-color: red; */
 }
@@ -203,6 +217,14 @@ const currentPath = Astro.url.pathname;
     box-shadow: 0 0 0 0.1rem hsl(var(--lightbluegrey) / 0.5);
     /* use a thin border instead */
     /* nah, border shifts it on focus */
+}
+
+.navbar-caldertextiles__logo {
+    padding-inline-start: 1rem;
+}
+
+.navbar-caldertextiles__logo-img {
+    max-width: 100%;
 }
 
 </style>

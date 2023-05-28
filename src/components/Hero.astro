@@ -43,8 +43,8 @@ const { imageBase, imageAlt } = Astro.props;
 
 ---
 
-<!-- using the bs min-vh-100 for the hero, hero class shouldn't need a negative margin as the nav is now sticky not fixed -->
-<div class="hero min-vh-100">
+<!-- not using min-vh-100 now, using calc and header has sticky-top -->
+<div class="hero">
     
     <PictureFullWidth imageBase={imageBase} imageAlt={imageAlt} pictureClasses="hero__picture" imageClasses="hero__image" lazyLoad={false}/>
 
@@ -105,7 +105,13 @@ const { imageBase, imageAlt } = Astro.props;
         </div>
 
     </div>
-   
+
+    <!-- show more / page content link -->
+    <a class="hero__page-content-link" href="#page-content">
+        <span class="material-symbols-outlined">
+            arrow_downward
+        </span>
+    </a>
 </div>
 
 
@@ -119,6 +125,11 @@ const { imageBase, imageAlt } = Astro.props;
 
 /* see: https://stackoverflow.com/questions/31267425/use-the-html-img-tag-as-a-background-image-instead-of-the-css-background-image */
 .hero {
+
+/* was using bootstrap min-vh-100 */
+/* but we need to take into account the height of the fixed-top navbar */
+/* or it keeps creating vertical position problems for things in main */
+min-height: calc(100vh - var(--navbar-height));
 
 /* display: inline-block; */
 overflow: hidden;
@@ -202,6 +213,45 @@ max-width: 20ch;
 .hero__para {
 max-width: 50ch;
 line-height: 1.75rem;
+}
+
+.hero__page-content-link {
+    position: absolute;
+    z-index: 1;
+    bottom: 2rem;
+    right: 2rem;
+    /* font-size: 3rem; */
+    color: hsl(var(--white)/0.7);
+    border: 2px solid hsl(var(--white)/0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 3rem;
+    min-height: 3rem;
+    border-radius: 50%;
+    /* box-shadow: offset-x, offset-y, blur-radius, spread-radius, colour - one day you might remember this */
+    box-shadow: 2px 10px 10px 0px hsl(0 0% 0% / 0.3);
+    text-decoration: none;
+    transition: all 0.1s ease-in;
+}
+
+.hero__page-content-link:hover {
+    /* text-decoration: none; */
+    color: hsl(var(--white));
+    border-color: hsl(var(--white));
+}
+
+.hero__page-content-link:hover, .hero__page-content-link:focus-visible {
+    /* background-color: hsl(var(--white)/0.25); */
+    transform: scale(1.2);
+}
+
+.material-symbols-outlined {
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 400,
+  'GRAD' 0,
+  'opsz' 48
 }
 
 </style>

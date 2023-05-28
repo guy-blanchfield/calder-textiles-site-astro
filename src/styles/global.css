@@ -8,7 +8,7 @@
     /* yeah the below works fine, but let's see if we can get away with the default bs sytem ui stack */
     /* --bs-body-font-family: 'Roboto', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; */
     
-    /* colours */
+    /* ----------- colours ------------- */
     
     --darkergrey: 220 5% 20%;
     --midbluegrey: 204 9% 43%;
@@ -27,6 +27,11 @@
     --text: hsl(var(--darkergrey));
     --muted: hsl(var(--lightbluegrey));
     --accent: hsl(var(--darkblue));
+
+    /* -------------- sizes --------------- */
+
+    /* set a height for the navbar and we can use the same value to calculate hero height and main top margin or padding */
+    --navbar-height: 5.5rem;
     
 }
 
@@ -67,4 +72,9 @@ footer {
 /* everytime we decide to change the font */
 .serif {
     font-family: 'Martel', 'Georgia', serif;
+}
+
+/* tailwind calls its nowrap utility whitespace-nowrap */
+.nowrap {
+    white-space: nowrap;
 }
