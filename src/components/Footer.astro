@@ -8,7 +8,7 @@
             <!-- vertical margins here when not sm or above (i.e. mobile) because everything stacks -->
             <div class="col-sm-auto ms-sm-auto text-sm-end px-sm-5 my-3 my-sm-0"><a href="" class="footer-caldertextiles__link">Privacy</a>  | <a href="" class="footer-caldertextiles__link">Contact</a></div>
 
-            <div class="col-sm-auto text-sm-end">Site designed by <strong>Wolfstar</strong></div>
+            <div class="col-sm-auto text-sm-end">Site designed by <a href="https://www.wolfstarconsultancy.com" title="Wolfstar website - opens a new window / tab" target="_blank" class="footer-caldertextiles__wolfstar-link">Wolfstar</a></div>
         </div>
 
     </div>
@@ -23,7 +23,7 @@
     /* border: 1px solid magenta; */
 }
 
-.footer-caldertextiles__link {
+.footer-caldertextiles__link, .footer-caldertextiles__wolfstar-link {
     color: hsl(var(--white));
     text-decoration: none;
 }
@@ -31,6 +31,35 @@
 .footer-caldertextiles__link:hover {
     color: var(--muted);
     /* text-decoration: none; */
+}
+
+.footer-caldertextiles__wolfstar-link {
+    font-weight: bold;
+    /* because the ::after is positioned absolutely */
+    position: relative;
+}
+
+.footer-caldertextiles__wolfstar-link:hover {
+    color: hsl(var(--white));
+}
+
+.footer-caldertextiles__wolfstar-link::after {
+    content: '';
+    position: absolute;
+    background-color: var(--muted);
+    height: 1px;
+    width: 100%;
+    /* width: 100%; */
+    border-radius: 2px;
+    bottom: -0.3rem;
+    left: 0;
+
+    transform: scaleX(0);
+    transition: transform 200ms ease-in-out;
+}
+
+.footer-caldertextiles__wolfstar-link:hover::after {
+    transform: scaleX(1);
 }
 
 </style>

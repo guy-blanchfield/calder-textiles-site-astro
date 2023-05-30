@@ -1,24 +1,116 @@
+<!-- see: https://www.youtube.com/watch?v=-HS9IIuT_Mo&t=418s -->
+<!-- or, if you want something fancier https://www.youtube.com/watch?v=Gx35fMhDPWs -->
+
 <!-- might need to do something to disable scroll while preloader is showing -->
 
-<div class="loader loader--hidden">This is the preloader</div>
+<!-- also see this: https://stackoverflow.com/questions/21147149/flash-of-unstyled-content-fouc-in-firefox-only-is-ff-slow-renderer -->
+
+<!-- old but seemingly still relevant -->
+<!-- so try this dummy script tag thing straight after body -->
+<!-- nah that didn't work, still get fouc on all browsers -->
+
+
+<div class="loader loader--blank"></div>
+
+<script>
+
+    // right, what's gonna happen with the preloader is this.
+    // if it takes more than a certain time to load, we add a --loading class to the preloader div
+    // the --loading class has the ::after so the spinner appears
+    // and a transition rule, so it fades when the --hidden class is applied
+
+    // otherwise the window load event will just add the --hidden class to the preloader div
+    // and the transition (fade) will happen every time you reload the page or go to a new page
+
+    // think the best option is to make the loader blank (tried white, the dark blue is better) 
+    // up until it's required to start looking like a loader
+    // then it'll cover the ugly stuff but not flash up like a loader when load is instantaneous
+
+    // NB don't get thrown by the blue background that will always flash before the hero image is loaded
+
+    // yeah this way is not that different to no loader when load is instant, just that the nav disappears momentarily
+    // this'll do for now
+
+
+    const preLoader = document.querySelector('.loader');
+
+    // console.log("preloader script running");
+
+    // if window load event fires before this timeout finishes, cancel the timeout
+    const startLoaderTimeout = setTimeout(() => {
+
+        console.log(`the timeout expired!`);
+
+        // if window.load hasn't fired within n milliseconds, add --loading class
+
+        // don't need a condition here (i.e. isLoaded) bc as soon as the window load event fires
+        // this timeout will be cleared, so if it gets this far the window load event definitely hasn't happenened
+
+        console.log(`show the preloader because window still hasn't loaded`);
+        // now add the loader--loading class so it's not just blank, 
+        // and it will transition (fade out) when the --hidden class is applied
+        preLoader.classList.add('loader--loading');
+        console.log(`loader is now loader--loading`)
+
+    }, 500);
+
+    window.addEventListener('load', () => {
+
+        // clear the timeout, so the --loading class doesn't get added
+        // so there won't be a transition when the --hidden class gets added
+        clearTimeout(startLoaderTimeout);
+        console.log(`the timeout cleared!`);
+
+        preLoader.classList.add('loader--hidden');
+        
+    });
+
+</script>
 
 <style>
 
+    /* NB google maps z-index appears to be 1000000 plus a few; */
+    /* so I suppose we're gonna have to go 1000100 or maybe 2000000! */
+
     .loader {
         position: fixed;
+        z-index: 1000100;
         inset: 0;
-        background-color: #ccc;
+        background-color: hsl(var(--darkergrey));
+        /* border: 1px solid hotpink; */
+        color: hsl(var(--white));
         width: 100vw;
         height: 100vh;
         display: flex;
         align-items: center;
         justify-content: center;
-        transition: opacity 0.75s, visibility 0.75s;
     }
 
-    .loader::after {
-        content: '- the after';
-        /* animation stuff goes here */
+    .loader--blank {
+        background-color: hsl(var(--darkblue));
+    }
+
+    .loader--loading {
+        /* background-color: hsl(var(--darkergrey)); */
+        transition: opacity 0.5s, visibility 0.5s;
+    }
+
+    .loader--loading::after {
+        content: '';
+        display: flex;
+        width: 70px;
+        height: 70px;
+        border: 5px solid hsl(var(--lightbluegrey));
+        /* border-top-color so a quarter of the circle is a different colour */
+        border-top-color: hsl(var(--white));
+        border-radius: 50%;
+
+        animation: loading 0.75s linear infinite;
+    }
+
+    @keyframes loading {
+        from { transform: rotate(0turn) }
+        to { transform: rotate(1turn) }
     }
 
     .loader--hidden {

@@ -6,6 +6,12 @@ import Footer from '../components/Footer.astro';
 
 // global custom styles
 import '../styles/global.css';
+// animate.css
+// import 'animate.css';
+
+// try all of this in frontmatter (including the init())
+// tried the import in the front matter and the init in a script tag but that was no good
+// nope try in script tag
 
 export interface Props {
 	title: string;
@@ -44,7 +50,10 @@ const { title, bodyClass = '' } = Astro.props;
     <!-- google material icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <!-- google material symbols -->
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    <!-- think we have to include the weights and optical sizes here -->
+    <!-- actually, think these are ranges i.e. 20...48 for the opsz -->
+    <!-- <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" /> -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 
     <!-- custom styles -->
     <!-- probably don't need reset, there's one built into bootstrap -->
@@ -84,6 +93,11 @@ const { title, bodyClass = '' } = Astro.props;
 	</body>
 	
 </html>
+
+<!-- seems a bit hacky but this is the only way it seems to work in astro -->
+<!-- see https://github.com/michalsnik/aos/issues/815#issuecomment-1500056742 -->
+<script src="../js/setup-aos.js"></script>
+
 
 <style>
 

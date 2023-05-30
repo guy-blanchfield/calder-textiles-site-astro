@@ -65,7 +65,7 @@ const { imageBase, imageAlt } = Astro.props;
 
                     <!-- put extra padding here, not on the col div -->
                     <!-- probably needs shifting down a fair bit more, do it in the custom css -->
-                    <div class="hero__text p-3">
+                    <div class="hero__text p-3" data-aos="fade-up">
                         <!-- display-x for a slightly more opinionated heading style -->
                         <!-- tried bootstrap line-height here, not gonna fly -->
                         <!-- do it in custom if you must -->
@@ -109,7 +109,11 @@ const { imageBase, imageAlt } = Astro.props;
     <!-- show more / page content link -->
     <a class="hero__page-content-link" href="#page-content">
         <span class="material-symbols-outlined">
-            arrow_downward
+            <!-- arrow_downward -->
+            <!-- try simple expand more chevron -->
+            <!-- expand_more -->
+            <!-- nah try expand_circle_down -->
+            expand_circle_down
         </span>
     </a>
 </div>
@@ -129,7 +133,17 @@ const { imageBase, imageAlt } = Astro.props;
 /* was using bootstrap min-vh-100 */
 /* but we need to take into account the height of the fixed-top navbar */
 /* or it keeps creating vertical position problems for things in main */
-min-height: calc(100vh - var(--navbar-height));
+
+/* NB!! also needs to account for the bootstrap var --bs-navbar-padding-y (0.5rem) */
+/* but NOT the --bs-navbar-brand-padding-y (0.3125rem) */
+/* those vars aren't available when this parses, just add 0.5rem */
+/* why aren't these vertical padding values doubled as you'd expect??? */
+/* min-height: calc(100vh - (var(--navbar-brand-logo-height) + (var(--navbar-vertical-padding)*2) + (var(--bs-navbar-padding-y)*2))); */
+min-height: calc(100vh - (var(--navbar-brand-logo-height) + (var(--navbar-vertical-padding)*2) + 0.5rem)); 
+/* close enough! */
+
+/* NB bootstrap uses browser default root font-size, usually 16px */
+
 
 /* display: inline-block; */
 overflow: hidden;
@@ -218,40 +232,54 @@ line-height: 1.75rem;
 .hero__page-content-link {
     position: absolute;
     z-index: 1;
-    bottom: 2rem;
+    bottom: 1.5rem;
     right: 2rem;
     /* font-size: 3rem; */
     color: hsl(var(--white)/0.7);
-    border: 2px solid hsl(var(--white)/0.7);
+    
+    text-decoration: none;
+    transition: all 0.1s ease-in;
+}
+
+/* circular border as an option */
+.hero__page-content-link--bordered {
+
     display: flex;
     align-items: center;
     justify-content: center;
     min-width: 3rem;
     min-height: 3rem;
     border-radius: 50%;
+
+    border: 2px solid hsl(var(--white)/0.7);
+
     /* box-shadow: offset-x, offset-y, blur-radius, spread-radius, colour - one day you might remember this */
     box-shadow: 2px 10px 10px 0px hsl(0 0% 0% / 0.3);
-    text-decoration: none;
-    transition: all 0.1s ease-in;
+
 }
 
-.hero__page-content-link:hover {
-    /* text-decoration: none; */
-    color: hsl(var(--white));
-    border-color: hsl(var(--white));
-}
 
 .hero__page-content-link:hover, .hero__page-content-link:focus-visible {
-    /* background-color: hsl(var(--white)/0.25); */
+    color: hsl(var(--white));
+    border-color: hsl(var(--white));
     transform: scale(1.2);
+    outline: none;
 }
 
+/* also add these settings to the css link tag in layout head */
+/* need them here, or it'll just use the defaults */
 .material-symbols-outlined {
   font-variation-settings:
   'FILL' 0,
-  'wght' 400,
+  'wght' 200,
   'GRAD' 0,
   'opsz' 48
+}
+
+/* these styles are scoped so feel free to do whatever you need to do here */
+/* it won't effect any other material-symbols-outlined outside the hero component */
+.material-symbols-outlined {
+    font-size: 3rem;
 }
 
 </style>

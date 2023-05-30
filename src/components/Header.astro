@@ -4,6 +4,7 @@
 // import Logo from '../images/design/logo-from-pdf.png';
 import Logo from '../images/design/logo-from-pdf-trim.png';
 
+// NB! if this changes, --navbar-brand-logo-height in global.css must be updated accordingly
 const logoSize = {
     width: 140,
     height: 51
@@ -15,7 +16,7 @@ const currentPath = Astro.url.pathname;
 
 ---
 
-<header class="sticky-top">
+<header class="sticky-top header-caldertextiles">
 
     <div id="skip" class="visually-hidden"><a href="#main-content">Skip to Main Content</a></div>
 
@@ -23,14 +24,15 @@ const currentPath = Astro.url.pathname;
 
     <!-- Navbar -->
     <!-- -lg means this navbar will do hamburger at screen sizes below large (992) -->
-    <!-- py-3 means padding of 3 on the y axis -->
-    <!-- fixed-top does what you'd expect - fixes it to the top -->
-    <!-- probably better than sticky in this case so the hero starts from the top of page with min-vh-100, this allows the nav to go over it not shunt it down -->
+
     <!-- tried expand-md, too small to fit the menu in -->
     <!-- was fixed-top, trying sticky-top -->
     <!-- NB! sticky-top needs to be on the header -->
     <!-- because sticky won't work if it's on an only child of the parent -->
-    <nav class="navbar navbar-expand-lg navbar-dark py-1 navbar-caldertextiles">
+
+    <!-- no bs padding classes here, padding needs to be set in custom css -->
+    <!-- using the navbar-vertical-padding var so that we can calculate the height of the hero -->
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-caldertextiles">
         <!-- -fluid is ok, but try -xxl so it goes to max width of 1320 -->
         <!-- nah, too small, let's risk fluid -->
         <div class="container-fluid">
@@ -113,13 +115,27 @@ const currentPath = Astro.url.pathname;
 </script>
 
 <style>
+
+.header-caldertextiles {
+    
+}
         
 .navbar-caldertextiles {
-    /* set a height for the navbar and we can use the same value to calculate hero height and main top margin or padding */
-    /* the height variable should probably be declared in global.css */
-    min-height: var(--navbar-height);
+    
+    /* min-height is no good, the flex centering causes things to shift when the nav expands / collapses */
+    /* try setting vars for the logo height and the nav bar vertical padding */
+    /* and use these to calculate the hero height */
+
+    /* the variables should probably be declared in global.css */
+    padding-top: var(--navbar-vertical-padding);
+    padding-bottom: var(--navbar-vertical-padding);
+
+    /* min-height: var(--navbar-height); */
     background-color: var(--accent);
-    /* background-color: red; */
+}
+
+.navbar-caldertextiles__container {
+    
 }
 
 /* nav-item needs a position relative for the fancy link hover to work */

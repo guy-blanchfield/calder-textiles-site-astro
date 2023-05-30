@@ -31,7 +31,17 @@
     /* -------------- sizes --------------- */
 
     /* set a height for the navbar and we can use the same value to calculate hero height and main top margin or padding */
-    --navbar-height: 5.5rem;
+    /* --navbar-height: 5.5rem; */
+
+    /* navbar height is no good because the vertical centering cause things to shift when navbar expands / collapses */
+    /* try setting a height for the logo and some vertical padding values */
+
+    /* then we should be able to use these values to calc the hero height */
+
+    /* this is the same as Header.astro > logoSize.height */
+    --navbar-brand-logo-height: 51px;
+
+    --navbar-vertical-padding: 1rem;
     
 }
 
