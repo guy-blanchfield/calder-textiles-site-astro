@@ -12,12 +12,15 @@ import GoogleMap from '../components/GoogleMap.astro';
         <div class="row">
             <div class="col-lg-5 d-flex align-items-center"> 
                 <div class="section-contact__contact-content">
-                    <h3 class="section-contact__heading fs-1 pb-4 serif">Contact Us</h3>
-                    <p class="section-contact__intro fw-bold py-2">Talk to us. You can depend on our experienced sales team. 
+                    <h3 class="section-contact__heading fs-1 pb-4 serif" data-aos="fade-up">Contact Us</h3>
+                    <p class="section-contact__intro fw-bold py-2" data-aos="fade-up">Talk to us. You can depend on our experienced sales team. 
                         Their knowledge will provide you with the ideal yarn solution and a 
                         successful working relationship, wherever you are in the world.</p>
-
-                    <p class="section-contact__address"><span class="fw-bold">Calder Textiles Ltd</span><br>
+                    
+                    <!-- wrapper div to keep address and contact details together for the aos transition -->
+                    <div data-aos="fade-up">
+                    <p class="section-contact__address">
+                        <span class="fw-bold">Calder Textiles Ltd</span><br>
                         Dewsbury Mills<br>
                         Thornhill Road<br>
                         Dewsbury<br>
@@ -29,6 +32,7 @@ import GoogleMap from '../components/GoogleMap.astro';
                         <span class="fw-bold">F</span> +44 (0)1924 487 387<br>
                         <span class="fw-bold">E</span> <a href="&#109;&#97;&#105;&#108;&#116;&#111;:&#116;&#105;&#109;.Booth&#64;&#99;&#97;&#108;&#100;&#101;&#114;textiles.com" class="section-contact__email">&#116;&#105;&#109;.Booth&#64;&#99;&#97;&#108;&#100;&#101;&#114;textiles.com</a>
                     </p>
+                    </div>
 
                 </div>
             </div>

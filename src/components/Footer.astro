@@ -6,7 +6,7 @@
             <div class="col">UK Registered Company No. 1803068</div>
 
             <!-- vertical margins here when not sm or above (i.e. mobile) because everything stacks -->
-            <div class="col-sm-auto ms-sm-auto text-sm-end px-sm-5 my-3 my-sm-0"><a href="" class="footer-caldertextiles__link">Privacy</a>  | <a href="" class="footer-caldertextiles__link">Contact</a></div>
+            <div class="col-sm-auto ms-sm-auto text-sm-end px-sm-5 my-3 my-sm-0"><a href="#" class="footer-caldertextiles__link">Privacy</a>  | <a href="#" class="footer-caldertextiles__link">Contact</a></div>
 
             <div class="col-sm-auto text-sm-end">Site designed by <a href="https://www.wolfstarconsultancy.com" title="Wolfstar website - opens a new window / tab" target="_blank" class="footer-caldertextiles__wolfstar-link">Wolfstar</a></div>
         </div>
@@ -26,40 +26,48 @@
 .footer-caldertextiles__link, .footer-caldertextiles__wolfstar-link {
     color: hsl(var(--white));
     text-decoration: none;
-}
-
-.footer-caldertextiles__link:hover {
-    color: var(--muted);
-    /* text-decoration: none; */
+    /* position relative for the ::after positioning */
+    position: relative;
 }
 
 .footer-caldertextiles__wolfstar-link {
     font-weight: bold;
-    /* because the ::after is positioned absolutely */
-    position: relative;
 }
 
-.footer-caldertextiles__wolfstar-link:hover {
+.footer-caldertextiles__link:hover, .footer-caldertextiles__wolfstar-link:hover {
     color: hsl(var(--white));
 }
 
-.footer-caldertextiles__wolfstar-link::after {
+.footer-caldertextiles__link::after, .footer-caldertextiles__wolfstar-link::after {
     content: '';
     position: absolute;
-    background-color: var(--muted);
+    /* background-color: var(--muted); */
     height: 1px;
     width: 100%;
-    /* width: 100%; */
     border-radius: 2px;
-    bottom: -0.3rem;
-    left: 0;
+    bottom: -0.3rem; 
+    left: 0; 
 
     transform: scaleX(0);
     transition: transform 200ms ease-in-out;
 }
 
-.footer-caldertextiles__wolfstar-link:hover::after {
+.footer-caldertextiles__link:hover::after, .footer-caldertextiles__wolfstar-link:hover::after, .footer-caldertextiles__link:focus-visible::after, .footer-caldertextiles__wolfstar-link:focus-visible::after {
     transform: scaleX(1);
+}
+
+/* doing the background-color in separate ruleset in case we want different color underline for different links */
+.footer-caldertextiles__link::after, .footer-caldertextiles__wolfstar-link::after {
+    background-color: var(--muted);
+}
+
+.footer-caldertextiles__link:focus-visible, .footer-caldertextiles__wolfstar-link:focus-visible {
+    outline: none;
+    background-color: hsl(var(--white) / 0.25);
+}
+
+.footer-caldertextiles__link::after {
+    /* background-color: hsl(var(--white)); */
 }
 
 </style>
