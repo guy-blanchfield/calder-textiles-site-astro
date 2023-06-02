@@ -2,11 +2,12 @@
 import Layout from '../layouts/Layout.astro';
 import Hero from '../components/Hero.astro';
 import PageContentSection from '../components/PageContentSection.astro';
-import PictureSection from '../components/PictureSection.astro';
+// import PictureSection from '../components/PictureSection.astro';
+import EmptySection from '../components/EmptySection.astro';
 import ContactSection from '../components/ContactSection.astro';
 ---
 
-<Layout title="Welcome to Calder Textiles">
+<Layout title="Welcome to Calder Textiles" bodyClass="body__bg-image--aboutus">
 		
 		<Hero imageBase="sheep" imageAlt="Some Sheep">
 			<!-- using Fragment here, span also works, but fragment produces tidier markup -->
@@ -26,7 +27,11 @@ import ContactSection from '../components/ContactSection.astro';
 			</Fragment>
 		</PageContentSection>
 
-		<PictureSection imageBase="herd-in-field" />
+		<!-- get rid of this until we get webp versions of herd-in-field -->
+		<!-- <PictureSection imageBase="herd-in-field" /> -->
+		<!-- emptysection requires bodyClass="body-pagnamehere" to be passed into layout to get the bg image -->
+		<!-- use body-aboutus for now -->
+		<EmptySection />
 
 		<ContactSection />
 

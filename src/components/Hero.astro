@@ -46,7 +46,13 @@ const { imageBase, imageAlt } = Astro.props;
 <!-- not using min-vh-100 now, using calc and header has sticky-top -->
 <div class="hero">
     
-    <PictureFullWidth imageBase={imageBase} imageAlt={imageAlt} pictureClasses="hero__picture" imageClasses="hero__image" lazyLoad={false}/>
+    <PictureFullWidth 
+        imageBase={imageBase} 
+        imageAlt={imageAlt} 
+        pictureClasses="hero__picture" 
+        imageClasses="hero__image" 
+        lazyLoad={false}
+    />
 
     <!-- a div that fits perfectly over the image -->
     <!-- and has an alpha gradient background to darken the image to make the text more legible -->

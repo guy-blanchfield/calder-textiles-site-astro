@@ -15,9 +15,6 @@ export interface Props {
     bodyClass?: string;
 }
 
-// probably set isLoaded true unless we specifically set it false
-// i.e. when we want to use a preloader
-
 const { title, bodyClass = '' } = Astro.props;
 
 ---
@@ -44,7 +41,8 @@ const { title, bodyClass = '' } = Astro.props;
     <!-- NB google fonts automatically supplies regular, so weights and styles only need to be specified if you want more than regular  -->
     <link href="https://fonts.googleapis.com/css2?family=Martel&display=swap" rel="stylesheet">
 
-    <!-- google material icons -->
+    <!-- google material icons - was required for the mobile navmenu toggle icons -->
+    <!-- hopefully not anymore - using material symbols outlined -->
     <!-- <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"> -->
     <!-- google material symbols -->
     <!-- think we have to include the weights and optical sizes here -->
@@ -76,7 +74,7 @@ const { title, bodyClass = '' } = Astro.props;
 
 	</head>
 
-	<body class:list={bodyClass}>
+	<body class:list={['body__bg-image', {bodyClass}]}>
 
 		<Preloader />
         <Header />
@@ -95,6 +93,21 @@ const { title, bodyClass = '' } = Astro.props;
 <!-- see https://github.com/michalsnik/aos/issues/815#issuecomment-1500056742 -->
 <script src="../js/setup-aos.js"></script>
 
+<script define:vars={{bodyClass}}>
+
+    // add the body background image class when everything else has loaded
+    window.onload = () => {
+
+        const body = document.body;
+        // trim the rogue whitespace from bodyClass
+        // const addClass = trim()
+        console.log(`adding ${bodyClass}`);
+        body.classList.add(bodyClass);
+        // console.log(`body class added!`);
+
+    }
+</script>
+
 
 <style>
 
@@ -104,11 +117,21 @@ const { title, bodyClass = '' } = Astro.props;
 
 /* maybe this should go in global.css? */
 
-.body-aboutus {
-    /* fallback image if image-set is not supported */
-    background-image: url('/images/herd-in-field-1440x810.jpg');
+/* try adding this with js on the window load event */
+/* so it doesn't get loaded up front */
+/* (the hero and pagecontent covers it up so it's not required immediately) */
+
+/* we need a base class, so we're not repeating stuff */
+/* and the image reference can go in specific classes */
+
+.body__bg-image {
     background-attachment: fixed;
     background-size: cover;
+}
+
+.body__bg-image--aboutus {
+    /* fallback image if image-set is not supported */
+    background-image: url('/images/herd-in-field-1440x810.jpg');
 
     /* Re: 1x, 2x - browser will choose  the image that most closely matched the device dpr*/
     /* regardless of viewport width */
