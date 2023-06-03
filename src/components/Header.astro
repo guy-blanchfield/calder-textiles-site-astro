@@ -4,6 +4,30 @@
 // import Logo from '../images/design/logo-from-pdf.png';
 import Logo from '../images/design/logo-from-pdf-trim.png';
 
+// try astro-icons
+// see: coding in public / net ninja: Build a Static Site with Figma & Astro #6 - Astro Structure & Components
+// https://www.youtube.com/watch?v=0xiMkffs87g
+// around 12m 45s in
+
+// also here's a whole video about astro-icon
+// https://www.youtube.com/watch?v=8LRY7-985yE
+
+// if astro-icons doesn't work, it might need svgo adding to the config.mjs
+// see: https://www.youtube.com/watch?v=DLTVZFzjPDs 6m 44s
+// but it looks like this now comes as dependency of astro-icons
+
+// npm install and setup in #5 - Astro Intro & Setup:
+// https://www.youtube.com/watch?v=DLTVZFzjPDs&t=238s
+
+// NB needs autoprefixer and postcss!
+// npm i -D postcss autoprefixer
+// NB remember to add browserslist to package.json for the autoprefixer
+// don't think we need to add a postcss config file (postcss.config.cjs)
+// it's just for the open props and just-in-time props
+// see Build a Static Site with Figma & Astro #5 7mins
+
+import { Icon } from 'astro-icon';
+
 // NB! if this changes, --navbar-brand-logo-height in global.css must be updated accordingly
 const logoSize = {
     width: 140,
@@ -47,15 +71,38 @@ const currentPath = Astro.url.pathname;
             <button 
                 class="navbar-toggler" 
                 type="button" 
+                aria-expanded="false"
+                aria-label="Toggle Mobile Navigation Menu" 
                 data-bs-toggle="collapse" 
                 data-bs-target="#navmenu"
             >
                 <!-- <span class="navbar-toggler-icon"></span> -->
 
                 <!-- try google material icons -->
-                <!-- consider installing astro-icons and integrating google material icons with that --> 
+                <!-- consider installing astro-icon and integrating google material icons with that --> 
                 <!-- just to see how it works -->
-                <span class="material-icons">menu</span>
+                <!-- was this: <span class="material-icons">menu</span> -->
+                <!-- try this (using local SVG downloaded from Google Material Symbols) -->
+                <!-- loads the SVG in src/icons -->
+                <!-- might need some kind of size attribute, works if its got width or height properties in the css -->
+                <!-- and it'll need some styling so give it a class (was class="material-icons") -->
+
+                <!-- with local svgs -->
+                <!-- <Icon name="menu_FILL0_wght400_GRAD0_opsz48" class="navbar-caldertextiles__toggler-icon navbar-caldertextiles__toggler-icon--menu" /> -->
+                <!-- <Icon name="close_FILL0_wght400_GRAD0_opsz48" class="navbar-caldertextiles__toggler-icon navbar-caldertextiles__toggler-icon--close" /> -->
+
+                <!-- with icon sets / library -->
+                <!-- see https://icones.js.org/collection/material-symbols -->
+
+                <!-- ok material symbols doesn't work, try material icons, yep (ic:baseline-menu) -->
+                <!-- try feather icon, yep (feather:menu) -->
+
+                <!-- think accessibility wise it's ok if we have two icons inside the button -->
+                <!-- it's not going to affect the button behaviour (toggle), and the aria label is on the button, the icons are purely decorative -->
+                <!-- the css should hide one icon at a time anyway, even from screen readers  -->
+                <Icon name="ic:baseline-menu" class="navbar-caldertextiles__toggler-icon navbar-caldertextiles__toggler-icon--menu" />
+                <Icon name="ic:baseline-close" class="navbar-caldertextiles__toggler-icon navbar-caldertextiles__toggler-icon--close" />
+
             </button>
             <!-- NB! id="navmenu" not #navmenu! -->
             <div class="collapse navbar-collapse" id="navmenu">
@@ -102,17 +149,8 @@ const currentPath = Astro.url.pathname;
 
 <!-- google material icon toggle script -->
 <!-- should be ok to bundle -->
-<script>
-
-    // material icons 'uses a typographic feature called ligatures, which allows rendering of an icon glyph simply by using its textual name'
-    // so changing the text changes the icon
-    const hamburgerMenuButton = document.querySelector('.navbar-toggler');
-    const hamburgerMenuButtonSpan = document.querySelector('.navbar-toggler span');
-
-    hamburgerMenuButton.addEventListener('click', () => {
-        hamburgerMenuButtonSpan.textContent = hamburgerMenuButtonSpan.textContent === 'menu' ? 'close' : 'menu';
-    });
-</script>
+<!-- not required now we're using css selectors to show and hide the icons -->
+<!-- archived in hamburger-toggle-old.js -->
 
 <style>
 
@@ -243,4 +281,24 @@ const currentPath = Astro.url.pathname;
     max-width: 100%;
 }
 
+.navbar-caldertextiles__toggler-icon {
+    /* NB fill instead of color for SVG */
+    fill: hsl(var(--white) / 0.5);
+    width: 2rem;
+    height: 2rem;
+    /* think display: none should be ok here accessibility wise */
+    display: none;
+}
+
+/* use .navbar-toggler's aria-expanded attr to show / hide the appropriate icon */
+
+.navbar-toggler[aria-expanded="false"] .navbar-caldertextiles__toggler-icon--menu {
+    display: block;
+    /* fill: firebrick; */
+}
+
+.navbar-toggler[aria-expanded="true"] .navbar-caldertextiles__toggler-icon--close {
+    display: block;
+    /* fill: hotpink; */
+}
 </style>
