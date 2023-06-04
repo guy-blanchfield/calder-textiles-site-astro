@@ -20,6 +20,7 @@ import googleMapsURL from '../data/map-api-key';
 
 <!-- think this script needs to be is:inline so it blocks -->
 <!-- it needs to have executed before the external google script calls initMap -->
+<!-- tried deferring it - made no difference to lighthouse performance -->
 <script is:inline>
     
     // Initialize and add the map
