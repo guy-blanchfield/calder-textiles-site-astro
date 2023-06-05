@@ -19,17 +19,51 @@ const { imageBase, imageAlt = '' } = Astro.props;
 
 <section class="section-picture">
 
-    <PictureFullWidth imageBase={imageBase} pictureClasses="bigpicture__picture" imageClasses="bigpicture__image" />
+    <!-- lazyLoad is true by default, you could leave it out here -->
+    <!-- NB! from web.dev https://web.dev/lazy-loading-images/ -->
+    <!-- One thing you will want to avoid is lazy loading images that are in the viewport during startup. -->
+
+    <PictureFullWidth imageBase={imageBase} pictureClasses="bigpicture__picture" imageClasses="bigpicture__image"/>
 
 </section>
+
+<script>
+    // tried using a window load event, didn't help the performance
+    // using setTimeout does though, longer the timeout, higher the score, seemingly
+    // bit hacky though!
+    // remove display:none after a timeout
+    const pictureTimeOut = setTimeout(() => {
+        const sectionPicture = document.querySelector('.section-picture');
+        sectionPicture.classList.add('section-picture--show');
+    }, 100);
+</script>
 
 
 
 <style>
 
+
+/* need to find a way to lazy load this, or hide it until it's required */
+/* and still have it behave like a background, i.e. fixed to the viewport */
+/* performance hit is massive if it has to load up front */
+
+/* ok, what we know */
+/* display: none takes it out of the paint, so performance is good (97 with display: none) */
+
 .section-picture {
+
+    /* trying some fixed backgroundy type behaviour */
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+
+    display: none;
+
+    z-index: -1;
     /* position: relative; */
-    height: 30rem;
+    /* height: 30rem; */
     /* border: 1px solid hotpink; */
     overflow: hidden;
 }
@@ -40,6 +74,10 @@ const { imageBase, imageAlt = '' } = Astro.props;
         height: 0;
     }
 
+}
+
+.section-picture--show {
+    display: block;
 }
 
 </style>

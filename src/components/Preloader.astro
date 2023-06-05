@@ -93,7 +93,9 @@
 
     .loader--loading {
         /* background-color: hsl(var(--darkergrey)); */
-        transition: opacity 0.5s, visibility 0.5s;
+        /* visibility isn't transitionable? */
+        /* transition: opacity 0.5s, visibility 0.5s; */
+        transition: opacity 0.5s;
     }
 
     .loader--loading::after {

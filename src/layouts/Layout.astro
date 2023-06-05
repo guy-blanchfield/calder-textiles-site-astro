@@ -29,6 +29,7 @@ const { title, bodyClass = '' } = Astro.props;
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Calder Textiles is one of the UK's foremost woollen yarn spinners with a world-wide reputation for excellence.">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta name="generator" content={Astro.generator} />
 
@@ -98,8 +99,7 @@ const { title, bodyClass = '' } = Astro.props;
 
 <!-- seems a bit hacky but this is the only way it seems to work in astro -->
 <!-- see https://github.com/michalsnik/aos/issues/815#issuecomment-1500056742 -->
-<!-- this is affecting lighthouse performance, probably to do with critical chaining -->
-<!-- see if there's a better place to put it -->
+<!-- don't worry about lighthouse performance in the dev version build version takes care of it -->
 <script src="../js/setup-aos.js"></script>
 
 
@@ -110,6 +110,11 @@ const { title, bodyClass = '' } = Astro.props;
 /* maybe there might be other variations as well in the future, say bg colour */
 
 /* maybe this should go in global.css? */
+
+/* Ok, background-image loses us 4 lighthouse performance points!! 8 as jpg! */
+/* it is massive, even as webp it's still 1,334k */
+/* so probably worth exploring other techniques */
+
 
 .body-aboutus {
     /* fallback image if image-set is not supported */
@@ -125,11 +130,11 @@ const { title, bodyClass = '' } = Astro.props;
 
     background-image: -webkit-image-set(
         url('/images/herd-in-field-1440x810.jpg') 1x,
-        url('/images/herd-in-field-2560x1440.jpg') 2x
+        url('/images/herd-in-field-2560x1440.webp') 2x
     );
     background-image: image-set(
         url('/images/herd-in-field-1440x810.jpg') 1x,
-        url('/images/herd-in-field-2560x1440.jpg') 2x
+        url('/images/herd-in-field-2560x1440.webp') 2x
     );
 
 }
