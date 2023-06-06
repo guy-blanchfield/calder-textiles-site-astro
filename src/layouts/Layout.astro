@@ -63,6 +63,9 @@ const { title, bodyClass = '' } = Astro.props;
     <!-- icon can't use rel=preload -->
 	<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
+    <!-- tried deferred style for unhiding the section picture (acting as background image) -->
+    <!-- worked but didn't help performance score -->
+
 	<!-- cdn scripts -->
 
 	<!-- polyfill probably only required for ie support for google maps javascript api -->
@@ -115,6 +118,9 @@ const { title, bodyClass = '' } = Astro.props;
 /* it is massive, even as webp it's still 1,334k */
 /* so probably worth exploring other techniques */
 
+/* probably won't do a backround image */
+/* but keep this class for now, just in case */
+
 
 .body-aboutus {
     /* fallback image if image-set is not supported */
@@ -138,6 +144,12 @@ const { title, bodyClass = '' } = Astro.props;
     );
 
 }
+
+/* .body-test-bg {
+    
+} */
+
+
 
 /* checked in devtools > network, browser will not download any of the above images if this media query is met */
 

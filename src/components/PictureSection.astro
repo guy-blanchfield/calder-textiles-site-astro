@@ -23,21 +23,11 @@ const { imageBase, imageAlt = '' } = Astro.props;
     <!-- NB! from web.dev https://web.dev/lazy-loading-images/ -->
     <!-- One thing you will want to avoid is lazy loading images that are in the viewport during startup. -->
 
-    <PictureFullWidth imageBase={imageBase} pictureClasses="bigpicture__picture" imageClasses="bigpicture__image"/>
+    <PictureFullWidth imageBase={imageBase} pictureClasses="bigpicture__picture" imageClasses="bigpicture__image" lazyLoad={true} />
+
+    
 
 </section>
-
-<script>
-    // tried using a window load event, didn't help the performance
-    // using setTimeout does though, longer the timeout, higher the score, seemingly
-    // bit hacky though!
-    // remove display:none after a timeout
-    const pictureTimeOut = setTimeout(() => {
-        const sectionPicture = document.querySelector('.section-picture');
-        sectionPicture.classList.add('section-picture--show');
-    }, 100);
-</script>
-
 
 
 <style>
@@ -50,22 +40,28 @@ const { imageBase, imageAlt = '' } = Astro.props;
 /* ok, what we know */
 /* display: none takes it out of the paint, so performance is good (97 with display: none) */
 
+/* yeah, going to abandon this idea for now */
+/* just have the image in the flow of the document as a section */
+
 .section-picture {
 
+    /* position: sticky;
+    top: 10px; */
+
     /* trying some fixed backgroundy type behaviour */
-    position: fixed;
+    /* position: fixed;
     top: 0;
     left: 0;
     bottom: 0;
-    right: 0;
+    right: 0; */
 
-    display: none;
+    /* display: none; */
 
-    z-index: -1;
+    /* z-index: -1; */
     /* position: relative; */
     /* height: 30rem; */
     /* border: 1px solid hotpink; */
-    overflow: hidden;
+    /* overflow: hidden; */
 }
 
 @media(max-width: 768px) {
@@ -76,8 +72,8 @@ const { imageBase, imageAlt = '' } = Astro.props;
 
 }
 
-.section-picture--show {
+/* .section-picture--show {
     display: block;
-}
+} */
 
 </style>
