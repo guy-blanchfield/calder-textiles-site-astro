@@ -47,6 +47,19 @@ const landscapeSrcset = `/images/${imageBase}-960x540.jpg 960w, /images/${imageB
 const landscapeSrcsetWebp = `/images/${imageBase}-960x540.webp 960w, /images/${imageBase}-1440x810.webp 1440w, /images/${imageBase}-1920x1080.webp 1920w, /images/${imageBase}-2560x1440.webp 2560w`; // 16:9
 const fallbackSrc = `/images/${imageBase}-960x540.jpg`;
 
+
+// need to create image path variable to pass into style
+// using define:vars
+// for the 20px blurry background-image, that shows while the big picture is loading
+// it's used as a background-image on section-picture__picture (see the style section below)
+
+// no portrait versions for the picture section so the 20px version will always 20x11 (16x9)
+// this'll probably have to go in public
+
+// NB has to be the whole background-image value - url() and all
+
+const backgroundImage = `url(/images/${imageBase}-20x11.jpg)`;
+
 ---
 
 
@@ -106,7 +119,7 @@ const fallbackSrc = `/images/${imageBase}-960x540.jpg`;
     
 </picture>
 
-<style>
+<style define:vars={{backgroundImage}}>
 
 .hero__picture {
     position: absolute;
@@ -119,7 +132,7 @@ const fallbackSrc = `/images/${imageBase}-960x540.jpg`;
     /* border: 1px solid red; */
 }
 
-.hero__image, .bigpicture__image {
+.hero__image, .section-picture__image {
     /* no pointer events because it's a background */
     pointer-events: none;
     max-width: initial;
@@ -144,7 +157,7 @@ const fallbackSrc = `/images/${imageBase}-960x540.jpg`;
 }
 
 
-.bigpicture__picture {
+.section-picture__picture {
 
     /* definitely need the width and height to make the picture */
     /* (and hence the image) fill its container (section-bigpicture) */ 
@@ -152,13 +165,32 @@ const fallbackSrc = `/images/${imageBase}-960x540.jpg`;
     height: 100%;
     /* border: 1px solid red; */
 
+    /* position: relative; */
+    /* opacity: 0; */
+    /* background-image: url('/images/herd-in-field-20x11.jpg'); */
+    background-image: var(--backgroundImage);
+    /* background-color: #f0f; */
+    background-size: cover;
+    /* border: 2px solid aqua; */
+
+    /* ok picture's default display is not block, must be inline I suppose */
+    /* so the picture wasn't expanding to contain the img */
+    /* img was just overflowing it */
+    /* this should fix that */
+    display: block;
+
+}
+
+.section-picture__picture > img {
+    opacity: 0;
 }
 
 @media(max-width: 768px) {
 
-    .bigpicture__picture {
+    .section-picture__picture {
         display: none;
     }
 
 }
+
 </style>

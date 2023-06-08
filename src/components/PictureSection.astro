@@ -23,8 +23,7 @@ const { imageBase, imageAlt = '' } = Astro.props;
     <!-- NB! from web.dev https://web.dev/lazy-loading-images/ -->
     <!-- One thing you will want to avoid is lazy loading images that are in the viewport during startup. -->
 
-    <PictureFullWidth imageBase={imageBase} pictureClasses="bigpicture__picture" imageClasses="bigpicture__image" lazyLoad={true} />
-
+    <PictureFullWidth imageBase={imageBase} pictureClasses="section-picture__picture" imageClasses="section-picture__image" lazyLoad={true} />
     
 
 </section>
