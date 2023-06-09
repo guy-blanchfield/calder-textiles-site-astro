@@ -58,7 +58,8 @@ const fallbackSrc = `/images/${imageBase}-960x540.jpg`;
 
 // NB has to be the whole background-image value - url() and all
 
-const backgroundImage = `url(/images/${imageBase}-20x11.jpg)`;
+// image-set - remember to put the best format first it'll use the first compatible format it comes across
+const backgroundImageSet = `url(/images/${imageBase}-20x11.webp) type("image/webp"), url(/images/${imageBase}-20x11.jpg) type("image/jpeg")`;
 
 ---
 
@@ -119,7 +120,31 @@ const backgroundImage = `url(/images/${imageBase}-20x11.jpg)`;
     
 </picture>
 
-<style define:vars={{backgroundImage}}>
+<script>
+    // wait for the image to load, then transition the opacity
+    // think this script will be scoped to this component
+    // so just grab the img with class single-picture__image
+    // so we don't bother with the hero image
+
+    const sectionPicture = document.querySelector('.section-picture__picture');
+    const sectionPictureImg = sectionPicture.querySelector('img');
+    // console.log(sectionPictureImg);
+    function imgLoaded() {
+        sectionPicture.classList.add('section-picture__picture--show');
+        // console.log(`imgLoaded!`);
+    }
+
+    // check if the image is loaded first
+    // otherwise add a load event listener
+    if (sectionPictureImg.complete) {
+        imgLoaded();
+    } else {
+        sectionPictureImg.addEventListener('load', imgLoaded);
+    }
+
+</script>
+
+<style define:vars={{backgroundImageSet}}>
 
 .hero__picture {
     position: absolute;
@@ -168,7 +193,10 @@ const backgroundImage = `url(/images/${imageBase}-20x11.jpg)`;
     /* position: relative; */
     /* opacity: 0; */
     /* background-image: url('/images/herd-in-field-20x11.jpg'); */
-    background-image: var(--backgroundImage);
+    /* background-image: var(--backgroundImage); */
+    /* background-image: image-set(var(--backgroundImage)); */
+    background-image: image-set(var(--backgroundImageSet));
+    /* background-image: image-set(url(/images/herd-in-field-20x11.jpg) type("image/jpeg"), url(/images/herd-in-field-20x11.jpg) type("image/webp")); */
     /* background-color: #f0f; */
     background-size: cover;
     /* border: 2px solid aqua; */
@@ -181,8 +209,15 @@ const backgroundImage = `url(/images/${imageBase}-20x11.jpg)`;
 
 }
 
-.section-picture__picture > img {
+/* the show/hide class has to go on the containing element (picture) not img */
+
+.section-picture__picture img {
     opacity: 0;
+    transition: opacity 250ms ease-in;
+}
+
+.section-picture__picture--show img {
+    opacity: 1;
 }
 
 @media(max-width: 768px) {
