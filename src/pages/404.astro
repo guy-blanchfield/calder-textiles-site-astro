@@ -1,0 +1,54 @@
+---
+import Layout from '../layouts/Layout.astro';
+// import Hero from '../components/Hero.astro';
+import PageContentSection from '../components/PageContentSection.astro';
+// import PictureSection from '../components/PictureSection.astro';
+// import ContactSection from '../components/ContactSection.astro';
+// import EmptySection from '../components/EmptySection.astro';
+---
+
+<Layout title="Page Not Found : Calder Textiles">
+
+		<PageContentSection heading="Page Not Found" bgColour="var(--lightbluegrey)">
+			<Fragment slot="page-content">
+				<p>Sorry, the page you're looking for can't be found.</p>
+				<p>Choose a page from the menu, or return to the <a href="./" class="page-content__link">home page</a>.</p>
+			</Fragment>
+		</PageContentSection>
+
+		<!-- just take this out for a while, till we get the webps for herd-in-field -->
+		<!-- <EmptySection />  -->
+		<!-- <PictureSection imageBase="herd-in-field" /> -->
+		<!-- <ContactSection /> -->
+
+</Layout>
+
+<style>
+
+
+.page-content__link, .page-content__link:is(:hover, :focus-visible) {
+    text-decoration: none;
+    color: hsl(var(--offwhite));
+    position: relative;
+    outline: none;
+}
+
+.page-content__link::after {
+    content: '';
+    position: absolute;
+    background-color: hsl(var(--offwhite) / 0.5);
+    height: 1px;
+    width: 100%;
+    border-radius: 2px;
+    bottom: -0.3rem; 
+    left: 0; 
+
+    transform: scaleX(0);
+    transition: transform 200ms ease-in-out;
+}
+
+.page-content__link:is(:hover, :focus-visible)::after {
+    transform: scaleX(1);
+}
+
+</style>

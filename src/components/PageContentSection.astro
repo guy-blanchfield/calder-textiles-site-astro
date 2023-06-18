@@ -66,6 +66,11 @@ const { heading, bgColour = "var(--lightbluegrey)" } = Astro.props;
 <style define:vars={{bgColour}}>
 
 .section-pagecontent {
+
+    /* to make the section stretch to fit main (if there's no other sections) */
+    /* main has display: flex, flex-direction: column */
+    flex: 1;
+
     color: hsl(var(--white));
     background-color: hsl(var(--bgColour));
     /* background-color: rgb(127, 141, 150); */

@@ -123,23 +123,29 @@ const backgroundImageSet = `url(/images/${imageBase}-20x11.webp) type("image/web
 <script>
     // wait for the image to load, then transition the opacity
     // think this script will be scoped to this component
-    // so just grab the img with class single-picture__image
+    // so just grab the img inside picture with class section-picture__picture
     // so we don't bother with the hero image
 
-    const sectionPicture = document.querySelector('.section-picture__picture');
-    const sectionPictureImg = sectionPicture.querySelector('img');
-    // console.log(sectionPictureImg);
-    function imgLoaded() {
-        sectionPicture.classList.add('section-picture__picture--show');
-        // console.log(`imgLoaded!`);
-    }
+    // all of this needs to be conditional on the section picture actually being present
 
-    // check if the image is loaded first
-    // otherwise add a load event listener
-    if (sectionPictureImg.complete) {
-        imgLoaded();
-    } else {
-        sectionPictureImg.addEventListener('load', imgLoaded);
+    if (document.querySelector('.section-picture__picture')) {
+
+        const sectionPicture = document.querySelector('.section-picture__picture');
+        const sectionPictureImg = sectionPicture.querySelector('img');
+        // console.log(sectionPictureImg);
+        function imgLoaded() {
+            sectionPicture.classList.add('section-picture__picture--show');
+            // console.log(`imgLoaded!`);
+        }
+
+        // check if the image is loaded first
+        // otherwise add a load event listener
+        if (sectionPictureImg.complete) {
+            imgLoaded();
+        } else {
+            sectionPictureImg.addEventListener('load', imgLoaded);
+        }
+
     }
 
 </script>

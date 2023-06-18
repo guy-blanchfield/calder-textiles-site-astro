@@ -13,11 +13,16 @@ import '../styles/global.css';
 export interface Props {
 	title: string;
     bodyClass?: string;
+    // bodyBgColour?: string;
 }
 
 // probably set isLoaded true unless we specifically set it false
 // i.e. when we want to use a preloader
 
+// set bodyBgColour to default to actual white, rather than the var --white
+// just to be on the safe side, maybe reconsider in future
+
+// const { title, bodyClass = '', bodyBgColour = '0 0% 100%' } = Astro.props;
 const { title, bodyClass = '' } = Astro.props;
 
 ---
@@ -106,7 +111,15 @@ const { title, bodyClass = '' } = Astro.props;
 <script src="../js/setup-aos.js"></script>
 
 
+<!-- <style define:vars={{bodyBgColour}}> -->
 <style>
+
+/* so the layout component can receive a prop for background-color */
+/* it'll default to white */
+
+/* body {
+    background-color: hsl(var(--bodyBgColour));
+} */
 
 /* various classes that can be applied by passing a prop bodyClass to the Layout layout */
 /* each one applies a different background image */

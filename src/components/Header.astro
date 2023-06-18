@@ -243,9 +243,11 @@ const currentPath = Astro.url.pathname;
 
 }
 
-
-.navbar-caldertextiles .nav-link:hover, .navbar-caldertextiles .nav-link:focus-visible {
+.navbar-caldertextiles .nav-link:is(:hover, :focus-visible) {
+/* .navbar-caldertextiles .nav-link:hover, .navbar-caldertextiles .nav-link:focus-visible { */
+    /* this definitely works */
     color: hsl(var(--white));
+    /* color: fuchsia; */
 }
 
 .navbar-caldertextiles .nav-link:focus-visible {
@@ -313,7 +315,12 @@ const currentPath = Astro.url.pathname;
 }
 
 .navbar-caldertextiles__logo {
-    padding-inline-start: 1rem;
+    /* padding-inline-start: 1rem; */
+    padding-inline: 1rem;
+}
+
+.navbar-caldertextiles__logo:focus-visible {
+    outline: 1px dotted hsl(var(--lightbluegrey));
 }
 
 .navbar-caldertextiles__logo-img {

@@ -58,11 +58,18 @@ body {
 
 /* main fills all the space between header & footer */
 main { 
+    /* background-color: fuchsia; */
     flex: 1; 
     /* shorthand for: flex-grow: 1, flex-shrink 0, flex-basis 0 */
     /* default values are: 0 1 auto */
 
     /* NB body flex-direction is column so these all relate to the vertical */
+
+    /* make main display: flex so that the sections can stretch to fit if necessary */
+    /* e.g. if there's only one section it can stretch to fill all of main */
+    /* (main strecthes to fit the available space between header and footer) */
+    display: flex;
+    flex-direction: column;
 }
 
 header{ 

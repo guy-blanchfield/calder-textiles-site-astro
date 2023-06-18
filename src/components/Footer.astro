@@ -52,11 +52,13 @@
     transition: transform 200ms ease-in-out;
 }
 
+/* tried doing this with :is, ended up harder to read and still didn't work! */
 .footer-caldertextiles__link:hover::after, .footer-caldertextiles__wolfstar-link:hover::after, .footer-caldertextiles__link:focus-visible::after, .footer-caldertextiles__wolfstar-link:focus-visible::after {
     transform: scaleX(1);
 }
 
 /* doing the background-color in separate ruleset in case we want different color underline for different links */
+/* tried this with :is also nope */
 .footer-caldertextiles__link::after, .footer-caldertextiles__wolfstar-link::after {
     background-color: var(--muted);
 }
