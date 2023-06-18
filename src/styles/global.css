@@ -42,6 +42,9 @@
     --navbar-brand-logo-height: 51px;
 
     --navbar-vertical-padding: 1rem;
+
+    /* try putting the calculation for the header height / hero height here as a global var */
+    --header-height-calc: calc(var(--navbar-brand-logo-height) + (var(--navbar-vertical-padding)*2) + 0.5rem);
     
 }
 

@@ -150,7 +150,8 @@ const { imageBase, imageAlt } = Astro.props;
 /* those vars aren't available when this parses, just add 0.5rem */
 /* why aren't these vertical padding values doubled as you'd expect??? */
 /* min-height: calc(100vh - (var(--navbar-brand-logo-height) + (var(--navbar-vertical-padding)*2) + (var(--bs-navbar-padding-y)*2))); */
-min-height: calc(100vh - (var(--navbar-brand-logo-height) + (var(--navbar-vertical-padding)*2) + 0.5rem));
+/* min-height: calc(100vh - (var(--navbar-brand-logo-height) + (var(--navbar-vertical-padding)*2) + 0.5rem)); */
+min-height: calc(100vh - var(--header-height-calc));
 /* close enough! */
 
 /* NB bootstrap uses browser default root font-size, usually 16px */

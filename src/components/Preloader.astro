@@ -14,6 +14,11 @@
 
 <script>
 
+    // try something like this
+    // (it's ok we don't need cookie consent to do this!)
+    // (sesion storage is considered strictly necessary)
+    // https://stackoverflow.com/questions/48054601/how-to-show-website-preloader-only-once
+
     // right, what's gonna happen with the preloader is this.
     // if it takes more than a certain time to load, we add a --loading class to the preloader div
     // the --loading class has the ::after so the spinner appears
@@ -88,13 +93,14 @@
     }
 
     .loader--blank {
-        background-color: hsl(var(--darkblue));
+        /* background-color: hsl(var(--darkblue)); */
     }
 
     .loader--loading {
         /* background-color: hsl(var(--darkergrey)); */
         /* visibility isn't transitionable? */
         /* transition: opacity 0.5s, visibility 0.5s; */
+        background-color: hsl(var(--darkblue));
         transition: opacity 0.5s;
     }
 
