@@ -163,7 +163,21 @@ const currentPath = Astro.url.pathname;
 
 <style>
 
+header {
+    
+}
+
 .header-caldertextiles {
+    /* the height: 0 setting here stops the shaking text in firefox as the menu is expanding */
+    /* it standardises the behaviour of the expanding menu */
+    /* i.e. it always expands over the the rest of the content, never pushes it down */
+    /* how does it work? I dunno, but it does! */
+
+    /* think it's because the changing size of the sticky element (because of the expanding menu inside it) */
+    /* causes it to sometimes behave as position sticky and sometimes as position relative */
+    
+    height: 0;
+    overflow: visible;
     
 }
         
