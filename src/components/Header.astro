@@ -2,7 +2,7 @@
 
 //import { Image, Picture } from '@astrojs/image/components';
 // import Logo from '../images/design/logo-from-pdf.png';
-import Logo from '../images/design/logo-from-pdf-trim.png';
+// import Logo from '../images/design/logo-from-pdf-trim.png';
 
 // try astro-icons
 // see: coding in public / net ninja: Build a Static Site with Figma & Astro #6 - Astro Structure & Components
@@ -73,7 +73,11 @@ const currentPath = Astro.url.pathname;
             <!-- was h1 with logo image, but probably does more harm than good in SEO terms -->
             <!-- The lead part of the hero text should probably be the h1 -->
             <a class="navbar-brand navbar-caldertextiles__logo" href="./">
-                <img src={Logo} alt="Calder Textiles" width={logoSize.width} height={logoSize.height} class="navbar-caldertextiles__logo-img">
+                <!-- <img src={Logo} alt="Calder Textiles" width={logoSize.width} height={logoSize.height} class="navbar-caldertextiles__logo-img"> -->
+                <!-- now using astro-icon with local svg for the logo (same in footer) -->
+                <!-- hopefully astro-icon will streamline the svg a bit -->
+                <!-- any svgs that you want to use with astro-icon need to be in src/icons -->
+                <Icon name="caldertextiles-logo-white-crop" width={logoSize.width} class="navbar-caldertextiles__logo-svg" />
             </a>
 
             <!-- in between the brand link and the navbar collapse we need the hamburger -->
@@ -190,6 +194,8 @@ header {
     /* --header-height-calc is defined in global.css */
     height: var(--header-height-calc);
     overflow: visible;
+    /* border: 1px solid fuchsia; */
+    background-color: var(--accent);
     
 }
         
@@ -204,7 +210,7 @@ header {
     padding-bottom: var(--navbar-vertical-padding);
 
     /* min-height: var(--navbar-height); */
-    background-color: var(--accent);
+    /* bg colour needs to be on header bc header now has a fixed height */
 }
 
 .navbar-caldertextiles__container {
@@ -292,7 +298,7 @@ header {
 /* nah that's tidier but still doesn't work bc the aria-expanded remains true unless the button gets toggled */
 /* i.e. just resizing the window won't do it */
 
-/* gonna hace to settle for a media query */
+/* gonna have to settle for a media query */
 /* we're using one for the desktop menu styling anyway! */
 
 @media (max-width: 991px) {
@@ -343,14 +349,33 @@ header {
 .navbar-caldertextiles__logo {
     /* padding-inline-start: 1rem; */
     padding-inline: 1rem;
+    /* img:-moz-loading { */
+  /* visibility: hidden; */
 }
+
+/* more padding for anything bigger than mobile */
+@media (min-width: 768px) {
+    .navbar-caldertextiles__logo {
+        padding-inline-start: 2rem;
+    }
+}
+
 
 .navbar-caldertextiles__logo:focus-visible {
     outline: 1px dotted hsl(var(--lightbluegrey));
 }
 
 .navbar-caldertextiles__logo-img {
-    max-width: 100%;
+
+    /* not sure what this was doing, this should be covered by the bs reset */
+    /* max-width: 100%; */
+}
+
+/* to fix the weird flah of alt text in firefox */
+/* see: https://stackoverflow.com/questions/68166235/firefox-alt-text-appears-while-loading-image */
+/* this might not be necessary when the logo is SVG - keep an eye on it */
+.navbar-caldertextiles__logo-img:-moz-loading {
+    visibility: hidden;
 }
 
 .navbar-caldertextiles__toggler-icon {

@@ -1,3 +1,24 @@
+/* ---------------- @fontface stuff ------------------- */
+
+@font-face {
+    font-family: 'Baskervville';
+    src: url('/fonts/baskervville-regular-webfont.woff2') format('woff2'),
+         url('/fonts/baskervville-regular-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'Baskervville';
+    src: url('/fonts/baskervville-italic-webfont.woff2') format('woff2'),
+         url('/fontsbaskervville-italic-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: italic;
+
+}
+
+
 /* :root for global custom properties (variables) */
 
 :root {
@@ -9,6 +30,8 @@
     /* --bs-body-font-family: 'Roboto', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; */
     
     /* ----------- colours ------------- */
+
+    /* navy #2c3446 */
     
     --darkergrey: 220 5% 20%;
     --midbluegrey: 204 9% 43%;
@@ -91,7 +114,7 @@ footer {
 /* otherwise we have to update every heading class */
 /* everytime we decide to change the font */
 .serif {
-    font-family: 'Martel', 'Georgia', serif;
+    font-family: 'Baskervville', 'Martel', 'Georgia', serif;
 }
 
 /* tailwind calls its nowrap utility whitespace-nowrap */

@@ -14,7 +14,8 @@ export interface Props {
     imageAlt: string;
 }
 
-
+// might need an extra prop here to determine whether hero image needs the gradient overlay
+// or maybe just a classlist to pass to the overlay div
 
 const { imageBase, imageAlt } = Astro.props;
 
@@ -49,7 +50,7 @@ const { imageBase, imageAlt } = Astro.props;
 <!-- not using min-vh-100 now, using calc and header has sticky-top -->
 <div class="hero">
     
-    <PictureFullWidth imageBase={imageBase} imageAlt={imageAlt} pictureClasses="hero__picture" imageClasses="hero__image" lazyLoad={false}/>
+    <PictureFullWidth imageBase={imageBase} imageAlt={imageAlt} pictureClasses="hero__picture picture--blur-load" imageClasses="hero__image" lazyLoad={false}/>
 
     <!-- a div that fits perfectly over the image -->
     <!-- and has an alpha gradient background to darken the image to make the text more legible -->
@@ -152,19 +153,13 @@ const { imageBase, imageAlt } = Astro.props;
 /* min-height: calc(100vh - (var(--navbar-brand-logo-height) + (var(--navbar-vertical-padding)*2) + (var(--bs-navbar-padding-y)*2))); */
 /* min-height: calc(100vh - (var(--navbar-brand-logo-height) + (var(--navbar-vertical-padding)*2) + 0.5rem)); */
 min-height: calc(100vh - var(--header-height-calc));
+
 /* close enough! */
 
 /* NB bootstrap uses browser default root font-size, usually 16px */
 
-
-/* display: inline-block; */
 overflow: hidden;
 position: relative;
-/* width 100% because it needs to fill its parent (it's behaving like a background) */
-
-/* create new stacking context for the hero, so that picture can act as background-image */
-/* isolation: isolate; */
-/* maybe just try to use universal z-index for now */
 
 /* if we do this with grid, we don't need 'position' to make z-index work */
 /* so that might be worth looking into */
@@ -189,7 +184,6 @@ z-index: 1;
 width: 100%;
 height: 100%;
 /* background: linear-gradient(to left, hsl(0 0 0 / 0.9), hsl(0 0 0 / 0)); */
-background: linear-gradient(to right top, hsl(0 0% 0% / .5), hsl(0 0% 0% / 0));
 
 /* importantly we need padding-top to be the height of the navbar (which is position fixed) */
 /* try 6rem for now, it's an approximation */
@@ -197,7 +191,23 @@ background: linear-gradient(to right top, hsl(0 0% 0% / .5), hsl(0 0% 0% / 0));
 padding-top: 6rem;
 
 /* border: 1px solid green; */
+
+/* NB! background now being applied with adjacent sibling selector with :global selector below */
+/* it needs to be global, because the two siblings are in different components, so have different scope */
+
 }
+
+/* only apply the opacity gradient background if the hero picture has loaded and is showing */
+/* i.e. has class 'picture--show' */
+/* using adjacent sibling selector */
+
+/* the adjacent sibling selctor has to be :global */
+/* because the two siblings are in different components, so have different scope */
+:global(.picture--show + .hero__overlay) {
+    background: linear-gradient(to right top, hsl(0 0% 0% / .5), hsl(0 0% 0% / 0));
+}
+
+
 
 .hero__text {
 /* padding-top: 100px; */

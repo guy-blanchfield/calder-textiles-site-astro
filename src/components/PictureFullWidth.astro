@@ -59,6 +59,9 @@ const fallbackSrc = `/images/${imageBase}-960x540.jpg`;
 // NB has to be the whole background-image value - url() and all
 
 // image-set - remember to put the best format first it'll use the first compatible format it comes across
+// const backgroundImageSet = `url(/images/${imageBase}-50x28.webp) type("image/webp"), url(/images/${imageBase}-50x28.jpg) type("image/jpeg")`;
+// tried 50px images - nah, 20 probably better
+
 const backgroundImageSet = `url(/images/${imageBase}-20x11.webp) type("image/webp"), url(/images/${imageBase}-20x11.jpg) type("image/jpeg")`;
 
 ---
@@ -82,7 +85,7 @@ const backgroundImageSet = `url(/images/${imageBase}-20x11.webp) type("image/web
     <!-- https://cloudfour.com/thinks/responsive-images-101-part-3-srcset-display-density/ -->
 
     <!-- "The moment you move beyond providing alternate densities of a fixed width img element, the display density descriptor becomes unwieldy and inadequate to the task." -->
-    <!-- so density desriptor is a no-no then -->
+    <!-- so density descriptor is a no-no then -->
 
     <!-- NB on tests with this laptop (density 2.5x) the image with the 3x descriptor is the chosen over 1x, but 2x is chosen over 3x -->
     <!-- 1.5x is chosen over 1x, 3x is chosen over 1.5, 2.5 over 3x -->
@@ -110,7 +113,7 @@ const backgroundImageSet = `url(/images/${imageBase}-20x11.webp) type("image/web
     
     <!-- the fallbackSrc will apply to anything under 768 wide and orientation landscape -->
     <!-- the loading=lazy will stop the browser immediately downloading its chosen image -->
-    <!-- which should give the css time to parse and set display to none...? -->
+    <!-- which should give the css time to parse and set display to none -->
 
     <!-- in tests so far, with loading=lazy and display:none: -->
     <!-- firefox doesn't download the image -->
@@ -122,45 +125,67 @@ const backgroundImageSet = `url(/images/${imageBase}-20x11.webp) type("image/web
 
 <script>
     // wait for the image to load, then transition the opacity
-    // think this script will be scoped to this component
-    // so just grab the img inside picture with class section-picture__picture
-    // so we don't bother with the hero image
+    // think this script will only run once, not once for each instance of the component
+    // so grabs the img inside all pictures with class picture--blur-load
 
-    // all of this needs to be conditional on the section picture actually being present
+    const pictureElements = document.querySelectorAll('.picture--blur-load');
 
-    if (document.querySelector('.section-picture__picture')) {
+    pictureElements.forEach(pictureEl => {
 
-        const sectionPicture = document.querySelector('.section-picture__picture');
-        const sectionPictureImg = sectionPicture.querySelector('img');
-        // console.log(sectionPictureImg);
-        function imgLoaded() {
-            sectionPicture.classList.add('section-picture__picture--show');
-            // console.log(`imgLoaded!`);
-        }
-
+        const pictureImg = pictureEl.querySelector('img');
+        
         // check if the image is loaded first
         // otherwise add a load event listener
-        if (sectionPictureImg.complete) {
-            imgLoaded();
+        if (pictureImg.complete) {
+            // we want a different process here
+            // from when the load event fires
+            // bc if the image is already loaded
+            // it doesn't really need the blur fade transition
+            // (it's probably already been downloaded previously)
+            // add 'blur-loading' NOT 'blur-load' (which is the class that identifies which images want a blur-load)
+            // imgLoaded(pictureEl);
+            // maybe we don't need anything to happen here?
+            console.log(`img is complete so adding picture--show`);
+            pictureEl.classList.add('picture--show');
+            
         } else {
-            sectionPictureImg.addEventListener('load', imgLoaded);
+            // add the class that sets a transition
+            // so that picture--show will cause a fade when the load event fires
+
+            console.log(`img is NOT complete so adding picture--blur-loading`);
+            pictureEl.classList.add('picture--blur-loading');
+            pictureImg.addEventListener('load', () => {
+                console.log(`img load event fired so adding picture--show`);
+                pictureEl.classList.add('picture--show');
+            });
         }
 
-    }
+    });
 
 </script>
 
 <style define:vars={{backgroundImageSet}}>
 
-.hero__picture {
-    position: absolute;
-    z-index: 0;
-    /* definitely need the width and height to make the picture */
-    /* (and hence the image) fill its container (hero) */ 
+
+/* firstly, lets have 100% width and height, and display block for the picture elements */
+/* definitely need the width and height to make the picture */
+/* (and hence the image) fill its container (section-picture or hero) */
+
+/* picture's default display is not block, must be inline I suppose */
+/* so the picture wasn't expanding to contain the img */
+/* img was just overflowing it */
+/* display:block this should fix that */
+
+.hero__picture, .section-picture__picture {
     width: 100%;
     height: 100%;
+    display: block;
+}
 
-    /* border: 1px solid red; */
+.hero__picture {
+    /* keep as position absolute, even though section-picture__picture is position: relative - trust me */
+    position: absolute;
+    z-index: 0;
 }
 
 .hero__image, .section-picture__image {
@@ -187,43 +212,96 @@ const backgroundImageSet = `url(/images/${imageBase}-20x11.webp) type("image/web
     /* border: 1px solid yellow; */
 }
 
+/* any picture element that we want to be preloaded, with blurred bg and pulsing overlay is given the class 'picture--blur-load' */
+/* so it can be applied to hero image as well as section image */
+/* we can apply it by passing it as a prop (pictureClasses) to the pictureFullWidth component into the classlist*/
 
-.section-picture__picture {
+/* 'picture--blur-load' sets opacity to 0 and identifies the element to the querySelectorAll */
+/* so it gets put into the nodelist (pictureElements) */
 
-    /* definitely need the width and height to make the picture */
-    /* (and hence the image) fill its container (section-bigpicture) */ 
-    width: 100%;
-    height: 100%;
-    /* border: 1px solid red; */
+/* another class called 'picture--blur-loading' is added by js once we've checked that the image isn't already loaded */
+/* this adds: */
+/*  - blurred bg image  */
+/*  - the transition property */
+/*  - the pulsing overlay (using ::before) */
 
-    /* position: relative; */
-    /* opacity: 0; */
-    /* background-image: url('/images/herd-in-field-20x11.jpg'); */
-    /* background-image: var(--backgroundImage); */
-    /* background-image: image-set(var(--backgroundImage)); */
+/* bc we don't want the blurred bg or transition or the pulsing overlay if the image is already loaded */
+
+/* if the image is already loaded OR when the img load event fires, 'picture--show is added' */
+/* this sets opacity to 1, which shows the image immediately if the picture only has 'picture--blur-load' */
+/* OR fades the image in if the picture has had 'picture--blur-loading' added */
+
+
+.picture--blur-loading {
     background-image: image-set(var(--backgroundImageSet));
-    /* background-image: image-set(url(/images/herd-in-field-20x11.jpg) type("image/jpeg"), url(/images/herd-in-field-20x11.jpg) type("image/webp")); */
-    /* background-color: #f0f; */
     background-size: cover;
-    /* border: 2px solid aqua; */
+    /* hero__picture already has position: absolute because of the overlay stuff to put text over the image */
+    /* position: relative won't work for hero__picture, it won't contain the img for a start */
+    /* so we'll have to apply position: relative specifically to section-picture__picture */
+    /* see below */
+}
 
-    /* ok picture's default display is not block, must be inline I suppose */
-    /* so the picture wasn't expanding to contain the img */
-    /* img was just overflowing it */
-    /* this should fix that */
-    display: block;
+/* try this as blor-loading for now, see what happens */
+.section-picture__picture.picture--blur-loading {
+    position: relative;
+}
+
+
+/* the pulsing overlay to indicate that something's happening */
+.picture--blur-loading::before {
+    content: "";
+    position: absolute;
+    /* inset 0 is eqivalent to top 0 right 0 bottom 0 left 0 */
+    /* so it fits the element to its parent */
+    inset: 0;
+    /* border: 1px solid fuchsia; */
+    /* background-color: hsl(var(--white) / 0.5); */
+    animation: pulsing-bg 2s ease-in-out infinite;
 
 }
+
+@keyframes pulsing-bg {
+    0% {
+        background-color: hsl(var(--white) / 0);
+    }
+    50% {
+        background-color: hsl(var(--white) / 0.1);
+    }
+    100% {
+        background-color: hsl(var(--white) / 0);
+    }
+}
+
 
 /* the show/hide class has to go on the containing element (picture) not img */
 
-.section-picture__picture img {
+.picture--blur-load img {
+    /* just hides the image but doesn't set up a transition */
     opacity: 0;
+    /* if we want the image to always fade in, put the transition delaration here */
+    /* (and take it off blur-loading img - below) */
+    /* think it's probably a bit nicer here - there's a little flash anyway so at least this looks a bit smoother */
     transition: opacity 250ms ease-in;
 }
 
-.section-picture__picture--show img {
+.picture--blur-loading img {
+    /* opacity: 0; */
+    /* put the transition here if we only want it to fade on images that are loading for the first time */
+    /* transition: opacity 250ms ease-in; */
+}
+
+.picture--show img {
     opacity: 1;
+}
+
+/* something to remove the pulsing ::before */
+.picture--show::before {
+    content: none;
+}
+
+.picture--show {
+    /* remove the background if you want */
+    /* background-image: none; */
 }
 
 @media(max-width: 768px) {

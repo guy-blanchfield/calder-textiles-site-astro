@@ -1,6 +1,21 @@
-<footer class="footer-caldertextiles py-4 px-2">
+---
+
+import { Icon } from 'astro-icon';
+
+---
+
+<!-- <footer class="footer-caldertextiles py-4 px-2"> -->
+<footer class="footer-caldertextiles">
     <!-- -fluid so it goes to 100% width -->
-    <div class="container-fluid">
+    <div class="container-fluid px-5 py-4 footer-caldertextiles__panel panel--logo">
+
+        <div class="footer-caldertextiles__logo">
+            <Icon name="caldertextiles-logo-navy-crop" width="150" class="footer-caldertextiles__logo-svg" />
+        </div>
+
+    </div>
+
+    <div class="container-fluid px-4 py-4 footer-caldertextiles__panel panel--text">
 
         <div class="row">
             <div class="col">UK Registered Company No. 1803068</div>
@@ -18,10 +33,27 @@
 <style>
 
 .footer-caldertextiles {
-    background-color: var(--text);
-    color: hsl(var(--white));
     /* border: 1px solid magenta; */
 }
+
+.footer-caldertextiles__panel {
+    /* padding: 2rem; */
+}
+
+.panel--logo {
+    display: flex;
+    justify-content: end;
+    background-color: hsl(var(--white));
+    /* border: solid 1px hotpink; */
+}
+
+.panel--text {
+    background-color: var(--text);
+    color: hsl(var(--white));
+    /* border: solid 1px yellow; */
+}
+
+
 
 .footer-caldertextiles__link, .footer-caldertextiles__wolfstar-link {
     color: hsl(var(--white));
