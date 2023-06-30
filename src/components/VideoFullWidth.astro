@@ -1,0 +1,187 @@
+---
+
+// what props will we need for the video?
+
+// imageBase can be used to create the filename for 2 sources
+// call the prop 'videoBase' but it takes the imageBase that gets 
+// drilled through Hero from whichever page calls it
+// probably do an mp4 and webm
+
+// no alt required for video
+
+//  use PictureClasses for video class
+
+// maybe we'll need props for autoplay, loop, probably not muted
+
+
+
+export interface Props {
+    videoBase: string;
+    pictureClasses?: string; // e.g. hero__picture
+}
+
+const { videoBase, pictureClasses = '' } = Astro.props;
+
+
+const videoSourceWebm = `/video/${videoBase}-1080p.webm`
+const videoSourceMp4 = `/video/${videoBase}-1080p.mp4`
+
+
+// we only need a background image for video if it's mobile (<768)
+// so the background image only needs to be about 768 width, use the 960x540 for now
+
+// not sure how the hero's gonna look on mobile yet, aspect-wise
+
+const backgroundImageSet = `url(/images/${videoBase}-960x540.webp) type("image/webp"), url(/images/${videoBase}-960x540.jpg) type("image/jpeg")`;
+
+---
+
+
+    <!-- NB autoplay getting set with js below, leave it off here -->
+    <!-- preload=none will stop browser downloading any part of the video unless it has to -->
+    <!-- i.e. when autoplay is set by the js -->
+
+    <!-- can we get the build to do this? -->
+    <video class="video-element video-element--md" preload="none" muted loop>
+
+        <!-- <source src={videoSourceMdWebm} type="video/webm" /> -->
+        <source src={videoSourceMp4} type="video/mp4" />
+
+        <p>Your browser doesn't support HTML video.</p>
+    
+    </video>
+
+    <video class="video-element video-element--lg" preload="none" muted loop>
+
+        <!-- <source src={videoSourceLgWebm} type="video/webm" /> -->
+        <source src={videoSourceMp4} type="video/mp4" />
+
+        <p>Your browser doesn't support HTML video.</p>
+    
+    </video>
+
+    <video class="video-element video-element--xl" preload="none" muted loop>
+
+        <!-- <source src={videoSourceXlWebm} type="video/webm" /> -->
+        <source src={videoSourceMp4} type="video/mp4" />
+
+        <p>Your browser doesn't support HTML video.</p>
+    
+    </video>
+
+
+
+
+<script>
+
+    // how to display different sized video according to window size
+    // ideas?!
+    // because autoplay is set to off to start with
+    // it should be possible to write multiple video tags
+    // have most hidden in css, but use media queries to show the appropriate video
+
+    // then use a window.innerWidth in the autoplay function to target the right video element
+    // maybe move the const declaration inside the function
+
+    // use the bootstrap breakpoints to label the elements (see above)
+
+    //  might need a on resize function
+    
+    // from https://www.smashingmagazine.com/2021/02/optimizing-video-size-quality/
+    // to stop video loading at all if it's mobile
+    // hopefully will just show the background instead
+    window.onload = addAutoplay;
+
+    const windowWidth: number = window.innerWidth;
+    let queryClass: string;
+
+    if (windowWidth < 992) {
+        queryClass = '.video-element--md';
+    } else if (windowWidth < 1200) {
+        queryClass = '.video-element--lg';
+    } else {
+        queryClass = '.video-element--xl';
+    }
+
+    console.log(`querying for ${queryClass}`);
+    const videoElement = document.querySelector(queryClass);
+    // const videoElement = document.querySelector('.video-element--xl');
+
+    function addAutoplay() {
+        if (windowWidth >= 768) {
+            videoElement.setAttribute("autoplay","");
+            // not sure about this, maybe keep this for the onresize stuff
+            // it means that all the videos are hidden until this script runs (window.onload)
+            // it'd be better to at least have a bg image showing
+            // videoElement.classList.toggle('video-element--show');
+            console.log(`setting autoplay on ${queryClass}`);
+        };
+    }
+
+</script>
+
+<style define:vars={{backgroundImageSet}}>
+
+/* probably need a container for the video, if only for postion relative */
+
+.video-container {
+    position: relative;
+    border: 1px solid blueviolet;
+}
+
+/* only need a background for <768 */
+@media(max-width: 767px) {
+    .video-element {
+        /* bg probably goes on the container */
+        background-image: image-set(var(--backgroundImageSet));
+        background-position: center;
+        background-size: cover;
+        background-color: hotpink;
+    }
+}
+
+.video-element {
+    min-width: 100%;
+    min-height: 100%;
+    /* The <video> element is a replaced element — its display value is inline */
+    display: block;
+    object-fit: cover;
+
+    /* to keep the video in the middle */
+    position: absolute;
+    /* top: 50%; */
+    /* left: 50%; */
+    /* transform: translate(-50%, -50%); */
+}
+
+:is(.video-element--md, .video-element--lg, .video-element--xl) {
+    display: none;
+}
+
+/* display block utility */
+/* probably use this for showing hiding on window resize */
+.video-element--show {
+    display: block;
+}
+
+/* now set the appropriate video element to display block depending on media query */
+@media (max-width: 991px) {
+    .video-element--md {
+        display: block;
+    }
+}
+
+@media (max-width: 1199px) {
+    .video-element--lg {
+        display: block;
+    }
+}
+
+@media (min-width: 1200px) {
+    .video-element--xl {
+        display: block;
+    }
+}
+
+
+</style>

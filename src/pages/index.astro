@@ -1,15 +1,17 @@
 ---
+
 import Layout from '../layouts/Layout.astro';
 import Hero from '../components/Hero.astro';
 import PageContentSection from '../components/PageContentSection.astro';
 import PictureSection from '../components/PictureSection.astro';
 import ContactSection from '../components/ContactSection.astro';
 import EmptySection from '../components/EmptySection.astro';
+
 ---
 
 <Layout title="Welcome to Calder Textiles">
 		
-		<Hero imageBase="sheep" imageAlt="Some Sheep">
+		<Hero imageBase="sheep-walking-mountain" imageAlt="Sheep walking on the mountain">
 			<!-- using Fragment here, span also works, but fragment produces tidier markup -->
 			<Fragment slot="hero-heading">Welcome to <br>Calder Textiles</Fragment>
 			<Fragment slot="hero-para">One of the UK's foremost woollen yarn spinners with a world-wide reputation for excellence.</Fragment>

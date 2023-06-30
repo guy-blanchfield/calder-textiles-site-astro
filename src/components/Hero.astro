@@ -3,6 +3,17 @@
 // now doing the Picture element as a separate component
 import PictureFullWidth from '../components/PictureFullWidth.astro';
 
+// import the video component
+// will be inserted instead of picture 
+// if current path is home
+
+// the video component will have to some script to not load or show the video
+// on mobile (< 768) and fallback to a background image
+
+// NB we can't get window.innerWidth during the build, duh!
+
+import VideoFullWidth from '../components/VideoFullWidth.astro';
+
 // import astro-icon component (for the expand arrow button)
 import { Icon } from 'astro-icon';
 
@@ -12,12 +23,19 @@ import { Icon } from 'astro-icon';
 export interface Props {
     imageBase: string;
     imageAlt: string;
+    overlayClass?: string;
 }
 
 // might need an extra prop here to determine whether hero image needs the gradient overlay
 // or maybe just a classlist to pass to the overlay div
 
-const { imageBase, imageAlt } = Astro.props;
+const { imageBase, imageAlt, overlayClass = '' } = Astro.props;
+
+// const curentPath = new URL(Astro.request.url).pathname;
+// or shorthand
+const currentPath = Astro.url.pathname;
+
+const goal = 3;
 
 
 // gonna try the astro image integration for this
@@ -45,12 +63,21 @@ const { imageBase, imageAlt } = Astro.props;
 
 // might just stick the images in public for now!
 
+// NB conditional rendering guide from the astro docs
+// https://docs.astro.build/en/tutorial/2-pages/3/#conditionally-render-elements
+
 ---
 
 <!-- not using min-vh-100 now, using calc and header has sticky-top -->
 <div class="hero">
-    
+
+    <!-- if current page is home page, show the video, otherwise show the appropriate picture -->
+
+    {currentPath === '/' ? 
+    <VideoFullWidth videoBase={imageBase} /> 
+    : 
     <PictureFullWidth imageBase={imageBase} imageAlt={imageAlt} pictureClasses="hero__picture picture--blur-load" imageClasses="hero__image" lazyLoad={false}/>
+    }
 
     <!-- a div that fits perfectly over the image -->
     <!-- and has an alpha gradient background to darken the image to make the text more legible -->
@@ -61,7 +88,8 @@ const { imageBase, imageAlt } = Astro.props;
     <!-- might need extra padding to shunt it down a bit -->
     <!-- try pt-5 on the hero__text -->
     <!-- only px here otherwise it overides the custom padding-top that we need to adjust for the nav -->
-    <div class="hero__overlay d-flex align-items-center px-5">
+    <!-- <div class="hero__overlay d-flex align-items-center px-5 {overlayClass}" class={overlayClass}> -->
+    <div class=`hero__overlay d-flex align-items-center px-5 ${overlayClass}`>
 
         <div class="container">
             <div class="row">
@@ -207,6 +235,12 @@ padding-top: 6rem;
     background: linear-gradient(to right top, hsl(0 0% 0% / .5), hsl(0 0% 0% / 0));
 }
 
+/* think we might need the :global here as well because specificity */
+
+:global(.picture--show + .hero__overlay--none) {
+    background: none;
+}
+
 
 
 .hero__text {
@@ -231,7 +265,6 @@ color: hsl(var(--white));
 /* font-family: 'Libre Baskerville', serif; */
 /* set font-size with bootstrap fs- class, just for practice! */
 /* font-size: 3.3rem; */
-/* letter-spacing: 0.1rem; */
 
 /* NB we're currently using a <br> in the heading slot so the max-width might be redundant - keep in for now */
 max-width: 20ch;

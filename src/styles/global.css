@@ -1,5 +1,15 @@
 /* ---------------- @fontface stuff ------------------- */
 
+/* this is the true baskerville */
+@font-face {
+    font-family: 'Baskerville Normal';
+    src: local('Baskerville'), url('/fonts/baskerville-normal.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+/* these are the impostors */
 @font-face {
     font-family: 'Baskervville';
     src: url('/fonts/baskervville-regular-webfont.woff2') format('woff2'),
@@ -15,7 +25,6 @@
          url('/fontsbaskervville-italic-webfont.woff') format('woff');
     font-weight: normal;
     font-style: italic;
-
 }
 
 
@@ -114,7 +123,8 @@ footer {
 /* otherwise we have to update every heading class */
 /* everytime we decide to change the font */
 .serif {
-    font-family: 'Baskervville', 'Martel', 'Georgia', serif;
+    font-family: 'Baskerville Normal', 'Martel', 'Georgia', serif;
+    font-weight: normal;
 }
 
 /* tailwind calls its nowrap utility whitespace-nowrap */

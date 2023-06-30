@@ -136,7 +136,7 @@ const backgroundImageSet = `url(/images/${imageBase}-20x11.webp) type("image/web
         
         // check if the image is loaded first
         // otherwise add a load event listener
-        if (pictureImg.complete) {
+        if (pictureImg?.complete) {
             // we want a different process here
             // from when the load event fires
             // bc if the image is already loaded
@@ -241,7 +241,7 @@ const backgroundImageSet = `url(/images/${imageBase}-20x11.webp) type("image/web
     /* see below */
 }
 
-/* try this as blor-loading for now, see what happens */
+/* try this as blur-loading for now, see what happens */
 .section-picture__picture.picture--blur-loading {
     position: relative;
 }
