@@ -23,6 +23,7 @@ export interface Props {
 const { videoBase, pictureClasses = '' } = Astro.props;
 
 
+const videoSourcePart = `/video/${videoBase}`
 const videoSourceWebm = `/video/${videoBase}-1080p.webm`
 const videoSourceMp4 = `/video/${videoBase}-1080p.mp4`
 
@@ -33,6 +34,7 @@ const videoSourceMp4 = `/video/${videoBase}-1080p.mp4`
 // not sure how the hero's gonna look on mobile yet, aspect-wise
 
 const backgroundImageSet = `url(/images/${videoBase}-960x540.webp) type("image/webp"), url(/images/${videoBase}-960x540.jpg) type("image/jpeg")`;
+// const backgroundImageSet = `url(/images/${videoBase}-1920x1088.webp) type("image/webp"), url(/images/${videoBase}-960x540.jpg) type("image/jpeg")`;
 
 ---
 
@@ -41,8 +43,7 @@ const backgroundImageSet = `url(/images/${videoBase}-960x540.webp) type("image/w
     <!-- preload=none will stop browser downloading any part of the video unless it has to -->
     <!-- i.e. when autoplay is set by the js -->
 
-    <!-- can we get the build to do this? -->
-    <video class="video-element video-element--md" preload="none" muted loop>
+    <video class="video-element" preload="none" data-source={videoSourcePart} muted loop>
 
         <!-- <source src={videoSourceMdWebm} type="video/webm" /> -->
         <source src={videoSourceMp4} type="video/mp4" />
@@ -50,26 +51,6 @@ const backgroundImageSet = `url(/images/${videoBase}-960x540.webp) type("image/w
         <p>Your browser doesn't support HTML video.</p>
     
     </video>
-
-    <video class="video-element video-element--lg" preload="none" muted loop>
-
-        <!-- <source src={videoSourceLgWebm} type="video/webm" /> -->
-        <source src={videoSourceMp4} type="video/mp4" />
-
-        <p>Your browser doesn't support HTML video.</p>
-    
-    </video>
-
-    <video class="video-element video-element--xl" preload="none" muted loop>
-
-        <!-- <source src={videoSourceXlWebm} type="video/webm" /> -->
-        <source src={videoSourceMp4} type="video/mp4" />
-
-        <p>Your browser doesn't support HTML video.</p>
-    
-    </video>
-
-
 
 
 <script>
@@ -90,33 +71,59 @@ const backgroundImageSet = `url(/images/${videoBase}-960x540.webp) type("image/w
     // from https://www.smashingmagazine.com/2021/02/optimizing-video-size-quality/
     // to stop video loading at all if it's mobile
     // hopefully will just show the background instead
-    window.onload = addAutoplay;
 
     const windowWidth: number = window.innerWidth;
+    const videoElement: HTMLVideoElement = document.querySelector('.video-element');
+    // const altVideoElement: Element = document.querySelector('.video-element');
+    const videoSrcPrt = videoElement.dataset.source;
     let queryClass: string;
+    let videoSource: string;
+    let videoPixels: string;
+    let videoExt: string;
 
     if (windowWidth < 992) {
-        queryClass = '.video-element--md';
+        // queryClass = '.video-element--md';
+        videoPixels = '1080p';
     } else if (windowWidth < 1200) {
-        queryClass = '.video-element--lg';
+        // queryClass = '.video-element--lg';
+        videoPixels = '1080p';
     } else {
-        queryClass = '.video-element--xl';
+        // queryClass = '.video-element--xl';
+        videoPixels = '1080p';
     }
 
-    console.log(`querying for ${queryClass}`);
-    const videoElement = document.querySelector(queryClass);
+    console.log(`videoPixels: ${videoPixels}`);
+
+    if (videoElement.canPlayType("video/webm") === 'probably') {
+        videoExt = '.webm';
+    } else {
+        videoExt = '.mp4';
+    }
+
+    console.log(`videoExt: ${videoExt}`);
+
+    videoSource = videoSrcPrt + '-' + videoPixels + videoExt;
+    console.log(`videoSource: ${videoSource}`);
+
+    // console.log(`querying for ${queryClass}`);
+    // const videoElement = document.querySelector(queryClass);
     // const videoElement = document.querySelector('.video-element--xl');
 
     function addAutoplay() {
+
+        console.log('addAutoplay');
         if (windowWidth >= 768) {
-            videoElement.setAttribute("autoplay","");
-            // not sure about this, maybe keep this for the onresize stuff
-            // it means that all the videos are hidden until this script runs (window.onload)
-            // it'd be better to at least have a bg image showing
-            // videoElement.classList.toggle('video-element--show');
-            console.log(`setting autoplay on ${queryClass}`);
+            videoElement.src = videoSource;
+            videoElement.setAttribute('autoplay','');
+            // videoElement.classList.add('video-element--show');
+            console.log(`setting autoplay on ${videoElement.dataset.source}`);
         };
     }
+
+    window.onload = addAutoplay;
+
+    // for manual load for testing
+    // document.querySelector('.hero__heading').addEventListener('click', addAutoplay);
 
 </script>
 
@@ -126,62 +133,49 @@ const backgroundImageSet = `url(/images/${videoBase}-960x540.webp) type("image/w
 
 .video-container {
     position: relative;
-    border: 1px solid blueviolet;
-}
-
-/* only need a background for <768 */
-@media(max-width: 767px) {
-    .video-element {
-        /* bg probably goes on the container */
-        background-image: image-set(var(--backgroundImageSet));
-        background-position: center;
-        background-size: cover;
-        background-color: hotpink;
-    }
+    /* border: 1px solid blueviolet; */
 }
 
 .video-element {
+
+    /* width and height are very important here! */
+    /* without them the video won't scale to fit the container */
+    /* so object-fit won't work as intended */
+    width: 100%;
+    height: auto;
+
     min-width: 100%;
     min-height: 100%;
     /* The <video> element is a replaced element — its display value is inline */
     display: block;
     object-fit: cover;
 
-    /* to keep the video in the middle */
+    /* to keep the video horizontally centered but starting from the top */
     position: absolute;
-    /* top: 50%; */
-    /* left: 50%; */
-    /* transform: translate(-50%, -50%); */
+    /* position: relative; */
+    top: 0;
+    left: 50%;
+    /* left: 520px; */
+    transform: translateX(-50%);
+
+    /* bg has to go on element, not container */
+    background-image: image-set(var(--backgroundImageSet));
+    background-position: top center;
+    background-size: cover;
+    /* border: 1px solid fuchsia; */
+    /* background-color: hotpink; */
 }
 
-:is(.video-element--md, .video-element--lg, .video-element--xl) {
+/* :is(.video-element--md, .video-element--lg, .video-element--xl) {
     display: none;
-}
+} */
 
 /* display block utility */
 /* probably use this for showing hiding on window resize */
-.video-element--show {
+/* .video-element--show {
     display: block;
-}
+} */
 
-/* now set the appropriate video element to display block depending on media query */
-@media (max-width: 991px) {
-    .video-element--md {
-        display: block;
-    }
-}
-
-@media (max-width: 1199px) {
-    .video-element--lg {
-        display: block;
-    }
-}
-
-@media (min-width: 1200px) {
-    .video-element--xl {
-        display: block;
-    }
-}
 
 
 </style>

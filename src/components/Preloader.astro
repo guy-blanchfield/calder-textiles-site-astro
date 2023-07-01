@@ -2,7 +2,7 @@
 <!-- or, if you want something fancier https://www.youtube.com/watch?v=Gx35fMhDPWs -->
 
 <!-- might need to do something to disable scroll while preloader is showing -->
-
+<!-- yeah really need to do this! -->
 
 <div class="loader loader--blank"></div>
 
@@ -106,7 +106,7 @@
         /* visibility isn't transitionable? */
         /* transition: opacity 0.5s, visibility 0.5s; */
         background-color: hsl(var(--darkblue));
-        transition: opacity 0.5s;
+        transition: opacity 0.5s ease-in;
     }
 
     .loader--loading::after {
@@ -129,6 +129,9 @@
 
     .loader--hidden {
         opacity: 0;
+        /* visibility breaks the transition */
+        /* consider an alternative way of using visibility */
+        /* we definitely need it hidden otherwise no links or buttons work! */
         visibility: hidden;
     }
     
