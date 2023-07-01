@@ -22,7 +22,6 @@ export interface Props {
 
 const { videoBase, pictureClasses = '' } = Astro.props;
 
-
 const videoSourcePart = `/video/${videoBase}`
 const videoSourceWebm = `/video/${videoBase}-1080p.webm`
 const videoSourceMp4 = `/video/${videoBase}-1080p.mp4`
@@ -43,7 +42,9 @@ const backgroundImageSet = `url(/images/${videoBase}-960x540.webp) type("image/w
     <!-- preload=none will stop browser downloading any part of the video unless it has to -->
     <!-- i.e. when autoplay is set by the js -->
 
-    <video class="video-element" preload="none" data-source={videoSourcePart} muted loop>
+    <div class="video-container">
+
+    <video class="video-element" data-source={videoSourcePart} muted loop>
 
         <!-- <source src={videoSourceMdWebm} type="video/webm" /> -->
         <source src={videoSourceMp4} type="video/mp4" />
@@ -51,6 +52,8 @@ const backgroundImageSet = `url(/images/${videoBase}-960x540.webp) type("image/w
         <p>Your browser doesn't support HTML video.</p>
     
     </video>
+
+    </div>
 
 
 <script>
@@ -73,6 +76,7 @@ const backgroundImageSet = `url(/images/${videoBase}-960x540.webp) type("image/w
     // hopefully will just show the background instead
 
     const windowWidth: number = window.innerWidth;
+    const videoContainer: HTMLElement = document.querySelector('.video-container');
     const videoElement: HTMLVideoElement = document.querySelector('.video-element');
     // const altVideoElement: Element = document.querySelector('.video-element');
     const videoSrcPrt = videoElement.dataset.source;
@@ -115,7 +119,9 @@ const backgroundImageSet = `url(/images/${videoBase}-960x540.webp) type("image/w
         if (windowWidth >= 768) {
             videoElement.src = videoSource;
             videoElement.setAttribute('autoplay','');
-            // videoElement.classList.add('video-element--show');
+            videoElement.classList.add('video-element--show');
+            // videoContainer.classList.add('video-container--reveal');
+            console.log(`adding reveal class`);
             console.log(`setting autoplay on ${videoElement.dataset.source}`);
         };
     }
@@ -132,8 +138,20 @@ const backgroundImageSet = `url(/images/${videoBase}-960x540.webp) type("image/w
 /* probably need a container for the video, if only for postion relative */
 
 .video-container {
+
+    /* parent (.hero) has display flex */
+    /* so we can put the background on the container */
+    /* then the video can fade in over the top  */
+
     position: relative;
     /* border: 1px solid blueviolet; */
+
+    flex-grow: 1;
+
+    /* background-image: image-set(var(--backgroundImageSet)); */
+    /* background-color: hsl(var(--offwhite)); */
+    background-position: top center;
+    background-size: cover;
 }
 
 .video-element {
@@ -143,9 +161,7 @@ const backgroundImageSet = `url(/images/${videoBase}-960x540.webp) type("image/w
     /* so object-fit won't work as intended */
     width: 100%;
     height: auto;
-
-    min-width: 100%;
-    min-height: 100%;
+    
     /* The <video> element is a replaced element — its display value is inline */
     display: block;
     object-fit: cover;
@@ -159,11 +175,12 @@ const backgroundImageSet = `url(/images/${videoBase}-960x540.webp) type("image/w
     transform: translateX(-50%);
 
     /* bg has to go on element, not container */
-    background-image: image-set(var(--backgroundImageSet));
-    background-position: top center;
-    background-size: cover;
+    
     /* border: 1px solid fuchsia; */
     /* background-color: hotpink; */
+
+    opacity: 0;
+    /* transition: opacity 2s ease-in; */
 }
 
 /* :is(.video-element--md, .video-element--lg, .video-element--xl) {
@@ -175,6 +192,35 @@ const backgroundImageSet = `url(/images/${videoBase}-960x540.webp) type("image/w
 /* .video-element--show {
     display: block;
 } */
+
+.video-element--show {
+    opacity: 1;
+}
+
+/* add this class when video is ready */
+/* it flashes and fades out */
+/* has to go on the container */
+/* no pseudo elements on replaced elements! */
+.video-container--reveal {
+
+    position: relative;
+    /* background-color: hsl(var(--offwhite)); */
+
+}
+
+.video-container--reveal::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-color: hsl(var(--offwhite));
+    /* delay of 0.75s to let the loader fade out first - nah*/
+    animation: flash-and-fade 0.5s ease-in-out normal 1 forwards;
+}
+
+@keyframes flash-and-fade {
+    from { opacity: 1 }
+    to { opacity: 0 }
+}
 
 
 

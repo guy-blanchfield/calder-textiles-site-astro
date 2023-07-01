@@ -56,26 +56,35 @@
         window.addEventListener('load', () => {
 
             // clear the timeout, so the --loading class doesn't get added
-            // so there won't be a transition when the --hidden class gets added
+            // so there won't be a transition when the --transparent class gets added
             // clearTimeout(startLoaderTimeout);
             // console.log(`the timeout cleared!`);
 
-            preLoader.classList.add('loader--hidden');
+            preLoader.classList.add('loader--transparent');
             console.log(`load event fired!`);
 
-            sessionStorage.setItem('preloadComplete', 'true');
+            // sessionStorage.setItem('preloadComplete', 'true');
             console.log(`preloadComplete is now: ${sessionStorage.getItem('preloadComplete')}`);
 
         });
 
+        // add eventlistener for the transitionend when the loader fades out
+        // when it fires, set loader visibility to hidden so it doesn't interfere with links and buttons
+
+        preLoader.addEventListener('transitionend', () => {
+            preLoader.classList.add('loader--hidden');
+            console.log('transitionend event fired - preloader visibility hidden');
+        });
+
+        console.log(`transition event listener added`);
         console.log(`load event listener added`);
 
     } else {
         console.log(`loader is not showing because preloadComplete is: ${sessionStorage.getItem('preloadComplete')}`);
         // hide the loader
+        preLoader.classList.add('loader--transparent');
+        // set loader visibility to hidden so it doesn't interfere with links and buttons
         preLoader.classList.add('loader--hidden');
-        // something
-        // set sessionStorage item at some point
     }
 
     // console.log("preloader script running");
@@ -127,11 +136,15 @@
         to { transform: rotate(1turn) }
     }
 
-    .loader--hidden {
+    .loader--transparent {
         opacity: 0;
+    }
+
+    .loader--hidden {
         /* visibility breaks the transition */
-        /* consider an alternative way of using visibility */
-        /* we definitely need it hidden otherwise no links or buttons work! */
+        /* but we definitely need it hidden otherwise no links or buttons work! */
+        /* so add this class with an event listener for transition end */
+        /* also add it if preloadComplete is true */
         visibility: hidden;
     }
     
