@@ -3,6 +3,7 @@
 /* this is the true baskerville */
 @font-face {
     font-family: 'Baskerville Normal';
+    /* src: local('Baskerville'), url('/fonts/baskerville-normal.woff') format('woff'); */
     src: local('Baskerville'), url('/fonts/baskerville-normal.woff') format('woff');
     font-weight: normal;
     font-style: normal;
@@ -123,7 +124,8 @@ footer {
 /* otherwise we have to update every heading class */
 /* everytime we decide to change the font */
 .serif {
-    font-family: 'Baskerville Normal', 'Martel', 'Georgia', serif;
+    /* font-family: 'Baskerville Normal', 'Martel', 'Georgia', serif; */
+    font-family: 'Baskerville Normal', serif;
     font-weight: normal;
 }
 

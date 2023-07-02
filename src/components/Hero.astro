@@ -97,7 +97,9 @@ const goal = 3;
 
                     <!-- put extra padding here, not on the col div -->
                     <!-- probably needs shifting down a fair bit more, do it in the custom css -->
-                    <div class="hero__text p-3" data-aos="fade-up">
+                    <!-- lose the aos on this div and animate it manually once the loader's finished -->
+                    <!-- <div class="hero__text p-3" data-aos="fade-up"> -->
+                    <div class="hero__text p-3">
                         <!-- display-x for a slightly more opinionated heading style -->
                         <!-- tried bootstrap line-height here, not gonna fly -->
                         <!-- do it in custom if you must -->
@@ -157,6 +159,20 @@ const goal = 3;
         <Icon name="expand_circle_down_FILL0_wght200_GRAD0_opsz48" class="page-content-link__icon" />
     </a>
 </div>
+
+
+<script>
+
+    console.log('Hero script running!');
+    function loadFunction () {
+        // console.log('adding hero__text--visible');
+        // document.querySelector('.hero__text').classList.add('hero__text--visible');
+    }
+
+    window.addEventListener('load', loadFunction);
+
+
+</script>
 
 
 <style>
@@ -254,6 +270,28 @@ padding-top: 6rem;
 color: hsl(var(--white));
 
 /* border: 1px solid firebrick; */
+
+/* let's try hiding this until the page has loaded so it comes up after the image / video shows */
+
+opacity: 0;
+
+/* for the fade up */
+transform: translateY(200px);
+
+/* transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out; */
+/*  aos default is animation-timing-function: ease; */
+/* delay of 0.5s */
+transition: all 0.3s ease 0.5s;
+
+
+}
+
+.hero__text--visible {
+
+    /* visibility: visible; */
+    opacity: 1;
+    transform: translateY(0);
+
 }
 
 .hero__heading {
@@ -272,6 +310,8 @@ color: hsl(var(--white));
 max-width: 20ch;
 
 /* line-height: 1.5; */
+
+
 }
 
 @media(min-width: 768px) {

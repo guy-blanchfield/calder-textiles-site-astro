@@ -79,7 +79,8 @@ const backgroundImageSet = `url(/images/${videoBase}-960x540.webp) type("image/w
     const videoContainer: HTMLElement = document.querySelector('.video-container');
     const videoElement: HTMLVideoElement = document.querySelector('.video-element');
     // const altVideoElement: Element = document.querySelector('.video-element');
-    const videoSrcPrt = videoElement.dataset.source;
+    // this script seems to be running even on non video pages so put assign videoSrc conditionally for now
+    const videoSrcPrt = videoElement?.dataset.source;
     let queryClass: string;
     let videoSource: string;
     let videoPixels: string;
@@ -98,7 +99,7 @@ const backgroundImageSet = `url(/images/${videoBase}-960x540.webp) type("image/w
 
     console.log(`videoPixels: ${videoPixels}`);
 
-    if (videoElement.canPlayType("video/webm") === 'probably') {
+    if (videoElement?.canPlayType("video/webm") === 'probably') {
         videoExt = '.webm';
     } else {
         videoExt = '.mp4';
@@ -116,17 +117,27 @@ const backgroundImageSet = `url(/images/${videoBase}-960x540.webp) type("image/w
     function addAutoplay() {
 
         console.log('addAutoplay');
-        if (windowWidth >= 768) {
+        if (windowWidth >= 768 && videoElement) {
             videoElement.src = videoSource;
             videoElement.setAttribute('autoplay','');
             videoElement.classList.add('video-element--show');
             // videoContainer.classList.add('video-container--reveal');
             console.log(`adding reveal class`);
             console.log(`setting autoplay on ${videoElement.dataset.source}`);
+            
+            // setTimeout(logBuffered, 5000);
         };
     }
 
     window.onload = addAutoplay;
+
+    // function logBuffered() {
+    //     console.log(`videoElement.buffered.start: ${videoElement.buffered.start(0)}`);
+    //     console.log(`videoElement.buffered.length: ${videoElement.buffered.length}`);
+    //     console.log(`videoElement.buffered.end: ${videoElement.buffered.end(0)}`);
+    //     console.log(`videoElement.duration: ${videoElement.duration}`);
+    //     console.log(`videoElement.src: ${videoElement.src}`);
+    // }
 
     // for manual load for testing
     // document.querySelector('.hero__heading').addEventListener('click', addAutoplay);

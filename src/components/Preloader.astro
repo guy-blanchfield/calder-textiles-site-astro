@@ -4,11 +4,102 @@
 <!-- might need to do something to disable scroll while preloader is showing -->
 <!-- yeah really need to do this! -->
 
+<!-- lets create this div with the script, so we can be sure it's ready in time -->
+<!-- the script here isn't deferred -->
+<!-- tried that, didn't take for some reason -->
 <div class="loader loader--blank"></div>
 
 <!-- try is:inline here so it loads quicker (and before the google map stuff) -->
 <script is:inline>
 
+
+// maybe put the init function in a separate module and import it, if that'll work
+
+// this is where we put anything that needs to happen after the loader is done
+// but isn't part of the loader
+function initialise() {
+
+    console.log("initialise!!!!!!!!");
+
+    // this needs to happen on transition end as well, if it hasn't happened
+    function showHeroText() {
+
+        console.log('showHeroText function is running');
+        console.log(`hero__text: ${document.querySelector('.hero__text')}`);
+
+        const heroTextDiv = document.querySelector('.hero__text');
+
+        // if the --visible class isn't there, add it
+        if (!heroTextDiv.classList.contains('hero__text--visible')) {
+            heroTextDiv.classList.add('hero__text--visible');
+            console.log(`hero__text--visible class added!`)
+        }
+    }
+
+    // think we need to move the fonts ready check into the loader
+    // incorporate the fonts ready check with the loader , not check it after the loader has finished
+    // it should also be inside the !preloadComplete condition
+    // we don't need to check fonts for each page
+
+    function fontFaceSetIteratorToArray(target) {
+        const iterable = target.entries();
+        const results = [];
+        let iterator = iterable.next();
+
+        while (iterator.done === false) {
+            results.push(iterator.value);
+
+            iterator = iterable.next();
+        }
+
+        return results;
+    }
+
+    async function fontsReady() {
+        let ready = await document.fonts.ready;
+        console.log(ready);
+        console.log(fontFaceSetIteratorToArray(document.fonts));
+        // console.log(`Baskerville: ${document.fonts.check('Baskerville Normal')}`);
+        console.log('fonts should be ready');
+        // showHeroText();
+    }
+
+    // this is going to check that the hero image is loaded
+    // or if it's video, whether the video has loaded enough to play a bit
+    async function heroImageReady() {
+        // const heroImage: HTMLImageElement = document.querySelector('hero__image');
+        // check if hero__image exists i.e. it's not a hero video instead
+        const heroImage = document.querySelector('.hero__image');
+        if (heroImage) {
+            let ready = await heroImage.decode();
+            console.log(ready);
+            console.log('hero image should be ready');
+            showHeroText();
+        } else {
+            console.log(`must be video, this should resolve!?`)
+            // Video.readystate >= 3 is the condition you're looking for
+            // or there's a canplay event, might be better
+            const heroVideo = document.querySelector('.video-element');
+            if (heroVideo) {
+                heroVideo.addEventListener('canplay', showHeroText);
+            }
+        }
+        
+    }
+
+    // fontsReady().then(heroImageReady).then(showHeroText);
+    // only chain fontsReady and imageReady and call showHeroText
+    // manually in the image if clause of imageReady and add an event listener 
+    // in the video else clause to call showHeroText
+    // because I can't find a way to get the video check to return a promise, i.e. can't be awaited
+    fontsReady().then(heroImageReady);
+
+    // Ok, the issue here is that before showHeroText can run, 3 conditions need to be met
+    // 1. fonts are loaded
+    // 2. hero image or first bit of hero video is loaded
+    // 3. if the preloader is running it needs to have finished and faded out
+
+}
     // try something like this
     // (it's ok we don't need cookie consent to do this!)
     // (sesion storage is considered strictly necessary)
@@ -53,6 +144,22 @@
         preLoader.classList.add('loader--loading');
         console.log(`loader is now loader--loading because preloadComplete is: ${sessionStorage.getItem('preloadComplete')}`);
         
+        // add eventlistener for the transitionend when the loader fades out
+        // when it fires, set loader visibility to hidden so it doesn't interfere with links and buttons
+
+        preLoader.addEventListener('transitionend', () => {
+            preLoader.classList.add('loader--hidden');
+            console.log('transitionend event fired - preloader visibility hidden');
+
+            // this is the first place we need to call the initialise function
+            // i.e. when the window load event has fired AND the preloader has finished its fade out
+            // the preloader fade out is initiated by adding the class 'loader--transparent' to the preloader
+            initialise();
+
+        });
+
+        console.log(`transition event listener added`);
+
         window.addEventListener('load', () => {
 
             // clear the timeout, so the --loading class doesn't get added
@@ -63,20 +170,12 @@
             preLoader.classList.add('loader--transparent');
             console.log(`load event fired!`);
 
-            // sessionStorage.setItem('preloadComplete', 'true');
+            // don't forget to uncomment this!!!! ------------------------------------- < important!
+            sessionStorage.setItem('preloadComplete', 'true');
             console.log(`preloadComplete is now: ${sessionStorage.getItem('preloadComplete')}`);
 
         });
 
-        // add eventlistener for the transitionend when the loader fades out
-        // when it fires, set loader visibility to hidden so it doesn't interfere with links and buttons
-
-        preLoader.addEventListener('transitionend', () => {
-            preLoader.classList.add('loader--hidden');
-            console.log('transitionend event fired - preloader visibility hidden');
-        });
-
-        console.log(`transition event listener added`);
         console.log(`load event listener added`);
 
     } else {
@@ -85,11 +184,30 @@
         preLoader.classList.add('loader--transparent');
         // set loader visibility to hidden so it doesn't interfere with links and buttons
         preLoader.classList.add('loader--hidden');
+
+        // this is the second place we need to call the initialise function
+        // i.e. if preloadComplete is already set and we're skipping the loader
+
+        // No! No! No!
+        // initialise can't run just cos there's no preloader
+        // it has to wait till the hero image is complete
+        // put the initialise in an event listener for domcontentloaded
+        // otherwise we can't get a reference for heroImage.decode
+        window.addEventListener('DOMContentLoaded', () => {
+            initialise();
+            console.log(`dom content must be loaded!`);
+        });
+        // initialise(); 
+        
     }
 
     // console.log("preloader script running");
 
 </script>
+
+
+
+
 
 <style>
 
@@ -108,6 +226,8 @@
         align-items: center;
         justify-content: center;
         display: flex;
+
+        /* visibility: hidden; */
     }
 
     .loader--loading {
@@ -133,6 +253,7 @@
 
     @keyframes loading {
         from { transform: rotate(0turn) }
+        /* 50% { transform: scale(0.75) } */
         to { transform: rotate(1turn) }
     }
 
