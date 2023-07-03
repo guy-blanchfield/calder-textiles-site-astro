@@ -1,10 +1,9 @@
 ---
-
 // now doing the Picture element as a separate component
-import PictureFullWidth from '../components/PictureFullWidth.astro';
+import PictureFullWidth from "../components/PictureFullWidth.astro";
 
 // import the video component
-// will be inserted instead of picture 
+// will be inserted instead of picture
 // if current path is home
 
 // the video component will have to some script to not load or show the video
@@ -12,31 +11,30 @@ import PictureFullWidth from '../components/PictureFullWidth.astro';
 
 // NB we can't get window.innerWidth during the build, duh!
 
-import VideoFullWidth from '../components/VideoFullWidth.astro';
+import VideoFullWidth from "../components/VideoFullWidth.astro";
 
 // import astro-icon component (for the expand arrow button)
-import { Icon } from 'astro-icon';
+import { Icon } from "astro-icon";
 
 // some prop drilling required to get the imageBase from the page that calls it
 // through to the pictureFullWidth component
 
 export interface Props {
-    imageBase: string;
-    imageAlt: string;
-    overlayClass?: string;
+	imageBase: string;
+	imageAlt: string;
+	overlayClass?: string;
 }
 
 // might need an extra prop here to determine whether hero image needs the gradient overlay
 // or maybe just a classlist to pass to the overlay div
 
-const { imageBase, imageAlt, overlayClass = '' } = Astro.props;
+const { imageBase, imageAlt, overlayClass = "" } = Astro.props;
 
 // const curentPath = new URL(Astro.request.url).pathname;
 // or shorthand
 const currentPath = Astro.url.pathname;
 
 const goal = 3;
-
 
 // gonna try the astro image integration for this
 // https://docs.astro.build/en/guides/integrations-guide/image/
@@ -46,10 +44,9 @@ const goal = 3;
 // so uh maybe not use image integration!?
 // maybe add it later, once everything's working, and @astrojs/image is less experimental!
 
-
 // according to: https://stackoverflow.com/questions/34695899/why-is-react-js-removing-the-srcset-tag-on-img
 
-// "Webpack resolves the imports of images (or require) as a string (the uri of the image). 
+// "Webpack resolves the imports of images (or require) as a string (the uri of the image).
 // The image data will just be fetched when the browser requests it and the browser will decide which image it needs according to srcSet."
 
 // so hopefully astro will do something similar
@@ -65,61 +62,64 @@ const goal = 3;
 
 // NB conditional rendering guide from the astro docs
 // https://docs.astro.build/en/tutorial/2-pages/3/#conditionally-render-elements
-
 ---
 
 <!-- not using min-vh-100 now, using calc and header has sticky-top -->
 <div class="hero">
+	<!-- if current page is home page, show the video, otherwise show the appropriate picture -->
 
-    <!-- if current page is home page, show the video, otherwise show the appropriate picture -->
+	{
+		currentPath === "/" ? (
+			<VideoFullWidth videoBase={imageBase} />
+		) : (
+			<PictureFullWidth
+				imageBase={imageBase}
+				imageAlt={imageAlt}
+				pictureClasses="hero__picture picture--blur-load"
+				imageClasses="hero__image"
+				lazyLoad={false}
+			/>
+		)
+	}
 
-    {currentPath === '/' ? 
-    <VideoFullWidth videoBase={imageBase} /> 
-    : 
-    <PictureFullWidth imageBase={imageBase} imageAlt={imageAlt} pictureClasses="hero__picture picture--blur-load" imageClasses="hero__image" lazyLoad={false}/>
-    }
+	<!-- a div that fits perfectly over the image -->
+	<!-- and has an alpha gradient background to darken the image to make the text more legible -->
+	<!-- contains the text div, which contains a heading and a para -->
+	<!-- could probably get by without the text container, but keep it for flexibility -->
 
-    <!-- a div that fits perfectly over the image -->
-    <!-- and has an alpha gradient background to darken the image to make the text more legible -->
-    <!-- contains the text div, which contains a heading and a para -->
-    <!-- could probably get by without the text container, but keep it for flexibility -->
+	<!-- display flex on the overlay so we can align its content vertically -->
+	<!-- might need extra padding to shunt it down a bit -->
+	<!-- try pt-5 on the hero__text -->
+	<!-- only px here otherwise it overides the custom padding-top that we need to adjust for the nav -->
+	<!-- <div class="hero__overlay d-flex align-items-center px-5 {overlayClass}" class={overlayClass}> -->
+	<div class=`hero__overlay d-flex align-items-center px-5 ${overlayClass}`>
+		<div class="container">
+			<div class="row">
+				<div class="col-md-6">
+					<!-- put extra padding here, not on the col div -->
+					<!-- probably needs shifting down a fair bit more, do it in the custom css -->
+					<!-- lose the aos on this div and animate it manually once the loader's finished -->
+					<!-- <div class="hero__text p-3" data-aos="fade-up"> -->
+					<div class="hero__text p-3">
+						<!-- display-x for a slightly more opinionated heading style -->
+						<!-- tried bootstrap line-height here, not gonna fly -->
+						<!-- do it in custom if you must -->
+						<h1 class="hero__heading display-6 serif">
+							<slot name="hero-heading" />
+						</h1>
 
-    <!-- display flex on the overlay so we can align its content vertically -->
-    <!-- might need extra padding to shunt it down a bit -->
-    <!-- try pt-5 on the hero__text -->
-    <!-- only px here otherwise it overides the custom padding-top that we need to adjust for the nav -->
-    <!-- <div class="hero__overlay d-flex align-items-center px-5 {overlayClass}" class={overlayClass}> -->
-    <div class=`hero__overlay d-flex align-items-center px-5 ${overlayClass}`>
+						{
+							Astro.slots.has("hero-para") && (
+								<p class="hero__para fs-5">
+									<slot name="hero-para" />
+								</p>
+							)
+						}
+					</div>
+				</div>
 
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6">
-
-                    <!-- put extra padding here, not on the col div -->
-                    <!-- probably needs shifting down a fair bit more, do it in the custom css -->
-                    <!-- lose the aos on this div and animate it manually once the loader's finished -->
-                    <!-- <div class="hero__text p-3" data-aos="fade-up"> -->
-                    <div class="hero__text p-3">
-                        <!-- display-x for a slightly more opinionated heading style -->
-                        <!-- tried bootstrap line-height here, not gonna fly -->
-                        <!-- do it in custom if you must -->
-                        <h1 class="hero__heading display-5 serif">
-                            <slot name="hero-heading" />
-                        </h1>
-
-                        {Astro.slots.has('hero-para') && (
-                            <p class="hero__para fs-5">
-                                <slot name="hero-para" />
-                            </p>
-                        )}
-
-                    </div>
-
-                    
-                </div>
-
-                <!-- dont need the 2nd column to make the first one take half the space  -->
-                <!--
+				<!-- dont need the 2nd column to make the first one take half the space  -->
+				<!--
                 <div class="col-md-6">
 
                     <div class="nothero__text p-5">
@@ -132,261 +132,268 @@ const goal = 3;
                     
                 </div>
                 -->
+			</div>
+		</div>
+	</div>
 
-
-            </div>
-
-        </div>
-
-    </div>
-
-    <!-- show more / page content link -->
-    <!-- should definitely be a link not a button -->
-    <!-- from a11y -->
-    <!-- "A link is focusable and can be triggered by the enter key. -->
-    <!-- A link will redirect you to a new page or a section within the same page." -->
-    <a class="hero__page-content-link" href="#page-content" aria-label="Page Content">
-        <!-- was span, now using astro-icon -->
-        <!-- <span class="material-symbols-outlined"> -->
-            <!-- arrow_downward -->
-            <!-- try simple expand more chevron -->
-            <!-- expand_more -->
-            <!-- nah try expand_circle_down -->
-            <!-- expand_circle_down -->
-        <!-- </span> -->
-        <!-- gonna have to use the svg for this, bc we need the lighter weight -->
-        <!-- name was ic:outline-expand-circle-down -->
-        <Icon name="expand_circle_down_FILL0_wght200_GRAD0_opsz48" class="page-content-link__icon" />
-    </a>
+	<!-- show more / page content link -->
+	<!-- should definitely be a link not a button -->
+	<!-- from a11y -->
+	<!-- "A link is focusable and can be triggered by the enter key. -->
+	<!-- A link will redirect you to a new page or a section within the same page." -->
+	<a
+		class="hero__page-content-link"
+		href="#page-content"
+		aria-label="Page Content"
+	>
+		<!-- was span, now using astro-icon -->
+		<!-- <span class="material-symbols-outlined"> -->
+		<!-- arrow_downward -->
+		<!-- try simple expand more chevron -->
+		<!-- expand_more -->
+		<!-- nah try expand_circle_down -->
+		<!-- expand_circle_down -->
+		<!-- </span> -->
+		<!-- gonna have to use the svg for this, bc we need the lighter weight -->
+		<!-- name was ic:outline-expand-circle-down -->
+		<Icon
+			name="expand_circle_down_FILL0_wght200_GRAD0_opsz48"
+			class="page-content-link__icon"
+		/>
+	</a>
 </div>
 
-
 <script>
+	console.log("Hero script running!");
+	function loadFunction() {
+		// console.log('adding hero__text--visible');
+		// document.querySelector('.hero__text').classList.add('hero__text--visible');
+	}
 
-    console.log('Hero script running!');
-    function loadFunction () {
-        // console.log('adding hero__text--visible');
-        // document.querySelector('.hero__text').classList.add('hero__text--visible');
-    }
-
-    window.addEventListener('load', loadFunction);
-
-
+	window.addEventListener("load", loadFunction);
 </script>
 
-
 <style>
+	/* OK, any styles that are going to be used inside the pictureFullWidth component */
+	/* need to be declared in the pictureFullWidth component, because of the scoping thing */
+	/* i.e. if you declare them here, they won't work inside the pictureFullWidth component */
 
-/* OK, any styles that are going to be used inside the pictureFullWidth component */
-/* need to be declared in the pictureFullWidth component, because of the scoping thing */
-/* i.e. if you declare them here, they won't work inside the pictureFullWidth component */
+	/* it's a bit messy, I'd prefer to have all the hero__ stuff together, but hey */
 
-/* it's a bit messy, I'd prefer to have all the hero__ stuff together, but hey */
+	/* see: https://stackoverflow.com/questions/31267425/use-the-html-img-tag-as-a-background-image-instead-of-the-css-background-image */
+	.hero {
+		/* was using bootstrap min-vh-100 */
+		/* but we need to take into account the height of the fixed-top navbar */
+		/* or it keeps creating vertical position problems for things in main */
 
-/* see: https://stackoverflow.com/questions/31267425/use-the-html-img-tag-as-a-background-image-instead-of-the-css-background-image */
-.hero {
+		/* NB!! also needs to account for the bootstrap var --bs-navbar-padding-y (0.5rem) */
+		/* but NOT the --bs-navbar-brand-padding-y (0.3125rem) */
+		/* those vars aren't available when this parses, just add 0.5rem */
+		/* why aren't these vertical padding values doubled as you'd expect??? */
+		/* min-height: calc(100vh - (var(--navbar-brand-logo-height) + (var(--navbar-vertical-padding)*2) + (var(--bs-navbar-padding-y)*2))); */
+		/* min-height: calc(100vh - (var(--navbar-brand-logo-height) + (var(--navbar-vertical-padding)*2) + 0.5rem)); */
+		min-height: calc(100vh - var(--header-height-calc));
 
-/* was using bootstrap min-vh-100 */
-/* but we need to take into account the height of the fixed-top navbar */
-/* or it keeps creating vertical position problems for things in main */
+		/* close enough! */
 
-/* NB!! also needs to account for the bootstrap var --bs-navbar-padding-y (0.5rem) */
-/* but NOT the --bs-navbar-brand-padding-y (0.3125rem) */
-/* those vars aren't available when this parses, just add 0.5rem */
-/* why aren't these vertical padding values doubled as you'd expect??? */
-/* min-height: calc(100vh - (var(--navbar-brand-logo-height) + (var(--navbar-vertical-padding)*2) + (var(--bs-navbar-padding-y)*2))); */
-/* min-height: calc(100vh - (var(--navbar-brand-logo-height) + (var(--navbar-vertical-padding)*2) + 0.5rem)); */
-min-height: calc(100vh - var(--header-height-calc));
+		/* NB bootstrap uses browser default root font-size, usually 16px */
 
-/* close enough! */
+		overflow: hidden;
+		position: relative;
 
-/* NB bootstrap uses browser default root font-size, usually 16px */
+		/* if we do this with grid, we don't need 'position' to make z-index work */
+		/* so that might be worth looking into */
+		/* see kp's video on grid stacking: */
+		/* https://www.youtube.com/watch?v=z2kuC7w9emE&t=405s */
 
-overflow: hidden;
-position: relative;
+		/* give this a background of --accent so it'll be forgiving if the image and overlay don't match up */
+		/* --accent is the nav bar colour */
+		background-color: var(--accent);
 
-/* if we do this with grid, we don't need 'position' to make z-index work */
-/* so that might be worth looking into */
-/* see kp's video on grid stacking: */
-/* https://www.youtube.com/watch?v=z2kuC7w9emE&t=405s */
+		/* border: 1px solid blue; */
 
-/* give this a background of --accent so it'll be forgiving if the image and overlay don't match up */
-/* --accent is the nav bar colour */
-background-color: var(--accent);
+		display: flex;
+	}
 
-/* border: 1px solid blue; */
+	/* hero__picture and hero__image moved to PictureFullWidth component */
 
-display: flex;
+	.hero__overlay {
+		position: absolute;
+		z-index: 1;
+		/* probably want width and height not min-width, min-height */
+		/* firstly to match the image exactly, secondly to stick to the dimensions of the hero, which has min-vh-100 */
+		width: 100%;
+		height: 100%;
+		/* background: linear-gradient(to left, hsl(0 0 0 / 0.9), hsl(0 0 0 / 0)); */
 
-}
+		/* importantly we need padding-top to be the height of the navbar (which is position fixed) */
+		/* try 6rem for now, it's an approximation */
+		/* remember to adjust if py value on navbar changes */
+		padding-top: 6rem;
 
-/* hero__picture and hero__image moved to PictureFullWidth component */
+		/* border: 1px solid green; */
 
-.hero__overlay {
-position: absolute;
-z-index: 1;
-/* probably want width and height not min-width, min-height */
-/* firstly to match the image exactly, secondly to stick to the dimensions of the hero, which has min-vh-100 */
-width: 100%;
-height: 100%;
-/* background: linear-gradient(to left, hsl(0 0 0 / 0.9), hsl(0 0 0 / 0)); */
+		/* NB! background now being applied with adjacent sibling selector with :global selector below */
+		/* it needs to be global, because the two siblings are in different components, so have different scope */
+	}
 
-/* importantly we need padding-top to be the height of the navbar (which is position fixed) */
-/* try 6rem for now, it's an approximation */
-/* remember to adjust if py value on navbar changes */
-padding-top: 6rem;
+	/* only apply the opacity gradient background if the hero picture has loaded and is showing */
+	/* i.e. has class 'picture--show' */
+	/* using adjacent sibling selector */
 
-/* border: 1px solid green; */
+	/* the adjacent sibling selctor has to be :global */
+	/* because the two siblings are in different components, so have different scope */
+	:global(.picture--show + .hero__overlay) {
+		background: linear-gradient(
+			to right top,
+			hsl(0 0% 0% / 0.5),
+			hsl(0 0% 0% / 0)
+		);
+	}
 
-/* NB! background now being applied with adjacent sibling selector with :global selector below */
-/* it needs to be global, because the two siblings are in different components, so have different scope */
+	/* think we might need the :global here as well because specificity */
 
-}
+	:global(.picture--show + .hero__overlay--none) {
+		background: none;
+	}
 
-/* only apply the opacity gradient background if the hero picture has loaded and is showing */
-/* i.e. has class 'picture--show' */
-/* using adjacent sibling selector */
+	.hero__text {
+		/* padding-top: 100px; */
+		/* might not need z-index and position here now it's going inside the overlay */
+		/* z-index: 1; */
+		/* position: relative; */
 
-/* the adjacent sibling selctor has to be :global */
-/* because the two siblings are in different components, so have different scope */
-:global(.picture--show + .hero__overlay) {
-    background: linear-gradient(to right top, hsl(0 0% 0% / .5), hsl(0 0% 0% / 0));
-}
+		color: hsl(var(--white));
 
-/* think we might need the :global here as well because specificity */
+		/* border: 1px solid firebrick; */
 
-:global(.picture--show + .hero__overlay--none) {
-    background: none;
-}
+		/* let's try hiding this until the page has loaded so it comes up after the image / video shows */
 
+		opacity: 0;
 
+		/* for the fade up */
+		transform: translateY(200px);
 
-.hero__text {
-/* padding-top: 100px; */
-/* might not need z-index and position here now it's going inside the overlay */
-/* z-index: 1; */
-/* position: relative; */
+		/* transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out; */
+		/*  aos default is animation-timing-function: ease; */
+		/* delay of 0.5s */
+		transition: all 0.3s ease 0.5s;
+	}
 
-color: hsl(var(--white));
+	.hero__text--visible {
+		/* visibility: visible; */
+		opacity: 1;
+		transform: translateY(0);
+	}
 
-/* border: 1px solid firebrick; */
+	.hero__heading {
+		/*  font-family is handled by the utility class 'serif' now */
+		/* see above, under the :root stuff */
+		/* font-family: 'Times New Roman', Times, Georgia, serif; */
+		/* font-family: 'Martel', 'Georgia', serif; */
+		/* font-weight redundant here bc bs class display-4 has font-weight 300 */
+		/* font-weight: normal; */
+		/* font-family: 'EB Garamond', serif; */
+		/* font-family: 'Libre Baskerville', serif; */
+		/* set font-size with bootstrap fs- class, just for practice! */
+		/* font-size: 3.3rem; */
 
-/* let's try hiding this until the page has loaded so it comes up after the image / video shows */
+		/* NB we're currently using a <br> in the heading slot so the max-width might be redundant - keep in for now */
+		max-width: 20ch;
 
-opacity: 0;
+		/* line-height: 1.5; */
+	}
 
-/* for the fade up */
-transform: translateY(200px);
+	@media (min-width: 768px) {
+		.hero__heading {
+			/* leave this for now */
+			/* line-height: 1.5; */
+		}
+	}
 
-/* transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out; */
-/*  aos default is animation-timing-function: ease; */
-/* delay of 0.5s */
-transition: all 0.3s ease 0.5s;
+	/* make the heading a bit bigger on larger screens */
+	/* is using display-6 bs class */
+	/* actual size will change depending on the font */
+	/* e.g. libre baskerville is bigger than baskerville normal */
 
+	@media (min-width: 992px) {
+		.hero__heading {
+			/* leave this for now */
+			/* line-height: 1.5; */
+			/* make the heading a bit bigger on larger screens */
+			font-size: 2rem;
+		}
+	}
 
-}
+	@media (min-width: 1200px) {
+		.hero__heading {
+			/* leave this for now */
+			/* line-height: 1.5; */
+			/* make the heading a bit bigger on larger screens */
+			font-size: 2.5rem;
+		}
+	}
 
-.hero__text--visible {
+	.hero__para {
+		max-width: 50ch;
+		line-height: 1.75rem;
+	}
 
-    /* visibility: visible; */
-    opacity: 1;
-    transform: translateY(0);
+	.hero__page-content-link {
+		position: absolute;
+		z-index: 1;
+		bottom: 1.5rem;
+		right: 2rem;
+		/* font-size: 3rem; */
+		/* color: hsl(var(--white)/0.7); */
+		opacity: 0.7;
 
-}
+		text-decoration: none;
+		transition: all 0.1s ease-in;
+	}
 
-.hero__heading {
-/*  font-family is handled by the utility class 'serif' now */
-/* see above, under the :root stuff */
-/* font-family: 'Times New Roman', Times, Georgia, serif; */
-/* font-family: 'Martel', 'Georgia', serif; */
-/* font-weight redundant here bc bs class display-4 has font-weight 300 */
-/* font-weight: normal; */
-/* font-family: 'EB Garamond', serif; */
-/* font-family: 'Libre Baskerville', serif; */
-/* set font-size with bootstrap fs- class, just for practice! */
-/* font-size: 3.3rem; */
+	/* circular border as an option */
+	.hero__page-content-link--bordered {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		min-width: 3rem;
+		min-height: 3rem;
+		border-radius: 50%;
 
-/* NB we're currently using a <br> in the heading slot so the max-width might be redundant - keep in for now */
-max-width: 20ch;
+		border: 2px solid hsl(var(--white) / 0.7);
 
-/* line-height: 1.5; */
+		/* box-shadow: offset-x, offset-y, blur-radius, spread-radius, colour - one day you might remember this */
+		box-shadow: 2px 10px 10px 0px hsl(0 0% 0% / 0.3);
+	}
 
+	.hero__page-content-link:hover,
+	.hero__page-content-link:focus-visible {
+		/* color: hsl(var(--white)); */
+		/* border-color: hsl(var(--white)); */
+		opacity: 1;
+		transform: scale(1.2);
+		outline: none;
+	}
 
-}
+	.page-content-link__icon {
+		/* NB fill not color for svg */
+		fill: hsl(var(--white));
+		width: 3rem;
+		height: auto;
+	}
 
-@media(min-width: 768px) {
-    .hero__heading {
-        /* leave this for now */
-        /* line-height: 1.5; */
-    }
-}
+	/* also add these settings to the css link tag in layout head */
+	/* need them here, or it'll just use the defaults */
 
-.hero__para {
-max-width: 50ch;
-line-height: 1.75rem;
-}
+	/* not required now, using astro-icon */
+	.material-symbols-outlined {
+		font-variation-settings: "FILL" 0, "wght" 200, "GRAD" 0, "opsz" 48;
+	}
 
-.hero__page-content-link {
-    position: absolute;
-    z-index: 1;
-    bottom: 1.5rem;
-    right: 2rem;
-    /* font-size: 3rem; */
-    /* color: hsl(var(--white)/0.7); */
-    opacity: 0.7;
-    
-    text-decoration: none;
-    transition: all 0.1s ease-in;
-}
-
-/* circular border as an option */
-.hero__page-content-link--bordered {
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 3rem;
-    min-height: 3rem;
-    border-radius: 50%;
-
-    border: 2px solid hsl(var(--white)/0.7);
-
-    /* box-shadow: offset-x, offset-y, blur-radius, spread-radius, colour - one day you might remember this */
-    box-shadow: 2px 10px 10px 0px hsl(0 0% 0% / 0.3);
-
-}
-
-.hero__page-content-link:hover, .hero__page-content-link:focus-visible {
-    /* color: hsl(var(--white)); */
-    /* border-color: hsl(var(--white)); */
-    opacity: 1;
-    transform: scale(1.2);
-    outline: none;
-}
-
-.page-content-link__icon {
-    /* NB fill not color for svg */
-    fill: hsl(var(--white));
-    width: 3rem;
-    height: auto;
-}
-
-/* also add these settings to the css link tag in layout head */
-/* need them here, or it'll just use the defaults */
-
-/* not required now, using astro-icon */
-.material-symbols-outlined {
-  font-variation-settings:
-  'FILL' 0,
-  'wght' 200,
-  'GRAD' 0,
-  'opsz' 48
-}
-
-/* these styles are scoped so feel free to do whatever you need to do here */
-/* it won't effect any other material-symbols-outlined outside the hero component */
-.material-symbols-outlined {
-    font-size: 3rem;
-}
-
+	/* these styles are scoped so feel free to do whatever you need to do here */
+	/* it won't effect any other material-symbols-outlined outside the hero component */
+	.material-symbols-outlined {
+		font-size: 3rem;
+	}
 </style>

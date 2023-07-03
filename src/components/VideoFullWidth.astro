@@ -1,9 +1,8 @@
 ---
-
 // what props will we need for the video?
 
 // imageBase can be used to create the filename for 2 sources
-// call the prop 'videoBase' but it takes the imageBase that gets 
+// call the prop 'videoBase' but it takes the imageBase that gets
 // drilled through Hero from whichever page calls it
 // probably do an mp4 and webm
 
@@ -13,19 +12,16 @@
 
 // maybe we'll need props for autoplay, loop, probably not muted
 
-
-
 export interface Props {
-    videoBase: string;
-    pictureClasses?: string; // e.g. hero__picture
+	videoBase: string;
+	pictureClasses?: string; // e.g. hero__picture
 }
 
-const { videoBase, pictureClasses = '' } = Astro.props;
+const { videoBase, pictureClasses = "" } = Astro.props;
 
-const videoSourcePart = `/video/${videoBase}`
-const videoSourceWebm = `/video/${videoBase}-1080p.webm`
-const videoSourceMp4 = `/video/${videoBase}-1080p.mp4`
-
+const videoSourcePart = `/video/${videoBase}`;
+const videoSourceWebm = `/video/${videoBase}-1080p.webm`;
+const videoSourceMp4 = `/video/${videoBase}-1080p.mp4`;
 
 // we only need a background image for video if it's mobile (<768)
 // so the background image only needs to be about 768 width, use the 960x540 for now
@@ -34,205 +30,205 @@ const videoSourceMp4 = `/video/${videoBase}-1080p.mp4`
 
 const backgroundImageSet = `url(/images/${videoBase}-960x540.webp) type("image/webp"), url(/images/${videoBase}-960x540.jpg) type("image/jpeg")`;
 // const backgroundImageSet = `url(/images/${videoBase}-1920x1088.webp) type("image/webp"), url(/images/${videoBase}-960x540.jpg) type("image/jpeg")`;
-
 ---
 
+<!-- NB autoplay getting set with js below, leave it off here --><!-- preload=none will stop browser downloading any part of the video unless it has to --><!-- i.e. when autoplay is set by the js -->
+<div class="video-container">
+	<!-- span here is necessary for attaching the video reveal animation -->
+	<!-- the class is added in preloader > initialise function -->
+	<span class="video-container__span"
+		>Lorem ipsum dolor sit amet consectetur adipisicing elit. Officiis ut asperiores quibusdam ea,
+		necessitatibus quas iusto expedita sapiente placeat. Tenetur ipsum autem commodi temporibus,
+		molestias amet culpa voluptatem quos fugit iusto ullam recusandae? Libero maiores incidunt
+		aliquid necessitatibus atque laudantium, quasi fuga quam magni excepturi. Sequi corporis soluta
+		veniam sapiente dolore cum fuga ea. Molestiae eveniet sint placeat in ipsam deserunt totam harum
+		unde qui aliquid distinctio quod nihil officia quam, culpa laborum similique expedita dolor
+		exercitationem debitis molestias beatae eius. Perspiciatis excepturi doloribus ullam vel hic
+		fugit voluptate error placeat non labore? Culpa obcaecati id sapiente, eligendi nemo minima.</span
+	>
 
-    <!-- NB autoplay getting set with js below, leave it off here -->
-    <!-- preload=none will stop browser downloading any part of the video unless it has to -->
-    <!-- i.e. when autoplay is set by the js -->
+	<video class="video-element" data-source={videoSourcePart} muted loop>
+		<!-- <source src={videoSourceMdWebm} type="video/webm" /> -->
+		<source src={videoSourceMp4} type="video/mp4" />
 
-    <div class="video-container">
-
-    <video class="video-element" data-source={videoSourcePart} muted loop>
-
-        <!-- <source src={videoSourceMdWebm} type="video/webm" /> -->
-        <source src={videoSourceMp4} type="video/mp4" />
-
-        <p>Your browser doesn't support HTML video.</p>
-    
-    </video>
-
-    </div>
-
+		<p>Your browser doesn't support HTML video.</p>
+	</video>
+</div>
 
 <script>
+	// how to display different sized video according to window size
+	// ideas?!
+	// because autoplay is set to off to start with
+	// it should be possible to write multiple video tags
+	// have most hidden in css, but use media queries to show the appropriate video
 
-    // how to display different sized video according to window size
-    // ideas?!
-    // because autoplay is set to off to start with
-    // it should be possible to write multiple video tags
-    // have most hidden in css, but use media queries to show the appropriate video
+	// then use a window.innerWidth in the autoplay function to target the right video element
+	// maybe move the const declaration inside the function
 
-    // then use a window.innerWidth in the autoplay function to target the right video element
-    // maybe move the const declaration inside the function
+	// use the bootstrap breakpoints to label the elements (see above)
 
-    // use the bootstrap breakpoints to label the elements (see above)
+	//  might need a on resize function
 
-    //  might need a on resize function
-    
-    // from https://www.smashingmagazine.com/2021/02/optimizing-video-size-quality/
-    // to stop video loading at all if it's mobile
-    // hopefully will just show the background instead
+	// from https://www.smashingmagazine.com/2021/02/optimizing-video-size-quality/
+	// to stop video loading at all if it's mobile
+	// hopefully will just show the background instead
 
-    const windowWidth: number = window.innerWidth;
-    const videoContainer: HTMLElement = document.querySelector('.video-container');
-    const videoElement: HTMLVideoElement = document.querySelector('.video-element');
-    // const altVideoElement: Element = document.querySelector('.video-element');
-    // this script seems to be running even on non video pages so put assign videoSrc conditionally for now
-    const videoSrcPrt = videoElement?.dataset.source;
-    let queryClass: string;
-    let videoSource: string;
-    let videoPixels: string;
-    let videoExt: string;
+	const windowWidth: number = window.innerWidth;
+	const videoContainer: HTMLElement = document.querySelector(".video-container");
+	const videoElement: HTMLVideoElement = document.querySelector(".video-element");
+	// const altVideoElement: Element = document.querySelector('.video-element');
+	// this script seems to be running even on non video pages so put assign videoSrc conditionally for now
+	const videoSrcPrt = videoElement?.dataset.source;
+	let queryClass: string;
+	let videoSource: string;
+	let videoPixels: string;
+	let videoExt: string;
 
-    if (windowWidth < 992) {
-        // queryClass = '.video-element--md';
-        videoPixels = '1080p';
-    } else if (windowWidth < 1200) {
-        // queryClass = '.video-element--lg';
-        videoPixels = '1080p';
-    } else {
-        // queryClass = '.video-element--xl';
-        videoPixels = '1080p';
-    }
+	if (windowWidth < 992) {
+		// queryClass = '.video-element--md';
+		videoPixels = "1080p";
+	} else if (windowWidth < 1200) {
+		// queryClass = '.video-element--lg';
+		videoPixels = "1080p";
+	} else {
+		// queryClass = '.video-element--xl';
+		videoPixels = "1080p";
+	}
 
-    console.log(`videoPixels: ${videoPixels}`);
+	console.log(`videoPixels: ${videoPixels}`);
 
-    if (videoElement?.canPlayType("video/webm") === 'probably') {
-        videoExt = '.webm';
-    } else {
-        videoExt = '.mp4';
-    }
+	if (videoElement?.canPlayType("video/webm") === "probably") {
+		videoExt = ".webm";
+	} else {
+		videoExt = ".mp4";
+	}
 
-    console.log(`videoExt: ${videoExt}`);
+	console.log(`videoExt: ${videoExt}`);
 
-    videoSource = videoSrcPrt + '-' + videoPixels + videoExt;
-    console.log(`videoSource: ${videoSource}`);
+	videoSource = videoSrcPrt + "-" + videoPixels + videoExt;
+	console.log(`videoSource: ${videoSource}`);
 
-    // console.log(`querying for ${queryClass}`);
-    // const videoElement = document.querySelector(queryClass);
-    // const videoElement = document.querySelector('.video-element--xl');
+	// console.log(`querying for ${queryClass}`);
+	// const videoElement = document.querySelector(queryClass);
+	// const videoElement = document.querySelector('.video-element--xl');
 
-    function addAutoplay() {
+	function addAutoplay() {
+		console.log("addAutoplay");
+		if (windowWidth >= 768 && videoElement) {
+			videoElement.src = videoSource;
+			videoElement.setAttribute("autoplay", "");
+			videoElement.classList.add("video-element--show");
+			// videoContainer.classList.add('video-container--reveal');
+			console.log(`adding reveal class`);
+			console.log(`setting autoplay on ${videoElement.dataset.source}`);
 
-        console.log('addAutoplay');
-        if (windowWidth >= 768 && videoElement) {
-            videoElement.src = videoSource;
-            videoElement.setAttribute('autoplay','');
-            videoElement.classList.add('video-element--show');
-            // videoContainer.classList.add('video-container--reveal');
-            console.log(`adding reveal class`);
-            console.log(`setting autoplay on ${videoElement.dataset.source}`);
-            
-            // setTimeout(logBuffered, 5000);
-        };
-    }
+			// setTimeout(logBuffered, 5000);
+		}
+	}
 
-    window.onload = addAutoplay;
+	window.onload = addAutoplay;
 
-    // function logBuffered() {
-    //     console.log(`videoElement.buffered.start: ${videoElement.buffered.start(0)}`);
-    //     console.log(`videoElement.buffered.length: ${videoElement.buffered.length}`);
-    //     console.log(`videoElement.buffered.end: ${videoElement.buffered.end(0)}`);
-    //     console.log(`videoElement.duration: ${videoElement.duration}`);
-    //     console.log(`videoElement.src: ${videoElement.src}`);
-    // }
+	// function logBuffered() {
+	//     console.log(`videoElement.buffered.start: ${videoElement.buffered.start(0)}`);
+	//     console.log(`videoElement.buffered.length: ${videoElement.buffered.length}`);
+	//     console.log(`videoElement.buffered.end: ${videoElement.buffered.end(0)}`);
+	//     console.log(`videoElement.duration: ${videoElement.duration}`);
+	//     console.log(`videoElement.src: ${videoElement.src}`);
+	// }
 
-    // for manual load for testing
-    // document.querySelector('.hero__heading').addEventListener('click', addAutoplay);
-
+	// for manual load for testing
+	// document.querySelector('.hero__heading').addEventListener('click', addAutoplay);
 </script>
 
-<style define:vars={{backgroundImageSet}}>
+<style define:vars={{ backgroundImageSet }}>
+	/* probably need a container for the video, if only for postion relative */
 
-/* probably need a container for the video, if only for postion relative */
+	.video-container {
+		/* parent (.hero) has display flex */
+		/* so we can put the background on the container */
+		/* then the video can fade in over the top  */
 
-.video-container {
+		position: relative;
+		/* border: 1px solid blueviolet; */
 
-    /* parent (.hero) has display flex */
-    /* so we can put the background on the container */
-    /* then the video can fade in over the top  */
+		flex-grow: 1;
 
-    position: relative;
-    /* border: 1px solid blueviolet; */
+		/* background-image: image-set(var(--backgroundImageSet)); */
+		/* background-color: hsl(var(--offwhite)); */
+		background-position: top center;
+		background-size: cover;
+	}
 
-    flex-grow: 1;
+	.video-element {
+		/* width and height are very important here! */
+		/* without them the video won't scale to fit the container */
+		/* so object-fit won't work as intended */
+		width: 100%;
+		height: auto;
 
-    /* background-image: image-set(var(--backgroundImageSet)); */
-    /* background-color: hsl(var(--offwhite)); */
-    background-position: top center;
-    background-size: cover;
-}
+		/* The <video> element is a replaced element — its display value is inline */
+		display: block;
+		object-fit: cover;
 
-.video-element {
+		/* to keep the video horizontally centered but starting from the top */
+		position: absolute;
+		/* position: relative; */
+		top: 0;
+		left: 50%;
+		/* left: 520px; */
+		transform: translateX(-50%);
 
-    /* width and height are very important here! */
-    /* without them the video won't scale to fit the container */
-    /* so object-fit won't work as intended */
-    width: 100%;
-    height: auto;
-    
-    /* The <video> element is a replaced element — its display value is inline */
-    display: block;
-    object-fit: cover;
+		/* bg has to go on element, not container */
 
-    /* to keep the video horizontally centered but starting from the top */
-    position: absolute;
-    /* position: relative; */
-    top: 0;
-    left: 50%;
-    /* left: 520px; */
-    transform: translateX(-50%);
+		/* border: 1px solid fuchsia; */
+		/* background-color: hotpink; */
 
-    /* bg has to go on element, not container */
-    
-    /* border: 1px solid fuchsia; */
-    /* background-color: hotpink; */
+		opacity: 0;
+		/* transition: opacity 2s ease-in; */
+	}
 
-    opacity: 0;
-    /* transition: opacity 2s ease-in; */
-}
-
-/* :is(.video-element--md, .video-element--lg, .video-element--xl) {
+	/* :is(.video-element--md, .video-element--lg, .video-element--xl) {
     display: none;
 } */
 
-/* display block utility */
-/* probably use this for showing hiding on window resize */
-/* .video-element--show {
+	/* display block utility */
+	/* probably use this for showing hiding on window resize */
+	/* .video-element--show {
     display: block;
 } */
 
-.video-element--show {
-    opacity: 1;
-}
+	.video-element--show {
+		opacity: 1;
+	}
 
-/* add this class when video is ready */
-/* it flashes and fades out */
-/* has to go on the container */
-/* no pseudo elements on replaced elements! */
-.video-container--reveal {
+	/* gonna have to put the reveal animation on a span */
+	/* we can't get an event fire for the animation if it's on a pseudo element */
 
-    position: relative;
-    /* background-color: hsl(var(--offwhite)); */
+	/* add this class when video is ready */
+	/* it flashes and fades out */
 
-}
+	/* the class is added in preloader > initialise function */
 
-.video-container--reveal::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background-color: hsl(var(--offwhite));
-    /* delay of 0.75s to let the loader fade out first - nah*/
-    animation: flash-and-fade 0.5s ease-in-out normal 1 forwards;
-}
+	.video-container__span {
+		z-index: 2;
+		/* so it doesn't interfere with links and buttons beneath it */
+		pointer-events: none;
+	}
 
-@keyframes flash-and-fade {
-    from { opacity: 1 }
-    to { opacity: 0 }
-}
+	.video-container__span--reveal {
+		position: absolute;
+		inset: 0;
+		background-color: hsl(var(--white));
+		/* delay of 0.75s to let the loader fade out first - nah*/
+		animation: flash-and-fade 0.5s ease-in-out normal 1 forwards;
+	}
 
-
-
+	@keyframes flash-and-fade {
+		from {
+			opacity: 1;
+		}
+		to {
+			opacity: 1;
+		}
+	}
 </style>

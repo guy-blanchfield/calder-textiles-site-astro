@@ -2,134 +2,125 @@
 
 /* this is the true baskerville */
 @font-face {
-    font-family: 'Baskerville Normal';
-    /* src: local('Baskerville'), url('/fonts/baskerville-normal.woff') format('woff'); */
-    src: local('Baskerville'), url('/fonts/baskerville-normal.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
-}
-
-
-/* these are the impostors */
-@font-face {
-    font-family: 'Baskervville';
-    src: url('/fonts/baskervville-regular-webfont.woff2') format('woff2'),
-         url('/fonts/baskervville-regular-webfont.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
-
+	font-family: "Baskerville Normal";
+	/* src: local('Baskerville'), url('/fonts/baskerville-normal.woff') format('woff'); */
+	src: local("Baskerville"),
+		url("/fonts/baskerville-normal.woff") format("woff");
+	font-weight: normal;
+	font-style: normal;
 }
 
 @font-face {
-    font-family: 'Baskervville';
-    src: url('/fonts/baskervville-italic-webfont.woff2') format('woff2'),
-         url('/fontsbaskervville-italic-webfont.woff') format('woff');
-    font-weight: normal;
-    font-style: italic;
+	font-family: "Libre Baskerville";
+	src: url("/fonts/librebaskerville-regular-webfont.woff2") format("woff2"),
+		url("/fonts/librebaskerville-regular-webfont.woff") format("woff");
+	font-weight: normal;
+	font-style: normal;
+	font-display: swap;
 }
-
 
 /* :root for global custom properties (variables) */
 
 :root {
+	/* try overriding the bootstrap body-font variable here */
+	/* see: https://www.youtube.com/watch?v=_7jrFQsaxT0 */
 
-    /* try overriding the bootstrap body-font variable here */
-    /* see: https://www.youtube.com/watch?v=_7jrFQsaxT0 */
-    
-    /* yeah the below works fine, but let's see if we can get away with the default bs sytem ui stack */
-    /* --bs-body-font-family: 'Roboto', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; */
-    
-    /* ----------- colours ------------- */
+	/* yeah the below works fine, but let's see if we can get away with the default bs sytem ui stack */
+	/* --bs-body-font-family: 'Roboto', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; */
 
-    /* navy #2c3446 */
-    
-    --darkergrey: 220 5% 20%;
-    --midbluegrey: 204 9% 43%;
-    /* --lightbluegrey: 203 9% 54%; this was the original colourpicker value from the pdf screen grab */ 
-    /* try increasing saturation, who knows what the colour profile's up to on this laptop */
-    /* higher hue = bluer, lower hue = greener */
-    --lightbluegrey: 200 15% 54%;
-    /* --lightbluegrey-rgb: 127, 141, 150; */
-    --darkblue: 225 16% 23%;
-    --darkerblue: 223% 13% 16%;
-    
-    --white: 0 0% 100%;
-    /* offwhite from the lightbluegrey */
-    --offwhite: 203 9% 83%;
-    
-    --text: hsl(var(--darkergrey));
-    --muted: hsl(var(--lightbluegrey));
-    --accent: hsl(var(--darkblue));
+	/* ----------- colours ------------- */
 
-    /* -------------- sizes --------------- */
+	/* navy #2c3446 */
 
-    /* set a height for the navbar and we can use the same value to calculate hero height and main top margin or padding */
-    /* --navbar-height: 5.5rem; */
+	--darkergrey: 220 5% 20%;
+	--midbluegrey: 204 9% 43%;
+	/* --lightbluegrey: 203 9% 54%; this was the original colourpicker value from the pdf screen grab */
+	/* try increasing saturation, who knows what the colour profile's up to on this laptop */
+	/* higher hue = bluer, lower hue = greener */
+	--lightbluegrey: 200 15% 54%;
+	/* --lightbluegrey-rgb: 127, 141, 150; */
+	--darkblue: 225 16% 23%;
+	--darkerblue: 223% 13% 16%;
 
-    /* navbar height is no good because the vertical centering cause things to shift when navbar expands / collapses */
-    /* try setting a height for the logo and some vertical padding values */
+	--white: 0 0% 100%;
+	/* offwhite from the lightbluegrey */
+	--offwhite: 203 9% 83%;
 
-    /* then we should be able to use these values to calc the hero height */
+	--text: hsl(var(--darkergrey));
+	--muted: hsl(var(--lightbluegrey));
+	--accent: hsl(var(--darkblue));
 
-    /* this is the same as Header.astro > logoSize.height */
-    --navbar-brand-logo-height: 51px;
+	/* -------------- sizes --------------- */
 
-    --navbar-vertical-padding: 1rem;
+	/* set a height for the navbar and we can use the same value to calculate hero height and main top margin or padding */
+	/* --navbar-height: 5.5rem; */
 
-    /* try putting the calculation for the header height / hero height here as a global var */
-    --header-height-calc: calc(var(--navbar-brand-logo-height) + (var(--navbar-vertical-padding)*2) + 0.5rem);
-    
+	/* navbar height is no good because the vertical centering cause things to shift when navbar expands / collapses */
+	/* try setting a height for the logo and some vertical padding values */
+
+	/* then we should be able to use these values to calc the hero height */
+
+	/* this is the same as Header.astro > logoSize.height */
+	--navbar-brand-logo-height: 51px;
+
+	--navbar-vertical-padding: 1rem;
+
+	/* try putting the calculation for the header height / hero height here as a global var */
+	--header-height-calc: calc(
+		var(--navbar-brand-logo-height) + (var(--navbar-vertical-padding) * 2) +
+			0.5rem
+	);
 }
 
 /* to make sure the page takes up full height, in the event of there not being */
 /* enough content to fill the height */
 
-body { 
-    min-height: 100vh; 
-    /* margin: 0;  */
+body {
+	min-height: 100vh;
+	/* margin: 0;  */
 
-    display: flex; 
-    flex-direction: column; 
+	display: flex;
+	flex-direction: column;
 }
 
 /* main fills all the space between header & footer */
-main { 
-    /* background-color: fuchsia; */
-    flex: 1; 
-    /* shorthand for: flex-grow: 1, flex-shrink 0, flex-basis 0 */
-    /* default values are: 0 1 auto */
+main {
+	/* background-color: fuchsia; */
+	flex: 1;
+	/* shorthand for: flex-grow: 1, flex-shrink 0, flex-basis 0 */
+	/* default values are: 0 1 auto */
 
-    /* NB body flex-direction is column so these all relate to the vertical */
+	/* NB body flex-direction is column so these all relate to the vertical */
 
-    /* make main display: flex so that the sections can stretch to fit if necessary */
-    /* e.g. if there's only one section it can stretch to fill all of main */
-    /* (main strecthes to fit the available space between header and footer) */
-    display: flex;
-    flex-direction: column;
+	/* make main display: flex so that the sections can stretch to fit if necessary */
+	/* e.g. if there's only one section it can stretch to fill all of main */
+	/* (main strecthes to fit the available space between header and footer) */
+	display: flex;
+	flex-direction: column;
 }
 
-header{ 
-    /* leave any height settings on header until the hero is in, no telling what it might do */
-    /* min-height: 6rem;  */
+header {
+	/* leave any height settings on header until the hero is in, no telling what it might do */
+	/* min-height: 6rem;  */
 }
 
 footer {
-    /* min-height: 50px;  */
+	/* min-height: 50px;  */
 }
 
 /* ------------ end min-height stuff ------------ */
-
 
 /* let's have a utility class for the serif font */
 /* otherwise we have to update every heading class */
 /* everytime we decide to change the font */
 .serif {
-    /* font-family: 'Baskerville Normal', 'Martel', 'Georgia', serif; */
-    font-family: 'Baskerville Normal', serif;
-    font-weight: normal;
+	/* font-family: 'Baskerville Normal', 'Martel', 'Georgia', serif; */
+	/* font-family: 'Baskerville Normal', serif; */
+	font-family: "Libre Baskerville", serif;
+	font-weight: normal;
 }
 
 /* tailwind calls its nowrap utility whitespace-nowrap */
 .nowrap {
-    white-space: nowrap;
+	white-space: nowrap;
 }
