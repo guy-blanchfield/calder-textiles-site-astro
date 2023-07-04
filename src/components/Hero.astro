@@ -70,7 +70,7 @@ const goal = 3;
 
 	{
 		currentPath === "/" ? (
-			<VideoFullWidth videoBase={imageBase} />
+			<VideoFullWidth videoBase={imageBase} videoAutoplay="false" />
 		) : (
 			<PictureFullWidth
 				imageBase={imageBase}
@@ -141,11 +141,7 @@ const goal = 3;
 	<!-- from a11y -->
 	<!-- "A link is focusable and can be triggered by the enter key. -->
 	<!-- A link will redirect you to a new page or a section within the same page." -->
-	<a
-		class="hero__page-content-link"
-		href="#page-content"
-		aria-label="Page Content"
-	>
+	<a class="hero__page-content-link" href="#page-content" aria-label="Page Content">
 		<!-- was span, now using astro-icon -->
 		<!-- <span class="material-symbols-outlined"> -->
 		<!-- arrow_downward -->
@@ -156,10 +152,7 @@ const goal = 3;
 		<!-- </span> -->
 		<!-- gonna have to use the svg for this, bc we need the lighter weight -->
 		<!-- name was ic:outline-expand-circle-down -->
-		<Icon
-			name="expand_circle_down_FILL0_wght200_GRAD0_opsz48"
-			class="page-content-link__icon"
-		/>
+		<Icon name="expand_circle_down_FILL0_wght200_GRAD0_opsz48" class="page-content-link__icon" />
 	</a>
 </div>
 
@@ -244,11 +237,7 @@ const goal = 3;
 	/* the adjacent sibling selctor has to be :global */
 	/* because the two siblings are in different components, so have different scope */
 	:global(.picture--show + .hero__overlay) {
-		background: linear-gradient(
-			to right top,
-			hsl(0 0% 0% / 0.5),
-			hsl(0 0% 0% / 0)
-		);
+		background: linear-gradient(to right top, hsl(0 0% 0% / 0.5), hsl(0 0% 0% / 0));
 	}
 
 	/* think we might need the :global here as well because specificity */

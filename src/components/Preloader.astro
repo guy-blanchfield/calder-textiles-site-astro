@@ -2,7 +2,8 @@
 <div class="loader loader--blank"></div>
 
 <!-- try is:inline here so it loads quicker (and before the google map stuff) -->
-<script is:inline>
+<!-- nah - try hiding all the content until the scripts have loaded -->
+<script>
 	// maybe put the init function in a separate module and import it, if that'll work
 
 	// this is where we put anything that needs to happen after the loader is done
@@ -10,19 +11,12 @@
 	function initialise() {
 		// const heroImage: HTMLImageElement = document.querySelector('hero__image');
 		// check if hero__image exists i.e. it's not a hero video instead
-		const heroImage = document.querySelector(".hero__image") ?? undefined;
-		const heroVideo = document.querySelector(".video-element") ?? undefined;
-		const heroVideoContainer = document.querySelector(".video-container") ?? undefined;
-		const heroVideoContainerSpan = document.querySelector(".video-container__span") ?? undefined;
+		const heroImage: HTMLImageElement = document.querySelector(".hero__image") ?? undefined;
+		const heroVideo: HTMLMediaElement = document.querySelector(".video-element") ?? undefined;
+		// const heroVideoContainer: HTMLElement = document.querySelector(".video-container") ?? undefined;
+		// const heroVideoContainerSpan: HTMLElement = document.querySelector(".video-container__span") ?? undefined;
 
 		console.log("initialise!!!!!!!!");
-
-		// to add a reveal / transition type little css animated flash
-		// so the video doesn't just appear, all boring like
-		function showHeroVideoReveal() {
-			heroVideoContainerSpan.classList.add("video-container__span--reveal");
-			console.log(`add video reveal class`);
-		}
 
 		// this needs to happen on transition end as well, if it hasn't happened
 		function showHeroText() {
@@ -65,24 +59,23 @@
 				console.log("hero image should be ready");
 				showHeroText();
 			} else {
-				console.log(`must be video, this should resolve!?`);
+				console.log(`!heroImage, must be video`);
 
 				// callback funtion for the 'canplay' event fired by video when it's ready to play
 				function canPlayCallback() {
 					console.log(`Can now play video: ${heroVideo.src}`);
 					console.log(`calling showHeroText function`);
-					// don't call the showHeroText, call showHeroVideoReveal instead
-					// and set up an event listener for the transition end, that calls showHeroText
-					// showHeroText();
-					heroVideoContainerSpan.addEventListener("animationend", () => {
-						console.log(`video reveal animation ended`);
-						// hide the span or it stops the links and buttons working
-						// we've got pointer-events: none on the span but maybe remove it anyway?
-						heroVideoContainerSpan.remove();
-						console.log(`span removed!`);
-						showHeroText();
-					});
-					showHeroVideoReveal();
+					showHeroText();
+					// showHeroVideo();
+
+					// if video hasn't been set to autoplay by the VideoFullWidthComponent
+					// set it to autoplay now
+					if (heroVideo.dataset.autoplay == "false") {
+						console.log(`setting autoplay on ${heroVideo.src}`);
+						// heroVideo.setAttribute("autoplay", "");
+						heroVideo.play();
+					}
+
 					// we only want the first canplay event
 					// (it fires after every time the video buffers)
 					// so remove this eventlistener
@@ -90,19 +83,17 @@
 					heroVideo.removeEventListener("canplay", canPlayCallback);
 					console.log("removing video event listener");
 				}
-				// Video.readystate >= 3 is the condition you're looking for
-				// or there's a canplay event, might be better
-				// are we sure the video is ready?
-				console.log(`heroVideo: ${heroVideo}`);
-				console.log(`adding video event listener`);
+
 				if (heroVideo) {
-					heroVideo.addEventListener("canplay", canPlayCallback);
-					// heroVideo.addEventListener("canplay", () => {
-					// 	console.log(`can now play video: ${heroVideo.src}`);
-					// 	canPlayCallback();
-					// });
+					// if video is already loaded and playing just manually call the canPlayCallback
+					if (heroVideo.readyState >= 2) {
+						canPlayCallback();
+					} else {
+						// otherwise set an event listener for the canplay event
+						console.log(`adding video event listener`);
+						heroVideo.addEventListener("canplay", canPlayCallback);
+					}
 				}
-				// showHeroText();
 			}
 		}
 
@@ -118,6 +109,9 @@
 		// 2. hero image or first bit of hero video is loaded
 		// 3. if the preloader is running it needs to have finished and faded out
 	}
+
+	// end initialise function ----------------------------------------------------------------------
+
 	// try something like this
 	// (it's ok we don't need cookie consent to do this!)
 	// (sesion storage is considered strictly necessary)
@@ -145,6 +139,10 @@
 	// sessionStorage.removeItem('preloadComplete');
 	// console.log(`session storage item is now: ${sessionStorage.getItem('preloadComplete')}`);
 
+	// think once we've got this far, we can unhide the content
+	document.querySelector(".content-wrapper").classList.remove("hidden");
+	// document.body.classList.remove("hidden");
+	console.log("unhide the body!");
 	const preLoader = document.querySelector(".loader");
 
 	// if preloadComplete hasn't been set yet
@@ -159,18 +157,22 @@
 		// we don't want the transition happening every time a new page loads
 		// loader--loading also adds the animation, using ::after
 		preLoader.classList.add("loader--loading");
+		// also add a class to the body to prevent scrolling while loader is showing
+		document.body.classList.add("loader-showing");
 		console.log(
-			`loader is now loader--loading because preloadComplete is: ${sessionStorage.getItem(
-				"preloadComplete"
-			)}`
+			`loader is now loader--loading because preloadComplete is: ${sessionStorage.getItem("preloadComplete")}`
 		);
 
 		// add eventlistener for the transitionend when the loader fades out
 		// when it fires, set loader visibility to hidden so it doesn't interfere with links and buttons
 
 		preLoader.addEventListener("transitionend", () => {
+			// set preloader visibility to hidden
 			preLoader.classList.add("loader--hidden");
 			console.log("transitionend event fired - preloader visibility hidden");
+			// remove the body class that was disabling scrolling
+			document.body.classList.remove("loader-showing");
+			console.log("remove body class loader-showing");
 
 			// this is the first place we need to call the initialise function
 			// i.e. when the window load event has fired AND the preloader has finished its fade out
@@ -190,17 +192,13 @@
 			console.log(`load event fired!`);
 
 			// don't forget to uncomment this!!!! ------------------------------------- < important!
-			sessionStorage.setItem("preloadComplete", "true");
+			// sessionStorage.setItem("preloadComplete", "true");
 			console.log(`preloadComplete is now: ${sessionStorage.getItem("preloadComplete")}`);
 		});
 
 		console.log(`load event listener added`);
 	} else {
-		console.log(
-			`loader is not showing because preloadComplete is: ${sessionStorage.getItem(
-				"preloadComplete"
-			)}`
-		);
+		console.log(`loader is not showing because preloadComplete is: ${sessionStorage.getItem("preloadComplete")}`);
 		// hide the loader
 		preLoader.classList.add("loader--transparent");
 		// set loader visibility to hidden so it doesn't interfere with links and buttons
@@ -225,6 +223,12 @@
 </script>
 
 <style>
+	/* to disable scrolling while loader is showing */
+	body.loader-showing {
+		height: 100vh;
+		overflow-y: hidden;
+	}
+
 	/* NB google maps z-index appears to be 1000000 plus a few; */
 	/* so I suppose we're gonna have to go 1000100 or maybe 2000000! */
 

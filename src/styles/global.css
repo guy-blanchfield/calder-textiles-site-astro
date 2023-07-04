@@ -4,8 +4,7 @@
 @font-face {
 	font-family: "Baskerville Normal";
 	/* src: local('Baskerville'), url('/fonts/baskerville-normal.woff') format('woff'); */
-	src: local("Baskerville"),
-		url("/fonts/baskerville-normal.woff") format("woff");
+	src: local("Baskerville"), url("/fonts/baskerville-normal.woff") format("woff");
 	font-weight: normal;
 	font-style: normal;
 }
@@ -66,10 +65,7 @@
 	--navbar-vertical-padding: 1rem;
 
 	/* try putting the calculation for the header height / hero height here as a global var */
-	--header-height-calc: calc(
-		var(--navbar-brand-logo-height) + (var(--navbar-vertical-padding) * 2) +
-			0.5rem
-	);
+	--header-height-calc: calc(var(--navbar-brand-logo-height) + (var(--navbar-vertical-padding) * 2) + 0.5rem);
 }
 
 /* to make sure the page takes up full height, in the event of there not being */
@@ -109,6 +105,12 @@ footer {
 }
 
 /* ------------ end min-height stuff ------------ */
+
+/* utility class to hide stuff */
+/* using this on the body to hide everything until scripts are loaded */
+.hidden {
+	visibility: hidden;
+}
 
 /* let's have a utility class for the serif font */
 /* otherwise we have to update every heading class */
