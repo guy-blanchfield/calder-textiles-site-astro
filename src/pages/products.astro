@@ -1,58 +1,51 @@
 ---
-
-import Layout from '../layouts/Layout.astro';
-import Hero from '../components/Hero.astro';
-import PageContentSection from '../components/PageContentSection.astro';
-import PictureSection from '../components/PictureSection.astro';
-import ContactSection from '../components/ContactSection.astro';
-
+import Layout from "../layouts/Layout.astro";
+import Hero from "../components/Hero.astro";
+import PageContentSection from "../components/PageContentSection.astro";
+import PictureSection from "../components/PictureSection.astro";
+import ContactSection from "../components/ContactSection.astro";
 ---
 
 <Layout title="Products : Calder Textiles">
 	<main>
-
-		<Hero imageBase="sheep" imageAlt="Some Sheep">
+		<Hero imageBase="cream-yarn" imageAlt="Cream coloured yarn">
 			<!-- using Fragment here, span also works, but fragment produces tidier markup -->
-			<Fragment slot="hero-heading">We pride ourselves on the quality we achieve, as well as the versatility of production.</Fragment>
+			<Fragment slot="hero-heading">
+				We pride ourselves on the quality we achieve, as well as the versatility of production.
+			</Fragment>
 			<!-- <Fragment slot="hero-para">Not One of the UK's foremost woollen yarn spinners with a world-wide reputation for excellence.</Fragment> -->
 		</Hero>
 
-        <PageContentSection heading="Products" bgColour="var(--midbluegrey)">
+		<PageContentSection heading="Products" bgColour="var(--midbluegrey)">
+			<Fragment slot="page-content">
+				<p>Yarns made on the Woollen Spinning System</p>
+				<!-- fs-6 is 1rem, to match <p> -->
+				<h4 class="fs-6 fw-bold">Uses</h4>
+				<p class="mb-4">Axminster, Wilton, Tufted, Colortec, Graphics, Flat weave, pass machine and rug manufacture.</p>
 
-            <Fragment slot="page-content">
+				<h4 class="fs-6 fw-bold">Raw materials</h4>
+				<p>All Wool, 80/20 Wool/Polyamide, 80/10/10</p>
+				<p class="mb-4">Wool/Polyamide/Polyester Melty and Wool blends.</p>
+				<h4 class="fs-6 fw-bold">Count Ranges</h4>
+				<p>42 yards/oz. - 146 yards/oz. Dewsbury (N.M 1.35 to N.M 4.7).</p>
+			</Fragment>
 
-                <p>Yarns made on the Woollen Spinning System</p>
-                <!-- fs-6 is 1rem, to match <p> -->
-                <h4 class="fs-6 fw-bold">Uses</h4>
-                <p class="mb-4">Axminster, Wilton, Tufted, Colortec, Graphics, Flat weave, pass machine and rug manufacture.</p>
+			<Fragment slot="page-content-2">
+				<h3 class="fs-4 fw-bold mb-0">Ply</h3>
+				<p class="fs-5 mb-4">Single, two, three, four and six.</p>
+				<h3 class="fs-4 fw-bold mb-0">Dyeing</h3>
+				<p class="fs-5 mb-4">Fibre (stock), hank (skein).</p>
+				<h3 class="fs-4 fw-bold mb-0">Finishing</h3>
+				<p class="fs-5 mb-4">Scoured (washed), Chemset and Autoclave.</p>
+				<h3 class="fs-4 fw-bold mb-0">Packages</h3>
+				<p class="fs-5 mb-4">Hanks (skeins), Cones, Parallel tubes (cylinders) and cheeses (pencil tubes).</p>
+			</Fragment>
+		</PageContentSection>
 
-                <h4 class="fs-6 fw-bold">Raw materials</h4>
-                <p>All Wool, 80/20 Wool/Polyamide, 80/10/10</p>
-                <p class="mb-4">Wool/Polyamide/Polyester Melty and Wool blends.</p>
-                <h4 class="fs-6 fw-bold">Count Ranges</h4>
-                <p>42 yards/oz. - 146 yards/oz. Dewsbury (N.M 1.35 to N.M 4.7).</p>
-            </Fragment>
-
-            <Fragment slot="page-content-2">
-                <h3 class="fs-4 fw-bold mb-0">Ply</h3>
-                <p class="fs-5 mb-4">Single, two, three, four and six.</p>
-                <h3 class="fs-4 fw-bold mb-0">Dyeing</h3>
-                <p class="fs-5 mb-4">Fibre (stock), hank (skein).</p>
-                <h3 class="fs-4 fw-bold mb-0">Finishing</h3>
-                <p class="fs-5 mb-4">Scoured (washed), Chemset and Autoclave.</p>
-                <h3 class="fs-4 fw-bold mb-0">Packages</h3>
-                <p class="fs-5 mb-4">Hanks (skeins), Cones, Parallel tubes (cylinders) and cheeses (pencil tubes).</p>
-            </Fragment>
-
-        </PageContentSection>
-
-        <PictureSection imageBase="sheep" />
+		<PictureSection imageBase="pom-colour-samples" />
 
 		<ContactSection />
-
 	</main>
 </Layout>
 
-<style>
-
-</style>
+<style></style>

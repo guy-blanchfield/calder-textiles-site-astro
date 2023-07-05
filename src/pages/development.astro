@@ -1,12 +1,12 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import Hero from '../components/Hero.astro';
-import PageContentSection from '../components/PageContentSection.astro';
-import ContactSection from '../components/ContactSection.astro';
+import Layout from "../layouts/Layout.astro";
+import Hero from "../components/Hero.astro";
+import PageContentSection from "../components/PageContentSection.astro";
+import ContactSection from "../components/ContactSection.astro";
 
 // diagram images
 
-const diagramBase = "development-diagram"
+const diagramBase = "development-diagram";
 
 // tried this with img srcset sizes, no good, use picture instead
 // picture is the obvious choice, just wanted to try and figure out how sizes works
@@ -28,123 +28,104 @@ const diagramFallback3 = `/images/${diagramBase}-3.png`;
 
 const diagramMediaMax = "(max-width: 576px)";
 const diagramMediaMin = "(min-width: 577px)";
-
 ---
 
 <Layout title="Development : Calder Textiles">
+	<Hero imageBase="pink-yarn" imageAlt="Pink Yarn">
+		<!-- using Fragment here, span also works, but fragment produces tidier markup -->
+		<Fragment slot="hero-heading">We work across all requirements with absolute dedication.</Fragment>
+		<!-- <Fragment slot="hero-para">One of the UK's foremost woollen yarn spinners with a world-wide reputation for excellence.</Fragment> -->
+	</Hero>
 
-		<Hero imageBase="sheep" imageAlt="Some Sheep">
-			<!-- using Fragment here, span also works, but fragment produces tidier markup -->
-			<Fragment slot="hero-heading">We work across all requirements with absolute dedication.</Fragment>
-			<!-- <Fragment slot="hero-para">One of the UK's foremost woollen yarn spinners with a world-wide reputation for excellence.</Fragment> -->
-		</Hero>
+	<PageContentSection heading="Development">
+		<Fragment slot="page-content">
+			<p>A key area of our operation is to develop new ranges with and for our customers.</p>
+			<p>
+				We work very closely with our customers whether we are creating new shades, be that natural heathers, dyed
+				heathers, stipples or a new colour bank.
+			</p>
+		</Fragment>
 
-		<PageContentSection heading="Development">
+		<Fragment slot="page-content-2">
+			<p>
+				We also look at the make-up of the yarn, count and raw materials to see how texture can play a part. We can also
+				experiment with different fibres such as Alpaca and Cashmere.
+			</p>
+		</Fragment>
+	</PageContentSection>
 
-			<Fragment slot="page-content">
-				<p>A key area of our operation is to develop new ranges with and
-					for our customers.</p>
-				<p>We work very closely with our customers whether we are
-					creating new shades, be that natural heathers, dyed heathers,
-					stipples or a new colour bank.</p>
-			</Fragment>
+	<!-- just do this diagram bit ad hoc for now it's the only one of its kind -->
+	<!-- so probably doesn't justify a component -->
 
-			<Fragment slot="page-content-2">
-				<p>We also look at the make-up of the yarn, count and raw
-					materials to see how texture can play a part. We can also
-					experiment with different fibres such as Alpaca and Cashmere.</p>
-			</Fragment>
+	<!-- picture seems to be the best solution for this -->
 
-		</PageContentSection>
+	<section class="section-diagram">
+		<div class="container">
+			<div class="row no-gutters p-5">
+				<div class="col-sm-4 px-0 align-self-center section-diagram__col">
+					<picture>
+						<source media={diagramMediaMax} srcset={diagramSrcsetMob1} />
+						<source media={diagramMediaMin} srcset={diagramSrcset1} />
 
-		<!-- just do this diagram bit ad hoc for now it's the only one of its kind -->
-		<!-- so probably doesn't justify a component -->
+						<img src={diagramFallback1} alt="Description of diagram 1" class="section-diagram__img" />
+					</picture>
+				</div>
 
-		<!-- picture seems to be the best solution for this -->
+				<div class="col-sm-4 px-0 align-self-center section-diagram__col">
+					<picture>
+						<source media={diagramMediaMax} srcset={diagramSrcsetMob2} />
+						<source media={diagramMediaMin} srcset={diagramSrcset2} />
 
-		<section class="section-diagram">
-			<div class="container">
-				<div class="row no-gutters p-5">
-					<div class="col-sm-4 px-0 align-self-center section-diagram__col">
-						<picture>
-							<source media={diagramMediaMax} srcset={diagramSrcsetMob1} >
-							<source media={diagramMediaMin} srcset={diagramSrcset1} >
+						<img src={diagramFallback2} alt="Description of diagram 2" class="section-diagram__img" />
+					</picture>
+				</div>
 
-							<img 
-								src={diagramFallback1}
-								alt="Description of diagram 1" 
-								class="section-diagram__img" 
-							/>
-						</picture>
-						
-					</div>
+				<div class="col-sm-4 px-0 align-self-center section-diagram__col">
+					<picture>
+						<source media={diagramMediaMax} srcset={diagramSrcsetMob3} />
+						<source media={diagramMediaMin} srcset={diagramSrcset3} />
 
-					<div class="col-sm-4 px-0 align-self-center section-diagram__col">
-						<picture>
-							<source media={diagramMediaMax} srcset={diagramSrcsetMob2} >
-							<source media={diagramMediaMin} srcset={diagramSrcset2} >
-
-							<img 
-								src={diagramFallback2}
-								alt="Description of diagram 2" 
-								class="section-diagram__img" 
-							/>
-						</picture>
-					</div>
-
-					<div class="col-sm-4 px-0 align-self-center section-diagram__col">
-						<picture>
-							<source media={diagramMediaMax} srcset={diagramSrcsetMob3} >
-							<source media={diagramMediaMin} srcset={diagramSrcset3} >
-
-							<img 
-								src={diagramFallback3}
-								alt="Description of diagram 3" 
-								class="section-diagram__img" 
-							/>
-						</picture>
-					</div>
+						<img src={diagramFallback3} alt="Description of diagram 3" class="section-diagram__img" />
+					</picture>
 				</div>
 			</div>
-		</section>
+		</div>
+	</section>
 
-		<ContactSection />
-
+	<ContactSection />
 </Layout>
 
 <style>
-
-.section-diagram {
-	background-color: hsl(240, 2%, 90%);
-}
-
-@media (max-width: 576px) {
-	.section-diagram__col:not(:last-child)::after {
-		content: '';
-		display: block;
-		/* display: flex; */
-		/* width: 50px; */
-		/* height: 75px; */
-		width: 100%;
-		/* think we need to use padding-bootom here instead of height */
-		/* if we want to use a percentage value */
-		/* it's a percentage of the width btw! */
-		padding-bottom: 20%;
-		/* height: 50px; */
-		margin: 0 auto;
-		/* align-items: center; */
-		/* justify-content: center; */
-		background-image: url('/images/development-diagram-arrow-down.png');
-		background-size: contain;
-		background-repeat: no-repeat;
-		background-position: center;
-		/* border: 1px solid lawngreen; */
+	.section-diagram {
+		background-color: hsl(240, 2%, 90%);
 	}
-}
 
-.section-diagram__img {
-	max-width: 100%;
-	/* border: 1px solid yellow; */
-}
+	@media (max-width: 576px) {
+		.section-diagram__col:not(:last-child)::after {
+			content: "";
+			display: block;
+			/* display: flex; */
+			/* width: 50px; */
+			/* height: 75px; */
+			width: 100%;
+			/* think we need to use padding-bootom here instead of height */
+			/* if we want to use a percentage value */
+			/* it's a percentage of the width btw! */
+			padding-bottom: 20%;
+			/* height: 50px; */
+			margin: 0 auto;
+			/* align-items: center; */
+			/* justify-content: center; */
+			background-image: url("/images/development-diagram-arrow-down.png");
+			background-size: contain;
+			background-repeat: no-repeat;
+			background-position: center;
+			/* border: 1px solid lawngreen; */
+		}
+	}
 
+	.section-diagram__img {
+		max-width: 100%;
+		/* border: 1px solid yellow; */
+	}
 </style>

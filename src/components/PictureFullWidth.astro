@@ -1,6 +1,5 @@
 ---
-
-// needs a class for the picture element AND a class for the img element inside 
+// needs a class for the picture element AND a class for the img element inside
 // (it's not just a fallback - its the img element that displays the image)
 
 // named them somethingClasses just in case we need more than one
@@ -17,21 +16,18 @@
 // and so when the css loads and sets display:none for mobile, modern browsers won't download it at all
 // hopefully!
 
-
-
 export interface Props {
-    imageBase: string;
-    imageAlt?: string;
-    pictureClasses: string; // e.g. hero__picture
-    imageClasses: string; // e.g. hero__image
-    // includePortrait?: boolean;
-    lazyLoad?: boolean;
+	imageBase: string;
+	imageAlt?: string;
+	pictureClasses: string; // e.g. hero__picture
+	imageClasses: string; // e.g. hero__image
+	// includePortrait?: boolean;
+	lazyLoad?: boolean;
 }
 
 // think lazyLoad should be true as default, only the hero picture needs to eager load
 
-const { imageBase, imageAlt = '', pictureClasses, imageClasses, lazyLoad = true } = Astro.props;
-
+const { imageBase, imageAlt = "", pictureClasses, imageClasses, lazyLoad = true } = Astro.props;
 
 // just create the whole string for each srcset
 // it'll be way tidier than creating objects and arrays to generate the the string dynamically
@@ -43,10 +39,16 @@ const { imageBase, imageAlt = '', pictureClasses, imageClasses, lazyLoad = true 
 const portraitSrcset = `/images/${imageBase}-portrait-540x960.jpg 540w, /images/${imageBase}-portrait-810x1440.jpg 810w, /images/${imageBase}-portrait-1080x1920.jpg 1080w`; // 9:16
 const portraitSrcsetWebp = `/images/${imageBase}-portrait-540x960.webp 540w, /images/${imageBase}-portrait-810x1440.webp 810w, /images/${imageBase}-portrait-1080x1920.webp 1080w`; // 9:16
 //const landscapeSrcset = `/images/${imageBase}-960x720.jpg 960w, /images/${imageBase}-1440x960.jpg 1440w, /images/${imageBase}-1920x1440.jpg 1920w, /images/${imageBase}-2400x1600.jpg 2400w`; //4:3
-const landscapeSrcset = `/images/${imageBase}-960x540.jpg 960w, /images/${imageBase}-1440x810.jpg 1440w, /images/${imageBase}-1920x1080.jpg 1920w, /images/${imageBase}-2560x1440.jpg 2560w`; // 16:9
-const landscapeSrcsetWebp = `/images/${imageBase}-960x540.webp 960w, /images/${imageBase}-1440x810.webp 1440w, /images/${imageBase}-1920x1080.webp 1920w, /images/${imageBase}-2560x1440.webp 2560w`; // 16:9
-const fallbackSrc = `/images/${imageBase}-960x540.jpg`;
+// largest 2360x1330
+const landscapeSrcset = `/images/${imageBase}-960x540.jpg 960w, /images/${imageBase}-1440x810.jpg 1440w, /images/${imageBase}-1920x1080.jpg 1920w, /images/${imageBase}-2360x1330.jpg 2560w`; // 16:9
+// largest 2560x1440
+// const landscapeSrcset = `/images/${imageBase}-960x540.jpg 960w, /images/${imageBase}-1440x810.jpg 1440w, /images/${imageBase}-1920x1080.jpg 1920w, /images/${imageBase}-2560x1440.jpg 2560w`; // 16:9
+// largest 2360x1330
+const landscapeSrcsetWebp = `/images/${imageBase}-960x540.webp 960w, /images/${imageBase}-1440x810.webp 1440w, /images/${imageBase}-1920x1080.webp 1920w, /images/${imageBase}-2360x1330.webp 2560w`; // 16:9
+// largest 2560x1440
+// const landscapeSrcsetWebp = `/images/${imageBase}-960x540.webp 960w, /images/${imageBase}-1440x810.webp 1440w, /images/${imageBase}-1920x1080.webp 1920w, /images/${imageBase}-2560x1440.webp 2560w`; // 16:9
 
+const fallbackSrc = `/images/${imageBase}-960x540.jpg`;
 
 // need to create image path variable to pass into style
 // using define:vars
@@ -63,253 +65,240 @@ const fallbackSrc = `/images/${imageBase}-960x540.jpg`;
 // tried 50px images - nah, 20 probably better
 
 const backgroundImageSet = `url(/images/${imageBase}-20x11.webp) type("image/webp"), url(/images/${imageBase}-20x11.jpg) type("image/jpeg")`;
-
 ---
 
-
 <picture class:list={pictureClasses}>
+	<!-- just use media min-width for now -->
+	<!-- add something for orientation (e.g. media="(orientation: portrait)") eventually -->
 
-    <!-- just use media min-width for now -->
-    <!-- add something for orientation (e.g. media="(orientation: portrait)") eventually -->
+	<!-- see: https://developer.mozilla.org/en-US/docs/Learn/HTML/Multimedia_and_embedding/Responsive_images -->
+	<!-- probably want to do something like: -->
 
-    <!-- see: https://developer.mozilla.org/en-US/docs/Learn/HTML/Multimedia_and_embedding/Responsive_images -->
-    <!-- probably want to do something like: -->
+	<!-- <source media="(orientation: portrait)" srcset=".assets/images/{someimage}-portrait-320.jpg, {someimage}-portrait-480.jpg 1.5x, {someimage}-portrait-640.jpg 2x" > -->
+	<!-- <source media="(max-width: 1200px)" srcset="./assets/images/{someimage}-320.jpg, {someimage}-480.jpg 1.5x, {someimage}-640.jpg 2x" > -->
 
-    <!-- <source media="(orientation: portrait)" srcset=".assets/images/{someimage}-portrait-320.jpg, {someimage}-portrait-480.jpg 1.5x, {someimage}-portrait-640.jpg 2x" > -->
-    <!-- <source media="(max-width: 1200px)" srcset="./assets/images/{someimage}-320.jpg, {someimage}-480.jpg 1.5x, {someimage}-640.jpg 2x" > -->
+	<!-- maybe you don't need the media orientation explicitly, just assume it from the min/max-width -->
+	<!-- just remember that srcset takes multiple files, for multiple display resolutions -->
 
-    <!-- maybe you don't need the media orientation explicitly, just assume it from the min/max-width -->
-    <!-- just remember that srcset takes multiple files, for multiple display resolutions -->
+	<!-- more about the picture issue from a well regarded article by jason grigsby -->
+	<!-- https://cloudfour.com/thinks/responsive-images-101-part-3-srcset-display-density/ -->
 
-    <!-- more about the picture issue from a well regarded article by jason grigsby -->
-    <!-- https://cloudfour.com/thinks/responsive-images-101-part-3-srcset-display-density/ -->
+	<!-- "The moment you move beyond providing alternate densities of a fixed width img element, the display density descriptor becomes unwieldy and inadequate to the task." -->
+	<!-- so density descriptor is a no-no then -->
 
-    <!-- "The moment you move beyond providing alternate densities of a fixed width img element, the display density descriptor becomes unwieldy and inadequate to the task." -->
-    <!-- so density descriptor is a no-no then -->
+	<!-- NB on tests with this laptop (density 2.5x) the image with the 3x descriptor is the chosen over 1x, but 2x is chosen over 3x -->
+	<!-- 1.5x is chosen over 1x, 3x is chosen over 1.5, 2.5 over 3x -->
 
-    <!-- NB on tests with this laptop (density 2.5x) the image with the 3x descriptor is the chosen over 1x, but 2x is chosen over 3x -->
-    <!-- 1.5x is chosen over 1x, 3x is chosen over 1.5, 2.5 over 3x -->
+	<!-- on tests with this laptop (density 2.5px) at 1500 viewport, 2880w is chosen over 1440w -->
+	<!-- at 400 viewport, 1440w is chosen (it's looking for an image 2.5 x 400 so 1000px, and 1440 is big enough) -->
+	<!-- it should choose the 2880w if viewport gets bigger than 576 (at the point where 1440 isn't enough (1440/2.5 = 576)) Yep! -->
 
-    <!-- on tests with this laptop (density 2.5px) at 1500 viewport, 2880w is chosen over 1440w -->
-    <!-- at 400 viewport, 1440w is chosen (it's looking for an image 2.5 x 400 so 1000px, and 1440 is big enough) -->
-    <!-- it should choose the 2880w if viewport gets bigger than 576 (at the point where 1440 isn't enough (1440/2.5 = 576)) Yep! -->
+	<!-- So, as long as we provide 2 or 3 different resolution images for both orientations -->
+	<!-- it probably doesn't matter whether we use density descriptor or width descriptor -->
+	<!-- width probably easiest to deal with -->
 
-    <!-- So, as long as we provide 2 or 3 different resolution images for both orientations -->
-    <!-- it probably doesn't matter whether we use density descriptor or width descriptor -->
-    <!-- width probably easiest to deal with -->
+	<!-- For portrait it's probably always going to be mobiles, so for a full width image we need say 400, 800, maybe 1200  -->
+	<!-- typical aspect ratio for smart phones is 9:16 - 9:20 -->
 
-    <!-- For portrait it's probably always going to be mobiles, so for a full width image we need say 400, 800, maybe 1200  -->
-    <!-- typical aspect ratio for smart phones is 9:16 - 9:20 -->
+	<source media="(orientation: portrait)" srcset={portraitSrcsetWebp} type="image/webp" />
+	<source media="(orientation: portrait)" srcset={portraitSrcset} type="image/jpeg" />
 
-    <source media="(orientation: portrait)" srcset={portraitSrcsetWebp} type="image/webp">
-    <source media="(orientation: portrait)" srcset={portraitSrcset} type="image/jpeg">
+	<!-- because this is picture so there's no 'sizes', browser will assume the image to be 100vw (correctly in this case!) -->
+	<!-- so we probably don't need any other media query, just let the browser select the best image based on the device pixel density -->
+	<source media="(min-width: 768px)" srcset={landscapeSrcsetWebp} type="image/webp" />
+	<source media="(min-width: 768px)" srcset={landscapeSrcset} type="image/jpeg" />
+	<!-- <source srcset="./assets/images/${heroImage}-1440x960.jpg 2880w, ./assets/images/${heroImage}-2000x1333.jpg 1440w" media="(min-width: 100px)"> -->
+	<!-- <source srcset="./assets/images/${heroImage}-1440x960.jpg" media="(min-width: 1200px)"> -->
 
-    <!-- because this is picture so there's no 'sizes', browser will assume the image to be 100vw (correctly in this case!) -->
-    <!-- so we probably don't need any other media query, just let the browser select the best image based on the device pixel density -->
-    <source media="(min-width: 768px)" srcset={landscapeSrcsetWebp} type="image/webp">
-    <source media="(min-width: 768px)" srcset={landscapeSrcset} type="image/jpeg">
-    <!-- <source srcset="./assets/images/${heroImage}-1440x960.jpg 2880w, ./assets/images/${heroImage}-2000x1333.jpg 1440w" media="(min-width: 100px)"> -->
-    <!-- <source srcset="./assets/images/${heroImage}-1440x960.jpg" media="(min-width: 1200px)"> -->
-    
-    <!-- the fallbackSrc will apply to anything under 768 wide and orientation landscape -->
-    <!-- the loading=lazy will stop the browser immediately downloading its chosen image -->
-    <!-- which should give the css time to parse and set display to none -->
+	<!-- the fallbackSrc will apply to anything under 768 wide and orientation landscape -->
+	<!-- the loading=lazy will stop the browser immediately downloading its chosen image -->
+	<!-- which should give the css time to parse and set display to none -->
 
-    <!-- in tests so far, with loading=lazy and display:none: -->
-    <!-- firefox doesn't download the image -->
-    <!-- chrome doesn't download the image -->
-    <!-- edge doesn't download the image -->
-    <img src={fallbackSrc} alt={imageAlt} class:list={imageClasses} loading={lazyLoad ? 'lazy' : 'eager'}>
-    
+	<!-- in tests so far, with loading=lazy and display:none: -->
+	<!-- firefox doesn't download the image -->
+	<!-- chrome doesn't download the image -->
+	<!-- edge doesn't download the image -->
+	<img src={fallbackSrc} alt={imageAlt} class:list={imageClasses} loading={lazyLoad ? "lazy" : "eager"} />
 </picture>
 
 <script>
-    // wait for the image to load, then transition the opacity
-    // think this script will only run once, not once for each instance of the component
-    // so grabs the img inside all pictures with class picture--blur-load
+	// wait for the image to load, then transition the opacity
+	// think this script will only run once, not once for each instance of the component
+	// so grabs the img inside all pictures with class picture--blur-load
 
-    const pictureElements = document.querySelectorAll('.picture--blur-load');
+	const pictureElements = document.querySelectorAll(".picture--blur-load");
 
-    pictureElements.forEach(pictureEl => {
+	pictureElements.forEach((pictureEl) => {
+		const pictureImg = pictureEl.querySelector("img");
 
-        const pictureImg = pictureEl.querySelector('img');
-        
-        // check if the image is loaded first
-        // otherwise add a load event listener
-        if (pictureImg?.complete) {
-            // we want a different process here
-            // from when the load event fires
-            // bc if the image is already loaded
-            // it doesn't really need the blur fade transition
-            // (it's probably already been downloaded previously)
-            // add 'blur-loading' NOT 'blur-load' (which is the class that identifies which images want a blur-load)
-            // imgLoaded(pictureEl);
-            // maybe we don't need anything to happen here?
-            console.log(`img is complete so adding picture--show`);
-            pictureEl.classList.add('picture--show');
-            
-        } else {
-            // add the class that sets a transition
-            // so that picture--show will cause a fade when the load event fires
+		// check if the image is loaded first
+		// otherwise add a load event listener
+		if (pictureImg?.complete) {
+			// we want a different process here
+			// from when the load event fires
+			// bc if the image is already loaded
+			// it doesn't really need the blur fade transition
+			// (it's probably already been downloaded previously)
+			// add 'blur-loading' NOT 'blur-load' (which is the class that identifies which images want a blur-load)
+			// imgLoaded(pictureEl);
+			// maybe we don't need anything to happen here?
+			console.log(`img is complete so adding picture--show`);
+			pictureEl.classList.add("picture--show");
+		} else {
+			// add the class that sets a transition
+			// so that picture--show will cause a fade when the load event fires
 
-            console.log(`img is NOT complete so adding picture--blur-loading`);
-            pictureEl.classList.add('picture--blur-loading');
-            pictureImg.addEventListener('load', () => {
-                console.log(`img load event fired so adding picture--show`);
-                pictureEl.classList.add('picture--show');
-            });
-        }
-
-    });
-
+			console.log(`img is NOT complete so adding picture--blur-loading`);
+			pictureEl.classList.add("picture--blur-loading");
+			pictureImg.addEventListener("load", () => {
+				console.log(`img load event fired so adding picture--show`);
+				pictureEl.classList.add("picture--show");
+			});
+		}
+	});
 </script>
 
-<style define:vars={{backgroundImageSet}}>
+<style define:vars={{ backgroundImageSet }}>
+	/* firstly, lets have 100% width and height, and display block for the picture elements */
+	/* definitely need the width and height to make the picture */
+	/* (and hence the image) fill its container (section-picture or hero) */
 
+	/* picture's default display is not block, must be inline I suppose */
+	/* so the picture wasn't expanding to contain the img */
+	/* img was just overflowing it */
+	/* display:block this should fix that */
 
-/* firstly, lets have 100% width and height, and display block for the picture elements */
-/* definitely need the width and height to make the picture */
-/* (and hence the image) fill its container (section-picture or hero) */
+	.hero__picture,
+	.section-picture__picture {
+		width: 100%;
+		height: 100%;
+		display: block;
 
-/* picture's default display is not block, must be inline I suppose */
-/* so the picture wasn't expanding to contain the img */
-/* img was just overflowing it */
-/* display:block this should fix that */
+		/* tried doing this as flex-grow: 1 (like the video container div), problematic, leave as is */
+	}
 
-.hero__picture, .section-picture__picture {
-    width: 100%;
-    height: 100%;
-    display: block;
-}
+	.hero__picture {
+		/* keep as position absolute, even though section-picture__picture is position: relative - trust me */
+		position: absolute;
+		z-index: 0;
+	}
 
-.hero__picture {
-    /* keep as position absolute, even though section-picture__picture is position: relative - trust me */
-    position: absolute;
-    z-index: 0;
-}
+	.hero__image,
+	.section-picture__image {
+		/* no pointer events because it's a background */
+		pointer-events: none;
+		max-width: initial;
+		width: 100%;
+		height: 100%;
+		/* https://developer.mozilla.org/en-US/docs/Web/CSS/object-fit */
+		/* please do some tests with this i need to understand it */
 
-.hero__image, .section-picture__image {
-    /* no pointer events because it's a background */
-    pointer-events: none;
-    max-width: initial;
-    width: 100%;
-    height: 100%;
-    /* https://developer.mozilla.org/en-US/docs/Web/CSS/object-fit */
-    /* please do some tests with this i need to understand it */
+		/* i think i get it */
+		/* "The object-fit CSS property sets how the content of a replaced element, such as an <img> or <video>, should be resized to fit its container." */
+		/* container in the case of a replaced element is the img or video box itself NOT the parent */
+		/* so you set some dimensions for the <img> and object fit determines how the actual image gets stretched or scaled to fit into its box */
+		/* that's why the element needs width and height setting */
 
-    /* i think i get it */
-    /* "The object-fit CSS property sets how the content of a replaced element, such as an <img> or <video>, should be resized to fit its container." */
-    /* container in the case of a replaced element is the img or video box itself NOT the parent */
-    /* so you set some dimensions for the <img> and object fit determines how the actual image gets stretched or scaled to fit into its box */
-    /* that's why the element needs width and height setting */
+		/* so what we're doing here is telling the <img> to be the width and height of its parent */
+		/* then telling the image how to fit into that <img> box using the object-fit rule */
 
-    /* so what we're doing here is telling the <img> to be the width and height of its parent */
-    /* then telling the image how to fit into that <img> box using the object-fit rule */
+		object-fit: cover;
+		/* position: relative; */
+		/* z-index: 9; */
+		/* border: 1px solid yellow; */
+	}
 
-    object-fit: cover;
-    /* position: relative; */
-    /* z-index: 9; */
-    /* border: 1px solid yellow; */
-}
+	/* any picture element that we want to be preloaded, with blurred bg and pulsing overlay is given the class 'picture--blur-load' */
+	/* so it can be applied to hero image as well as section image */
+	/* we can apply it by passing it as a prop (pictureClasses) to the pictureFullWidth component into the classlist*/
 
-/* any picture element that we want to be preloaded, with blurred bg and pulsing overlay is given the class 'picture--blur-load' */
-/* so it can be applied to hero image as well as section image */
-/* we can apply it by passing it as a prop (pictureClasses) to the pictureFullWidth component into the classlist*/
+	/* 'picture--blur-load' sets opacity to 0 and identifies the element to the querySelectorAll */
+	/* so it gets put into the nodelist (pictureElements) */
 
-/* 'picture--blur-load' sets opacity to 0 and identifies the element to the querySelectorAll */
-/* so it gets put into the nodelist (pictureElements) */
+	/* another class called 'picture--blur-loading' is added by js once we've checked that the image isn't already loaded */
+	/* this adds: */
+	/*  - blurred bg image  */
+	/*  - the transition property */
+	/*  - the pulsing overlay (using ::before) */
 
-/* another class called 'picture--blur-loading' is added by js once we've checked that the image isn't already loaded */
-/* this adds: */
-/*  - blurred bg image  */
-/*  - the transition property */
-/*  - the pulsing overlay (using ::before) */
+	/* bc we don't want the blurred bg or transition or the pulsing overlay if the image is already loaded */
 
-/* bc we don't want the blurred bg or transition or the pulsing overlay if the image is already loaded */
+	/* if the image is already loaded OR when the img load event fires, 'picture--show is added' */
+	/* this sets opacity to 1, which shows the image immediately if the picture only has 'picture--blur-load' */
+	/* OR fades the image in if the picture has had 'picture--blur-loading' added */
 
-/* if the image is already loaded OR when the img load event fires, 'picture--show is added' */
-/* this sets opacity to 1, which shows the image immediately if the picture only has 'picture--blur-load' */
-/* OR fades the image in if the picture has had 'picture--blur-loading' added */
+	.picture--blur-loading {
+		background-image: image-set(var(--backgroundImageSet));
+		background-size: cover;
+		/* hero__picture already has position: absolute because of the overlay stuff to put text over the image */
+		/* position: relative won't work for hero__picture, it won't contain the img for a start */
+		/* so we'll have to apply position: relative specifically to section-picture__picture */
+		/* see below */
+	}
 
+	/* try this as blur-loading for now, see what happens */
+	.section-picture__picture.picture--blur-loading {
+		position: relative;
+	}
 
-.picture--blur-loading {
-    background-image: image-set(var(--backgroundImageSet));
-    background-size: cover;
-    /* hero__picture already has position: absolute because of the overlay stuff to put text over the image */
-    /* position: relative won't work for hero__picture, it won't contain the img for a start */
-    /* so we'll have to apply position: relative specifically to section-picture__picture */
-    /* see below */
-}
+	/* the pulsing overlay to indicate that something's happening */
+	.picture--blur-loading::before {
+		content: "";
+		position: absolute;
+		/* inset 0 is eqivalent to top 0 right 0 bottom 0 left 0 */
+		/* so it fits the element to its parent */
+		inset: 0;
+		/* border: 1px solid fuchsia; */
+		/* background-color: hsl(var(--white) / 0.5); */
+		animation: pulsing-bg 2s ease-in-out infinite;
+	}
 
-/* try this as blur-loading for now, see what happens */
-.section-picture__picture.picture--blur-loading {
-    position: relative;
-}
+	@keyframes pulsing-bg {
+		0% {
+			background-color: hsl(var(--white) / 0);
+		}
+		50% {
+			background-color: hsl(var(--white) / 0.1);
+		}
+		100% {
+			background-color: hsl(var(--white) / 0);
+		}
+	}
 
+	/* the show/hide class has to go on the containing element (picture) not img */
 
-/* the pulsing overlay to indicate that something's happening */
-.picture--blur-loading::before {
-    content: "";
-    position: absolute;
-    /* inset 0 is eqivalent to top 0 right 0 bottom 0 left 0 */
-    /* so it fits the element to its parent */
-    inset: 0;
-    /* border: 1px solid fuchsia; */
-    /* background-color: hsl(var(--white) / 0.5); */
-    animation: pulsing-bg 2s ease-in-out infinite;
+	.picture--blur-load img {
+		/* just hides the image but doesn't set up a transition */
+		opacity: 0;
+		/* if we want the image to always fade in, put the transition delaration here */
+		/* (and take it off blur-loading img - below) */
+		/* think it's probably a bit nicer here - there's a little flash anyway so at least this looks a bit smoother */
+		transition: opacity 250ms ease-in;
+	}
 
-}
+	.picture--blur-loading img {
+		/* opacity: 0; */
+		/* put the transition here if we only want it to fade on images that are loading for the first time */
+		/* transition: opacity 250ms ease-in; */
+	}
 
-@keyframes pulsing-bg {
-    0% {
-        background-color: hsl(var(--white) / 0);
-    }
-    50% {
-        background-color: hsl(var(--white) / 0.1);
-    }
-    100% {
-        background-color: hsl(var(--white) / 0);
-    }
-}
+	.picture--show img {
+		opacity: 1;
+	}
 
+	/* something to remove the pulsing ::before */
+	.picture--show::before {
+		content: none;
+	}
 
-/* the show/hide class has to go on the containing element (picture) not img */
+	.picture--show {
+		/* remove the background if you want */
+		/* background-image: none; */
+	}
 
-.picture--blur-load img {
-    /* just hides the image but doesn't set up a transition */
-    opacity: 0;
-    /* if we want the image to always fade in, put the transition delaration here */
-    /* (and take it off blur-loading img - below) */
-    /* think it's probably a bit nicer here - there's a little flash anyway so at least this looks a bit smoother */
-    transition: opacity 250ms ease-in;
-}
-
-.picture--blur-loading img {
-    /* opacity: 0; */
-    /* put the transition here if we only want it to fade on images that are loading for the first time */
-    /* transition: opacity 250ms ease-in; */
-}
-
-.picture--show img {
-    opacity: 1;
-}
-
-/* something to remove the pulsing ::before */
-.picture--show::before {
-    content: none;
-}
-
-.picture--show {
-    /* remove the background if you want */
-    /* background-image: none; */
-}
-
-@media(max-width: 768px) {
-
-    .section-picture__picture {
-        display: none;
-    }
-
-}
-
+	@media (max-width: 768px) {
+		.section-picture__picture {
+			display: none;
+		}
+	}
 </style>

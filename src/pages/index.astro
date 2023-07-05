@@ -1,41 +1,43 @@
 ---
-
-import Layout from '../layouts/Layout.astro';
-import Hero from '../components/Hero.astro';
-import PageContentSection from '../components/PageContentSection.astro';
-import PictureSection from '../components/PictureSection.astro';
-import ContactSection from '../components/ContactSection.astro';
-import EmptySection from '../components/EmptySection.astro';
-
+import Layout from "../layouts/Layout.astro";
+import Hero from "../components/Hero.astro";
+import PageContentSection from "../components/PageContentSection.astro";
+import PictureSection from "../components/PictureSection.astro";
+import ContactSection from "../components/ContactSection.astro";
+import EmptySection from "../components/EmptySection.astro";
 ---
 
 <Layout title="Welcome to Calder Textiles">
-		
-		<Hero imageBase="sheep-walking-mountain" imageAlt="Sheep walking on the mountain">
-			<!-- using Fragment here, span also works, but fragment produces tidier markup -->
-			<Fragment slot="hero-heading">Welcome to <br>Calder Textiles</Fragment>
-			<Fragment slot="hero-para">One of the UK's foremost woollen yarn spinners with a world-wide reputation for excellence.</Fragment>
-		</Hero>
+	<Hero imageBase="sheep-walking-mountain" imageAlt="Sheep walking on the mountain">
+		<!-- using Fragment here, span also works, but fragment produces tidier markup -->
+		<Fragment slot="hero-heading">Welcome to <br />Calder Textiles</Fragment>
+		<Fragment slot="hero-para">
+			One of the UK's foremost woollen yarn spinners with a world-wide reputation for excellence.
+		</Fragment>
+	</Hero>
 
-		<PageContentSection heading="The Home Page" bgColour="var(--lightbluegrey)">
-			<Fragment slot="page-content">
-				<p>Here is some content for the home page, it's not really about anything.</p>
-				<p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Blanditiis fugiat quaerat, maxime beatae illum molestias libero odit! Enim repudiandae, facilis dignissimos nulla amet nam ratione.</p>
-			</Fragment>
+	<PageContentSection heading="The Home Page" bgColour="var(--lightbluegrey)">
+		<Fragment slot="page-content">
+			<p>Here is some content for the home page, it's not really about anything.</p>
+			<p>
+				Lorem ipsum dolor, sit amet consectetur adipisicing elit. Blanditiis fugiat quaerat, maxime beatae illum
+				molestias libero odit! Enim repudiandae, facilis dignissimos nulla amet nam ratione.
+			</p>
+		</Fragment>
 
-			<Fragment slot="page-content-2">
-				<p>Oh look! A whole new column of content</p>
-				<p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Blanditiis fugiat quaerat, maxime beatae illum molestias libero odit! Enim repudiandae, facilis dignissimos nulla amet nam ratione.</p>
-			</Fragment>
-		</PageContentSection>
+		<Fragment slot="page-content-2">
+			<p>Oh look! A whole new column of content</p>
+			<p>
+				Lorem ipsum dolor, sit amet consectetur adipisicing elit. Blanditiis fugiat quaerat, maxime beatae illum
+				molestias libero odit! Enim repudiandae, facilis dignissimos nulla amet nam ratione.
+			</p>
+		</Fragment>
+	</PageContentSection>
 
-		<!-- just take this out for a while, till we get the webps for herd-in-field -->
-		<!-- <EmptySection />  -->
-		<PictureSection imageBase="herd-in-field" />
-		<ContactSection />
-
+	<!-- just take this out for a while, till we get the webps for herd-in-field -->
+	<!-- <EmptySection />  -->
+	<PictureSection imageBase="anchor-house-front" />
+	<ContactSection />
 </Layout>
 
-<style>
-
-</style>
+<style></style>

@@ -1,5 +1,4 @@
 ---
-
 //import { Image, Picture } from '@astrojs/image/components';
 // import Logo from '../images/design/logo-from-pdf.png';
 // import Logo from '../images/design/logo-from-pdf-trim.png';
@@ -26,139 +25,143 @@
 // it's just for the open props and just-in-time props
 // see Build a Static Site with Figma & Astro #5 7mins
 
-import { Icon } from 'astro-icon';
+import { Icon } from "astro-icon";
 
 // NB! if this changes, --navbar-brand-logo-height in global.css must be updated accordingly
 const logoSize = {
-    width: 140,
-    height: 51
-}
+	width: 140,
+	height: 51,
+};
 
 // const curentPath = new URL(Astro.request.url).pathname;
 // or shorthand
 const currentPath = Astro.url.pathname;
-
 ---
 
-<!-- if expanding nav cause the text to shake in firefox -->
-<!-- change sticky-top to fixed-top -->
-<!-- some padding will have to be added to body or whatever the main container is -->
-<!-- calculate it the same way hero min-height is calculated -->
+<!-- if expanding nav cause the text to shake in firefox --><!-- change sticky-top to fixed-top --><!-- some padding will have to be added to body or whatever the main container is --><!-- calculate it the same way hero min-height is calculated -->
 <header class="sticky-top header-caldertextiles">
+	<div id="skip" class="visually-hidden"><a href="#main-content">Skip to Main Content</a></div>
 
-    <div id="skip" class="visually-hidden"><a href="#main-content">Skip to Main Content</a></div>
+	<!-- is it worth doing nav as a separate component? -->
 
-    <!-- is it worth doing nav as a separate component? -->
+	<!-- Navbar -->
+	<!-- -lg means this navbar will do hamburger at screen sizes below large (992) -->
 
-    <!-- Navbar -->
-    <!-- -lg means this navbar will do hamburger at screen sizes below large (992) -->
+	<!-- tried expand-md, too small to fit the menu in -->
+	<!-- was fixed-top, trying sticky-top -->
+	<!-- NB! sticky-top needs to be on the header -->
+	<!-- because sticky won't work if it's on an only child of the parent -->
 
-    <!-- tried expand-md, too small to fit the menu in -->
-    <!-- was fixed-top, trying sticky-top -->
-    <!-- NB! sticky-top needs to be on the header -->
-    <!-- because sticky won't work if it's on an only child of the parent -->
+	<!-- no bs padding classes here, padding needs to be set in custom css -->
+	<!-- using the navbar-vertical-padding var so that we can calculate the height of the hero -->
 
-    <!-- no bs padding classes here, padding needs to be set in custom css -->
-    <!-- using the navbar-vertical-padding var so that we can calculate the height of the hero -->
+	<!-- NB!! if navbar-expand-lg gets changed to a different breakpoint -->
+	<!-- the media query for .nav-link (in the styles below) has to be changed accordingly -->
+	<!-- -lg is 992px -->
+	<!-- same goes for the media query on nav-item -->
+	<nav class="navbar navbar-expand-lg navbar-dark navbar-caldertextiles">
+		<!-- -fluid is ok, but try -xxl so it goes to max width of 1320 -->
+		<!-- nah, too small, let's risk fluid -->
+		<div class="container-fluid">
+			<!-- was h1 with logo image, but probably does more harm than good in SEO terms -->
+			<!-- The lead part of the hero text should probably be the h1 -->
+			<a class="navbar-brand navbar-caldertextiles__logo" href="./">
+				<!-- <img src={Logo} alt="Calder Textiles" width={logoSize.width} height={logoSize.height} class="navbar-caldertextiles__logo-img"> -->
+				<!-- now using astro-icon with local svg for the logo (same in footer) -->
+				<!-- hopefully astro-icon will streamline the svg a bit -->
+				<!-- any svgs that you want to use with astro-icon need to be in src/icons -->
+				<Icon name="caldertextiles-logo-crop" width={logoSize.width} class="navbar-caldertextiles__logo-svg" />
+			</a>
 
-    <!-- NB!! if navbar-expand-lg gets changed to a different breakpoint -->
-    <!-- the media query for .nav-link (in the styles below) has to be changed accordingly -->
-    <!-- -lg is 992px -->
-    <!-- same goes for the media query on nav-item -->
-    <nav class="navbar navbar-expand-lg navbar-dark navbar-caldertextiles">
-        <!-- -fluid is ok, but try -xxl so it goes to max width of 1320 -->
-        <!-- nah, too small, let's risk fluid -->
-        <div class="container-fluid">
+			<!-- in between the brand link and the navbar collapse we need the hamburger -->
+			<button
+				class="navbar-toggler"
+				type="button"
+				aria-expanded="false"
+				aria-label="Toggle Mobile Navigation Menu"
+				data-bs-toggle="collapse"
+				data-bs-target="#navmenu"
+			>
+				<!-- <span class="navbar-toggler-icon"></span> -->
 
-            <!-- was h1 with logo image, but probably does more harm than good in SEO terms -->
-            <!-- The lead part of the hero text should probably be the h1 -->
-            <a class="navbar-brand navbar-caldertextiles__logo" href="./">
-                <!-- <img src={Logo} alt="Calder Textiles" width={logoSize.width} height={logoSize.height} class="navbar-caldertextiles__logo-img"> -->
-                <!-- now using astro-icon with local svg for the logo (same in footer) -->
-                <!-- hopefully astro-icon will streamline the svg a bit -->
-                <!-- any svgs that you want to use with astro-icon need to be in src/icons -->
-                <Icon name="caldertextiles-logo-crop" width={logoSize.width} class="navbar-caldertextiles__logo-svg" />
-            </a>
+				<!-- try google material icons -->
+				<!-- consider installing astro-icon and integrating google material icons with that -->
+				<!-- just to see how it works -->
+				<!-- was this: <span class="material-icons">menu</span> -->
+				<!-- try this (using local SVG downloaded from Google Material Symbols) -->
+				<!-- loads the SVG in src/icons -->
+				<!-- might need some kind of size attribute, works if its got width or height properties in the css -->
+				<!-- and it'll need some styling so give it a class (was class="material-icons") -->
 
-            <!-- in between the brand link and the navbar collapse we need the hamburger -->
-            <button 
-                class="navbar-toggler" 
-                type="button" 
-                aria-expanded="false"
-                aria-label="Toggle Mobile Navigation Menu" 
-                data-bs-toggle="collapse" 
-                data-bs-target="#navmenu"
-            >
-                <!-- <span class="navbar-toggler-icon"></span> -->
+				<!-- with local svgs -->
+				<!-- <Icon name="menu_FILL0_wght400_GRAD0_opsz48" class="navbar-caldertextiles__toggler-icon navbar-caldertextiles__toggler-icon--menu" /> -->
+				<!-- <Icon name="close_FILL0_wght400_GRAD0_opsz48" class="navbar-caldertextiles__toggler-icon navbar-caldertextiles__toggler-icon--close" /> -->
 
-                <!-- try google material icons -->
-                <!-- consider installing astro-icon and integrating google material icons with that --> 
-                <!-- just to see how it works -->
-                <!-- was this: <span class="material-icons">menu</span> -->
-                <!-- try this (using local SVG downloaded from Google Material Symbols) -->
-                <!-- loads the SVG in src/icons -->
-                <!-- might need some kind of size attribute, works if its got width or height properties in the css -->
-                <!-- and it'll need some styling so give it a class (was class="material-icons") -->
+				<!-- with icon sets / library -->
+				<!-- see https://icones.js.org/collection/material-symbols -->
 
-                <!-- with local svgs -->
-                <!-- <Icon name="menu_FILL0_wght400_GRAD0_opsz48" class="navbar-caldertextiles__toggler-icon navbar-caldertextiles__toggler-icon--menu" /> -->
-                <!-- <Icon name="close_FILL0_wght400_GRAD0_opsz48" class="navbar-caldertextiles__toggler-icon navbar-caldertextiles__toggler-icon--close" /> -->
+				<!-- ok material symbols doesn't work, try material icons, yep (ic:baseline-menu) -->
+				<!-- try feather icon, yep (feather:menu) -->
 
-                <!-- with icon sets / library -->
-                <!-- see https://icones.js.org/collection/material-symbols -->
+				<!-- think accessibility wise it's ok if we have two icons inside the button -->
+				<!-- it's not going to affect the button behaviour (toggle), and the aria label is on the button, the icons are purely decorative -->
+				<!-- the css should hide one icon at a time anyway, even from screen readers  -->
+				<Icon
+					name="ic:baseline-menu"
+					class="navbar-caldertextiles__toggler-icon navbar-caldertextiles__toggler-icon--menu"
+				/>
+				<Icon
+					name="ic:baseline-close"
+					class="navbar-caldertextiles__toggler-icon navbar-caldertextiles__toggler-icon--close"
+				/>
+			</button>
+			<!-- NB! id="navmenu" not #navmenu! -->
+			<div class="collapse navbar-collapse" id="navmenu">
+				<!-- ul with a class of navbar-nav bc it's the navbar navigation -->
+				<!-- and ms-auto (margin-start auto) pushes it right with the magic of margin auto -->
+				<ul class="navbar-nav ms-auto me-2">
+					<!-- and each li needs a class of nav-item -->
 
-                <!-- ok material symbols doesn't work, try material icons, yep (ic:baseline-menu) -->
-                <!-- try feather icon, yep (feather:menu) -->
+					<!-- see here for aria-current info: -->
+					<!-- https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-current -->
+					<!-- aria-current attribute goes on the <a> not the <li> -->
+					<!-- use something like const pathname = new URL(Astro.request.url).pathname -->
+					<!-- see also: https://petermekhaeil.com/til/astro-url/ -->
+					<!-- astro.url is equivalent to new URL(Astro.request.url) -->
+					<!-- https://docs.astro.build/en/reference/api-reference/#astrourl -->
+					<li class="nav-item active">
+						<!-- and each link needs a class of nav-link -->
+						<a href="./aboutus" class="nav-link" aria-current={currentPath === "/aboutus" ? "page" : false}>About Us</a>
+					</li>
 
-                <!-- think accessibility wise it's ok if we have two icons inside the button -->
-                <!-- it's not going to affect the button behaviour (toggle), and the aria label is on the button, the icons are purely decorative -->
-                <!-- the css should hide one icon at a time anyway, even from screen readers  -->
-                <Icon name="ic:baseline-menu" class="navbar-caldertextiles__toggler-icon navbar-caldertextiles__toggler-icon--menu" />
-                <Icon name="ic:baseline-close" class="navbar-caldertextiles__toggler-icon navbar-caldertextiles__toggler-icon--close" />
+					<li class="nav-item">
+						<a href="./products" class="nav-link" aria-current={currentPath === "/products" ? "page" : false}
+							>Products</a
+						>
+					</li>
+					<li class="nav-item">
+						<a href="./development" class="nav-link" aria-current={currentPath === "/development" ? "page" : false}
+							>Development</a
+						>
+					</li>
+					<li class="nav-item">
+						<a
+							href="./sustainability"
+							class="nav-link"
+							aria-current={currentPath === "/sustainability" ? "page" : false}>Sustainability</a
+						>
+					</li>
+					<li class="nav-item">
+						<a href="./contact" class="nav-link" aria-current={currentPath === "/contact" ? "page" : false}>Contact</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
 
-            </button>
-            <!-- NB! id="navmenu" not #navmenu! -->
-            <div class="collapse navbar-collapse" id="navmenu">
-                <!-- ul with a class of navbar-nav bc it's the navbar navigation -->
-                <!-- and ms-auto (margin-start auto) pushes it right with the magic of margin auto -->
-                <ul class="navbar-nav ms-auto me-2">
-                    <!-- and each li needs a class of nav-item -->
-
-                    <!-- see here for aria-current info: -->
-                    <!-- https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-current -->
-                    <!-- aria-current attribute goes on the <a> not the <li> -->
-                    <!-- use something like const pathname = new URL(Astro.request.url).pathname -->
-                    <!-- see also: https://petermekhaeil.com/til/astro-url/ -->
-                    <!-- astro.url is equivalent to new URL(Astro.request.url) -->
-                    <!-- https://docs.astro.build/en/reference/api-reference/#astrourl -->
-                    <li class="nav-item active">
-                       <!-- and each link needs a class of nav-link -->
-                       <a href="./aboutus" class="nav-link" aria-current={currentPath === "/aboutus" ? "page" : false}>About Us</a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a href="./products" class="nav-link" aria-current={currentPath === "/products" ? "page" : false}>Products</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="./development" class="nav-link" aria-current={currentPath === "/development" ? "page" : false}>Development</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="./sustainability" class="nav-link" aria-current={currentPath === "/sustainability" ? "page" : false}>Sustainability</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="./contact" class="nav-link" aria-current={currentPath === "/contact" ? "page" : false}>Contact</a>
-                    </li>
-                </ul>
-            </div>
-
-        </div>
-    </nav>
-
-    <!-- maybe the image in here as hero? maybe it belongs in main? nah put hero image in main, keep header for nav and maybe search -->
-    <!-- mdn says: The <header> HTML element represents introductory content, typically a group of introductory or navigational aids -->
-
+	<!-- maybe the image in here as hero? maybe it belongs in main? nah put hero image in main, keep header for nav and maybe search -->
+	<!-- mdn says: The <header> HTML element represents introductory content, typically a group of introductory or navigational aids -->
 </header>
-
 
 <!-- google material icon toggle script -->
 <!-- should be ok to bundle -->
@@ -166,265 +169,263 @@ const currentPath = Astro.url.pathname;
 <!-- archived in hamburger-toggle-old.js -->
 
 <style>
+	header {
+	}
 
-header {
-    
-}
+	.header-caldertextiles {
+		/* the height: 0 setting here stops the shaking text in firefox as the menu is expanding */
+		/* it standardises the behaviour of the expanding menu */
+		/* i.e. it always expands over the the rest of the content, never pushes it down */
+		/* how does it work? I dunno, but it does! */
 
-.header-caldertextiles {
-    /* the height: 0 setting here stops the shaking text in firefox as the menu is expanding */
-    /* it standardises the behaviour of the expanding menu */
-    /* i.e. it always expands over the the rest of the content, never pushes it down */
-    /* how does it work? I dunno, but it does! */
+		/* think it's because the changing size of the sticky element (because of the expanding menu inside it) */
+		/* causes it to sometimes behave as position sticky and sometimes as position relative */
 
-    /* think it's because the changing size of the sticky element (because of the expanding menu inside it) */
-    /* causes it to sometimes behave as position sticky and sometimes as position relative */
+		/* maybe a fixed height might work the same */
+		/* problem with this is all the content after the header starts at the top of the page */
+		/* which defeats the point of doing it sticky, might as well do it fixed! */
 
-    /* maybe a fixed height might work the same */
-    /* problem with this is all the content after the header starts at the top of the page */
-    /* which defeats the point of doing it sticky, might as well do it fixed! */
+		/* maybe use the formula from the hero height calculation? */
+		/* yeah that works, but fiddly */
+		/* can we set this as a constant somewhere? yep */
 
-    /* maybe use the formula from the hero height calculation? */
-    /* yeah that works, but fiddly */
-    /* can we set this as a constant somewhere? yep */
+		/* height: 0; */
 
-    /* height: 0; */
+		/* height: calc(var(--navbar-brand-logo-height) + (var(--navbar-vertical-padding)*2) + 0.5rem); */
+		/* --header-height-calc is defined in global.css */
+		height: var(--header-height-calc);
+		overflow: visible;
+		/* border: 1px solid fuchsia; */
+		background-color: var(--accent);
+	}
 
-    /* height: calc(var(--navbar-brand-logo-height) + (var(--navbar-vertical-padding)*2) + 0.5rem); */
-    /* --header-height-calc is defined in global.css */
-    height: var(--header-height-calc);
-    overflow: visible;
-    /* border: 1px solid fuchsia; */
-    background-color: var(--accent);
-    
-}
-        
-.navbar-caldertextiles {
-    
-    /* min-height is no good, the flex centering causes things to shift when the nav expands / collapses */
-    /* try setting vars for the logo height and the nav bar vertical padding */
-    /* and use these to calculate the hero height */
+	.navbar-caldertextiles {
+		/* min-height is no good, the flex centering causes things to shift when the nav expands / collapses */
+		/* try setting vars for the logo height and the nav bar vertical padding */
+		/* and use these to calculate the hero height */
 
-    /* the variables should probably be declared in global.css */
-    padding-top: var(--navbar-vertical-padding);
-    padding-bottom: var(--navbar-vertical-padding);
+		/* the variables should probably be declared in global.css */
+		padding-top: var(--navbar-vertical-padding);
+		padding-bottom: var(--navbar-vertical-padding);
 
-    /* min-height: var(--navbar-height); */
-    /* bg colour needs to be here as well as the header */
-    /* because of the expanding */
-    background-color: var(--accent);
-}
+		/* min-height: var(--navbar-height); */
+		/* bg colour needs to be here as well as the header */
+		/* because of the expanding */
+		background-color: var(--accent);
+	}
 
-.navbar-caldertextiles__container {
-    
-}
+	.navbar-caldertextiles__container {
+	}
 
-/* nav-item needs a position relative for the fancy link hover to work */
-/* .navbar-caldertextiles .nav-item {
+	/* nav-item needs a position relative for the fancy link hover to work */
+	/* .navbar-caldertextiles .nav-item {
     position: relative;
 } */
 
+	/* the separators in the navmenu list */
+	/* use adjacent sibling selector (+) so that only the ::befores that immediately follow a nav-item get the separator */
+	/* i.e. not the first item in the list */
+	/* could use not first-child, but this seems a bit more elegant */
 
-/* the separators in the navmenu list */
-/* use adjacent sibling selector (+) so that only the ::befores that immediately follow a nav-item get the separator */
-/* i.e. not the first item in the list */
-/* could use not first-child, but this seems a bit more elegant */
+	/* only need this at lg and above */
+	/* 992px see: https://getbootstrap.com/docs/5.3/layout/breakpoints/ */
 
-/* only need this at lg and above */
-/* 992px see: https://getbootstrap.com/docs/5.3/layout/breakpoints/ */
+	@media (min-width: 992px) {
+		.navbar-caldertextiles .nav-item + .nav-item::before {
+			content: "|";
+			font-size: 0.7rem;
+			font-weight: bold;
+			padding: 0rem 0.5rem;
+			color: var(--muted);
+			/* position relative so we can nudge it up a bit - it sits on the baseline otherwise */
+			position: relative;
+			top: -0.1rem;
+		}
 
-@media(min-width: 992px) {
+		/* try forcing the nav-link to display: inline */
+		.navbar-caldertextiles .nav-link {
+			display: inline;
+			/* also set colour while we're at it */
+			color: hsl(var(--offwhite));
 
-    .navbar-caldertextiles .nav-item + .nav-item::before {
-        content: '|';
-        font-size: 0.7rem;
-        font-weight: bold;
-        padding: 0rem 0.5rem;
-        color: var(--muted);
-        /* position relative so we can nudge it up a bit - it sits on the baseline otherwise */
-        position: relative;
-        top: -0.1rem;
-    }
-    
-    /* try forcing the nav-link to display: inline */
-    .navbar-caldertextiles .nav-link {
-        display: inline;
-        /* also set colour while we're at it */
-        color: hsl(var(--offwhite));
+			/* navlink position relative so the ::after can be positioned absolute */
+			position: relative;
+		}
 
-        /* navlink position relative so the ::after can be positioned absolute */
-        position: relative;
-    }
-    
-    .navbar-caldertextiles .nav-link:not([aria-current="page"])::after {
-        content: '';
-        position: absolute;
-        background-color: var(--muted);
-        height: 1px;
-        width: calc(100% - 1rem);
-        /* width: 100%; */
-        border-radius: 2px;
-        bottom: 0;
-        left: var(--bs-navbar-nav-link-padding-x);
-        /* var(--bs-navbar-nav-link-padding-x) is 0.5rem */
+		.navbar-caldertextiles .nav-link:not([aria-current="page"])::after {
+			content: "";
+			position: absolute;
+			background-color: var(--muted);
+			height: 1px;
+			width: calc(100% - 1rem);
+			/* width: 100%; */
+			border-radius: 2px;
+			bottom: 0;
+			left: var(--bs-navbar-nav-link-padding-x);
+			/* var(--bs-navbar-nav-link-padding-x) is 0.5rem */
 
-        transform: scaleX(0);
-        transition: transform 200ms ease-in-out;
-    }
+			transform: scaleX(0);
+			transition: transform 200ms ease-in-out;
+		}
 
-    .navbar-caldertextiles .nav-link:hover::after {
-        transform: scaleX(1);
-    }
+		.navbar-caldertextiles .nav-link:hover::after {
+			transform: scaleX(1);
+		}
+	}
 
-}
+	.navbar-caldertextiles .nav-link:is(:hover, :focus-visible) {
+		/* .navbar-caldertextiles .nav-link:hover, .navbar-caldertextiles .nav-link:focus-visible { */
+		/* this definitely works */
+		color: hsl(var(--white));
+		/* color: fuchsia; */
+	}
 
-.navbar-caldertextiles .nav-link:is(:hover, :focus-visible) {
-/* .navbar-caldertextiles .nav-link:hover, .navbar-caldertextiles .nav-link:focus-visible { */
-    /* this definitely works */
-    color: hsl(var(--white));
-    /* color: fuchsia; */
-}
+	.navbar-caldertextiles .nav-link:focus-visible {
+		outline: none;
+		background-color: hsl(var(--white) / 0.1);
+	}
 
-.navbar-caldertextiles .nav-link:focus-visible {
-    outline: none;
-    background-color: hsl(var(--white) / 0.1);
-}
+	.navbar-caldertextiles .nav-link[aria-current="page"] {
+		color: var(--muted);
+	}
 
-.navbar-caldertextiles .nav-link[aria-current="page"] {
-    color: var(--muted);
-}
+	/* can't find an appropriate class with which to select the mobile nav */
+	/* a combination of .show and .collpasing seems a bit hacky */
 
-/* can't find an appropriate class with which to select the mobile nav */
-/* a combination of .show and .collpasing seems a bit hacky */
+	/* yeah we should be able to do it with an adjacent sibling (.navbar-toggler [aria-expanded="true"]) */
+	/* nah that's tidier but still doesn't work bc the aria-expanded remains true unless the button gets toggled */
+	/* i.e. just resizing the window won't do it */
 
-/* yeah we should be able to do it with an adjacent sibling (.navbar-toggler [aria-expanded="true"]) */
-/* nah that's tidier but still doesn't work bc the aria-expanded remains true unless the button gets toggled */
-/* i.e. just resizing the window won't do it */
+	/* gonna have to settle for a media query */
+	/* we're using one for the desktop menu styling anyway! */
 
-/* gonna have to settle for a media query */
-/* we're using one for the desktop menu styling anyway! */
+	@media (max-width: 991px) {
+		/* custom (non-bootstrap) styles for mobile navbar and menu */
 
-@media (max-width: 991px) {
+		.navbar-caldertextiles {
+			/* padding-top: var(--navbar-vertical-padding); */
+			/* padding-bottom: 0; */
+		}
 
+		.navbar-caldertextiles .navbar-nav {
+			margin-top: 0.5rem;
+		}
 
-    /* custom (non-bootstrap) styles for mobile navbar and menu */
+		.navbar-caldertextiles .nav-link {
+			/* this'll need adjusting when the proper logo goes in */
+			padding-left: 1rem;
+			border-bottom: 1px solid hsl(var(--lightbluegrey) / 0.2);
+		}
 
-    .navbar-caldertextiles {
-    
-        /* padding-top: var(--navbar-vertical-padding); */
-        /* padding-bottom: 0; */
-    }
+		/* so the last item in the mobile nav gets closer to the bottom and has no border */
+		.navbar-caldertextiles .nav-item:last-child .nav-link {
+			padding-bottom: 0;
+			border: none;
+		}
+	}
 
-    .navbar-caldertextiles .navbar-nav {
-        margin-top: 0.5rem;
-    }
-
-    .navbar-caldertextiles .nav-link {
-        /* this'll need adjusting when the proper logo goes in */
-        padding-left: 1rem;
-        border-bottom: 1px solid hsl(var(--lightbluegrey) / 0.2);
-    }
-
-    /* so the last item in the mobile nav gets closer to the bottom and has no border */
-    .navbar-caldertextiles .nav-item:last-child .nav-link {
-        padding-bottom: 0;
-        border: none;
-    }
-
-}
-
-
-/* for the mobile nav (.show and .collapsing) */
-/* .navbar-caldertextiles .show .nav-link, .navbar-caldertextiles .collapsing .nav-link {
+	/* for the mobile nav (.show and .collapsing) */
+	/* .navbar-caldertextiles .show .nav-link, .navbar-caldertextiles .collapsing .nav-link {
 
 } */
 
-/* get rid of the border on the toggle button */
-.navbar-caldertextiles .navbar-toggler {
-    border: none;
-    border-radius: 0;
-}
+	/* get rid of the border on the toggle button */
+	.navbar-caldertextiles .navbar-toggler {
+		border: none;
+		border-radius: 0;
+	}
 
-/* to make the focus outline thinner */
-.navbar-caldertextiles .navbar-toggler:focus {
-    box-shadow: none;
-}
+	/* to make the focus outline thinner */
+	.navbar-caldertextiles .navbar-toggler:focus {
+		box-shadow: none;
+	}
 
-.navbar-caldertextiles .navbar-toggler:focus-visible {
-    box-shadow: 0 0 0 0.1rem hsl(var(--lightbluegrey) / 0.5);
-    /* use a thin border instead */
-    /* nah, border shifts it on focus */
-}
+	.navbar-caldertextiles .navbar-toggler:focus-visible {
+		box-shadow: 0 0 0 0.1rem hsl(var(--lightbluegrey) / 0.5);
+		/* use a thin border instead */
+		/* nah, border shifts it on focus */
+	}
 
-.navbar-caldertextiles__logo {
-    /* padding-inline-start: 1rem; */
-    padding-inline: 1rem;
-    /* img:-moz-loading { */
-    /* visibility: hidden; */
-    transition: transform 0.2s ease-in-out;
-}
+	.navbar-caldertextiles__logo {
+		/* padding-inline-start: 1rem; */
+		padding-inline: 1rem;
+		/* img:-moz-loading { */
+		/* visibility: hidden; */
+		/* transition: transform 0.2s ease-in-out; */
+	}
 
-/* more padding for lg and higher */
-/* navmenu goes to hamburger <992 */
-@media (min-width: 992px) {
-    .navbar-caldertextiles__logo {
-        padding-inline-start: 2rem;
-    }
-}
+	/* more padding for lg and higher */
+	/* navmenu goes to hamburger <992 */
+	@media (min-width: 992px) {
+		.navbar-caldertextiles__logo {
+			padding-inline-start: 2rem;
+		}
+	}
 
+	.navbar-caldertextiles__logo:focus-visible {
+		outline: 1px dotted hsl(var(--lightbluegrey));
+	}
 
-.navbar-caldertextiles__logo:focus-visible {
-    outline: 1px dotted hsl(var(--lightbluegrey));
-}
+	.navbar-caldertextiles__logo:is(:hover, :focus-visible) {
+		/* color: hsl(var(--offwhite)); */
+		animation: logo-pop 0.4s ease-in-out;
+		/* transform: scale(1.05); */
+	}
 
-.navbar-caldertextiles__logo:is(:hover, :focus-visible) {
-    /* color: hsl(var(--offwhite)); */
-    transform: scale(1.05);
-}
+	@keyframes logo-pop {
+		from {
+			transform: scale(1);
+		}
+		50% {
+			transform: scale(1.05);
+		}
+		to {
+			transform: scale(1);
+		}
+	}
 
-.navbar-caldertextiles__logo:is(:hover, :focus-visible) .navbar-caldertextiles__logo-svg {
-    /* color: hsl(var(--offwhite)); */
-}
+	.navbar-caldertextiles__logo:is(:hover, :focus-visible) .navbar-caldertextiles__logo-svg {
+		/* color: hsl(var(--offwhite)); */
+	}
 
-.navbar-caldertextiles__logo-svg {
-    color: hsl(var(--white));
-}
+	.navbar-caldertextiles__logo-svg {
+		color: hsl(var(--white));
+	}
 
-/* .navbar-caldertextiles__logo-svg:is(:hover, :focus-visible) {
+	/* .navbar-caldertextiles__logo-svg:is(:hover, :focus-visible) {
     color: hsl(var(--offwhite));
 } */
 
-.navbar-caldertextiles__logo-img {
+	.navbar-caldertextiles__logo-img {
+		/* not sure what this was doing, this should be covered by the bs reset */
+		/* max-width: 100%; */
+	}
 
-    /* not sure what this was doing, this should be covered by the bs reset */
-    /* max-width: 100%; */
-}
+	/* to fix the weird flah of alt text in firefox */
+	/* see: https://stackoverflow.com/questions/68166235/firefox-alt-text-appears-while-loading-image */
+	/* this might not be necessary when the logo is SVG - keep an eye on it */
+	.navbar-caldertextiles__logo-img:-moz-loading {
+		visibility: hidden;
+	}
 
-/* to fix the weird flah of alt text in firefox */
-/* see: https://stackoverflow.com/questions/68166235/firefox-alt-text-appears-while-loading-image */
-/* this might not be necessary when the logo is SVG - keep an eye on it */
-.navbar-caldertextiles__logo-img:-moz-loading {
-    visibility: hidden;
-}
+	.navbar-caldertextiles__toggler-icon {
+		/* NB fill instead of color for SVG */
+		fill: hsl(var(--white) / 0.5);
+		width: 2rem;
+		height: 2rem;
+		/* think display: none should be ok here accessibility wise */
+		display: none;
+	}
 
-.navbar-caldertextiles__toggler-icon {
-    /* NB fill instead of color for SVG */
-    fill: hsl(var(--white) / 0.5);
-    width: 2rem;
-    height: 2rem;
-    /* think display: none should be ok here accessibility wise */
-    display: none;
-}
+	/* use .navbar-toggler's aria-expanded attr to show / hide the appropriate icon */
 
-/* use .navbar-toggler's aria-expanded attr to show / hide the appropriate icon */
+	.navbar-toggler[aria-expanded="false"] .navbar-caldertextiles__toggler-icon--menu {
+		display: block;
+		/* fill: firebrick; */
+	}
 
-.navbar-toggler[aria-expanded="false"] .navbar-caldertextiles__toggler-icon--menu {
-    display: block;
-    /* fill: firebrick; */
-}
-
-.navbar-toggler[aria-expanded="true"] .navbar-caldertextiles__toggler-icon--close {
-    display: block;
-    /* fill: hotpink; */
-}
+	.navbar-toggler[aria-expanded="true"] .navbar-caldertextiles__toggler-icon--close {
+		display: block;
+		/* fill: hotpink; */
+	}
 </style>

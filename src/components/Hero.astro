@@ -234,10 +234,12 @@ const goal = 3;
 	/* i.e. has class 'picture--show' */
 	/* using adjacent sibling selector */
 
-	/* the adjacent sibling selctor has to be :global */
+	/* the adjacent sibling selector has to be :global */
 	/* because the two siblings are in different components, so have different scope */
 	:global(.picture--show + .hero__overlay) {
-		background: linear-gradient(to right top, hsl(0 0% 0% / 0.5), hsl(0 0% 0% / 0));
+		/* https://developer.mozilla.org/en-US/docs/Web/CSS/gradient/linear-gradient#values */
+		background: linear-gradient(60deg, hsl(0 0% 0% / 0.8), 33%, hsl(0 0% 0% / 0));
+		/* background: linear-gradient(to right, hsl(0 0% 0% / 0.5), hsl(0 0% 0% / 0)); */
 	}
 
 	/* think we might need the :global here as well because specificity */
@@ -288,9 +290,9 @@ const goal = 3;
 		/* font-size: 3.3rem; */
 
 		/* NB we're currently using a <br> in the heading slot so the max-width might be redundant - keep in for now */
-		max-width: 20ch;
+		max-width: 18ch;
 
-		/* line-height: 1.5; */
+		line-height: 1.4;
 	}
 
 	@media (min-width: 768px) {
@@ -324,7 +326,7 @@ const goal = 3;
 	}
 
 	.hero__para {
-		max-width: 50ch;
+		max-width: 40ch;
 		line-height: 1.75rem;
 	}
 
