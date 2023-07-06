@@ -31,23 +31,84 @@
 
 	/* navy #2c3446 */
 
-	--darkergrey: 220 5% 20%;
-	--midbluegrey: 204 9% 43%;
+	/*
+
+	Navy
+
+	Rgb	rgb(42, 51, 69)
+	Hex	#2a3345
+	Hsl	hsl(220, 24%, 22%)
+	Hwb	hwb(220, 16%, 73%)
+	Cmyk cmyk(39%, 26%, 0%, 73%)
+
+	Duck Egg Blue
+
+	Rgb	rgb(118, 141, 151)
+	Hex	#768d97
+	Hsl	hsl(198, 14%, 53%)
+	Hwb	hwb(198, 46%, 41%)
+	Cmyk cmyk(22%, 7%, 0%, 41%)
+
+	Dark Teal
+
+	Rgb	rgb(91, 113, 121)
+	Hex	#5b7179
+	Hsl	hsl(196, 14%, 42%)
+	Hwb	hwb(196, 36%, 53%)
+	Cmyk cmyk(25%, 7%, 0%, 53%)
+
+	Dark Navy
+
+	Rgb	rgb(27, 33, 42)
+	Hex	#1b212a
+	Hsl	hsl(216, 22%, 14%)
+	Hwb	hwb(216, 11%, 84%)
+	Cmyk cmyk(36%, 21%, 0%, 84%)
+
+	Darker Navy
+
+	Rgb	rgb(46, 49, 54)
+	Hex	#2e3136
+	Hsl	hsl(217, 8%, 20%)
+	Hwb	hwb(217, 18%, 79%)
+	Cmyk cmyk(15%, 9%, 0%, 79%)
+
+	Footer Navy?
+	Rgb	rgb(44, 47, 52)
+	Hex	#2c2f34
+	Hsl	hsl(217, 8%, 19%)
+	Hwb	hwb(217, 17%, 80%)
+	Cmyk cmyk(15%, 10%, 0%, 80%)
+
+	*/
+
+	/* --darkergrey: 220 5% 20%; */
+	/* --midbluegrey: 204 9% 43%; */
 	/* --lightbluegrey: 203 9% 54%; this was the original colourpicker value from the pdf screen grab */
-	/* try increasing saturation, who knows what the colour profile's up to on this laptop */
-	/* higher hue = bluer, lower hue = greener */
-	--lightbluegrey: 200 15% 54%;
+
+	--duckeggblue: 198 14% 53%;
 	/* --lightbluegrey-rgb: 127, 141, 150; */
-	--darkblue: 225 16% 23%;
-	--darkerblue: 223% 13% 16%;
+	/* duckegggrey from from duckeggblue */
+	--duckegggrey: 198 9% 53%;
+
+	--darkteal: 196 14% 42%;
+
+	--navy: 220 24% 22%;
+	--darknavy: 216 22% 14%;
+	--darkernavy: 217 8% 20%;
 
 	--white: 0 0% 100%;
-	/* offwhite from the lightbluegrey */
-	--offwhite: 203 9% 83%;
+	/* offwhite from the duckeggblue */
+	--offwhite: 198 9% 83%;
 
-	--text: hsl(var(--darkergrey));
-	--muted: hsl(var(--lightbluegrey));
-	--accent: hsl(var(--darkblue));
+	--text: hsl(var(--darkernavy));
+	--muted: hsl(var(--duckegggrey));
+	--accent: hsl(var(--navy));
+	--accent-2: hsl(var(--duckeggblue));
+
+	--pageContentBgColour-1: hsl(var(--duckeggblue));
+	--pageContentBgColour-2: hsl(var(--darkteal));
+	--pageContentBgColour-3: hsl(var(--darknavy));
 
 	/* -------------- sizes --------------- */
 

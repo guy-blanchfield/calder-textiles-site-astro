@@ -105,8 +105,12 @@ const backgroundImageSet = `url(/images/${imageBase}-20x11.webp) type("image/web
 
 	<!-- because this is picture so there's no 'sizes', browser will assume the image to be 100vw (correctly in this case!) -->
 	<!-- so we probably don't need any other media query, just let the browser select the best image based on the device pixel density -->
-	<source media="(min-width: 768px)" srcset={landscapeSrcsetWebp} type="image/webp" />
-	<source media="(min-width: 768px)" srcset={landscapeSrcset} type="image/jpeg" />
+
+	<!-- query here was originally min-width: 768px, but that meant that at landscape orientations less than 768 -->
+	<!-- no image at all was shown (why the fallback image didn't apply, who knows?) -->
+	<!-- either way, try orientation: landscape instead -->
+	<source media="(orientation: landscape)" srcset={landscapeSrcsetWebp} type="image/webp" />
+	<source media="(orientation: landscape)" srcset={landscapeSrcset} type="image/jpeg" />
 	<!-- <source srcset="./assets/images/${heroImage}-1440x960.jpg 2880w, ./assets/images/${heroImage}-2000x1333.jpg 1440w" media="(min-width: 100px)"> -->
 	<!-- <source srcset="./assets/images/${heroImage}-1440x960.jpg" media="(min-width: 1200px)"> -->
 

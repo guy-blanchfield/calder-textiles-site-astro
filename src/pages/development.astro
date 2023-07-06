@@ -2,32 +2,8 @@
 import Layout from "../layouts/Layout.astro";
 import Hero from "../components/Hero.astro";
 import PageContentSection from "../components/PageContentSection.astro";
+import DiagramSection from "../components/DiagramSection.astro";
 import ContactSection from "../components/ContactSection.astro";
-
-// diagram images
-
-const diagramBase = "development-diagram";
-
-// tried this with img srcset sizes, no good, use picture instead
-// picture is the obvious choice, just wanted to try and figure out how sizes works
-
-const diagramSrcsetMob1 = `/images/${diagramBase}-no-arrow-1.png`;
-const diagramSrcsetMob2 = `/images/${diagramBase}-no-arrow-2.png`;
-const diagramSrcsetMob3 = `/images/${diagramBase}-no-arrow-3.png`;
-
-const diagramSrcset1 = `/images/${diagramBase}-1.png`;
-const diagramSrcset2 = `/images/${diagramBase}-2.png`;
-const diagramSrcset3 = `/images/${diagramBase}-3.png`;
-
-const diagramFallback1 = `/images/${diagramBase}-1.png`;
-const diagramFallback2 = `/images/${diagramBase}-2.png`;
-const diagramFallback3 = `/images/${diagramBase}-3.png`;
-
-// max-width here should match max-width in the css media query (see below in the style section)
-// (where the ::after is added)
-
-const diagramMediaMax = "(max-width: 576px)";
-const diagramMediaMin = "(min-width: 577px)";
 ---
 
 <Layout title="Development : Calder Textiles">
@@ -59,73 +35,17 @@ const diagramMediaMin = "(min-width: 577px)";
 
 	<!-- picture seems to be the best solution for this -->
 
-	<section class="section-diagram">
-		<div class="container">
-			<div class="row no-gutters p-5">
-				<div class="col-sm-4 px-0 align-self-center section-diagram__col">
-					<picture>
-						<source media={diagramMediaMax} srcset={diagramSrcsetMob1} />
-						<source media={diagramMediaMin} srcset={diagramSrcset1} />
-
-						<img src={diagramFallback1} alt="Description of diagram 1" class="section-diagram__img" />
-					</picture>
-				</div>
-
-				<div class="col-sm-4 px-0 align-self-center section-diagram__col">
-					<picture>
-						<source media={diagramMediaMax} srcset={diagramSrcsetMob2} />
-						<source media={diagramMediaMin} srcset={diagramSrcset2} />
-
-						<img src={diagramFallback2} alt="Description of diagram 2" class="section-diagram__img" />
-					</picture>
-				</div>
-
-				<div class="col-sm-4 px-0 align-self-center section-diagram__col">
-					<picture>
-						<source media={diagramMediaMax} srcset={diagramSrcsetMob3} />
-						<source media={diagramMediaMin} srcset={diagramSrcset3} />
-
-						<img src={diagramFallback3} alt="Description of diagram 3" class="section-diagram__img" />
-					</picture>
-				</div>
-			</div>
-		</div>
-	</section>
+	<DiagramSection
+		diagramBase="development-diagram"
+		diagramStackSeparator="url('/images/development-diagram-arrow-down.png')"
+		diagramAlt={[
+			"We export over 60% of our yarn",
+			"We manufacture 40,000kgs of woollen spun and dyed yarn per week",
+			"Produced under 1 roof to UK and international customer specifications",
+		]}
+	/>
 
 	<ContactSection />
 </Layout>
 
-<style>
-	.section-diagram {
-		background-color: hsl(240, 2%, 90%);
-	}
-
-	@media (max-width: 576px) {
-		.section-diagram__col:not(:last-child)::after {
-			content: "";
-			display: block;
-			/* display: flex; */
-			/* width: 50px; */
-			/* height: 75px; */
-			width: 100%;
-			/* think we need to use padding-bootom here instead of height */
-			/* if we want to use a percentage value */
-			/* it's a percentage of the width btw! */
-			padding-bottom: 20%;
-			/* height: 50px; */
-			margin: 0 auto;
-			/* align-items: center; */
-			/* justify-content: center; */
-			background-image: url("/images/development-diagram-arrow-down.png");
-			background-size: contain;
-			background-repeat: no-repeat;
-			background-position: center;
-			/* border: 1px solid lawngreen; */
-		}
-	}
-
-	.section-diagram__img {
-		max-width: 100%;
-		/* border: 1px solid yellow; */
-	}
-</style>
+<style></style>

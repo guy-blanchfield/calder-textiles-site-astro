@@ -52,13 +52,13 @@ import GoogleMap from "../components/GoogleMap.astro";
 	}
 
 	.section-contact__contact-content {
-		color: hsl(var(--darkergrey) / 0.85);
+		color: hsl(var(--darkernavy) / 0.85);
 	}
 
 	.section-contact__heading {
 		/* font-family now handled by .serif utility, see after the :root stuff */
 		/* font-family: Georgia, serif; */
-		color: hsl(var(--lightbluegrey));
+		color: var(--accent-2);
 	}
 
 	.section-contact__intro {
@@ -67,7 +67,11 @@ import GoogleMap from "../components/GoogleMap.astro";
 	}
 
 	.section-contact__email {
-		color: hsl(var(--muted));
+		color: var(--text);
 		text-decoration: none;
+	}
+
+	.section-contact__email:is(:hover, :focus-visible) {
+		color: var(--accent-2);
 	}
 </style>
