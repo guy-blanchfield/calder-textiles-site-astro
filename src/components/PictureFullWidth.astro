@@ -64,7 +64,9 @@ const fallbackSrc = `/images/${imageBase}-960x540.jpg`;
 // const backgroundImageSet = `url(/images/${imageBase}-50x28.webp) type("image/webp"), url(/images/${imageBase}-50x28.jpg) type("image/jpeg")`;
 // tried 50px images - nah, 20 probably better
 
-const backgroundImageSet = `url(/images/${imageBase}-20x11.webp) type("image/webp"), url(/images/${imageBase}-20x11.jpg) type("image/jpeg")`;
+// the 20px background images are so small, there's no point having a webp as well as jpg
+// const backgroundImageSet = `url(/images/${imageBase}-20x11.webp) type("image/webp"), url(/images/${imageBase}-20x11.jpg) type("image/jpeg")`;
+const backgroundImageSet = `url(/images/${imageBase}-20x11.jpg) type("image/jpeg")`;
 ---
 
 <picture class:list={pictureClasses}>

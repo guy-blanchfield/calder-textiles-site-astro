@@ -84,8 +84,16 @@ const backgroundImageSet = `url(/images/${videoBase}-960x540.webp) type("image/w
 	}
 
 	console.log(`videoPixels: ${videoPixels}`);
-
-	if (videoElement?.canPlayType("video/webm") === "probably") {
+	console.log(`Canplaytype(): ${typeof videoElement?.canPlayType}`);
+	// with codec not specified, logs "maybe" on firefox, chrome, edge
+	console.log(`Can play webm: ${videoElement?.canPlayType("video/webm")}`);
+	// with codec specified, logs "probably" on firefox, chrome, edge
+	console.log(`Can play webm codecs=vp9: ${videoElement?.canPlayType('video/webm;codecs="vp9"')}`);
+	// NB has to be single quotes with double quotes round the codec e.g. "vp9"
+	if (
+		typeof videoElement?.canPlayType === "function" &&
+		videoElement?.canPlayType('video/webm;codecs="vp9"') === "probably"
+	) {
 		videoExt = ".webm";
 	} else {
 		videoExt = ".mp4";
@@ -198,7 +206,7 @@ const backgroundImageSet = `url(/images/${videoBase}-960x540.webp) type("image/w
 		/* background-color: hotpink; */
 
 		opacity: 0;
-		/* transition: opacity 2s ease-in; */
+		transition: opacity 0.5s ease-in;
 
 		/* will-change: opacity; */
 
