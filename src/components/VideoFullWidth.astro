@@ -21,8 +21,8 @@ export interface Props {
 const { videoBase, videoAutoplay = "true", pictureClasses = "" } = Astro.props;
 
 const videoSourcePart = `/video/${videoBase}`;
-const videoSourceWebm = `/video/${videoBase}-1080p.webm`;
-const videoSourceMp4 = `/video/${videoBase}-1080p.mp4`;
+// const videoSourceWebm = `/video/${videoBase}-1080p.webm`;
+// const videoSourceMp4 = `/video/${videoBase}-1080p.mp4`;
 
 // we only need a background image for video if it's mobile (<768)
 // so the background image only needs to be about 768 width, use the 960x540 for now
@@ -35,9 +35,9 @@ const backgroundImageSet = `url(/images/${videoBase}-960x540.webp) type("image/w
 
 <!-- NB autoplay getting set with js below, leave it off here --><!-- preload=none will stop browser downloading any part of the video unless it has to --><!-- i.e. when autoplay is set by the js -->
 <div class="video-container">
-	<video class="video-element" data-source={videoSourcePart} data-autoplay={videoAutoplay} muted loop>
+	<video class="video-element" data-source={videoSourcePart} data-autoplay={videoAutoplay} muted loop plays-inline>
 		<!-- <source src={videoSourceMdWebm} type="video/webm" /> -->
-		<source src={videoSourceMp4} type="video/mp4" />
+		<!-- <source src={videoSourceMp4} type="video/mp4" /> -->
 
 		<p>Your browser doesn't support HTML video.</p>
 	</video>
@@ -62,22 +62,26 @@ const backgroundImageSet = `url(/images/${videoBase}-960x540.webp) type("image/w
 	// hopefully will just show the background instead
 
 	const windowWidth: number = window.innerWidth;
-	const videoContainer: HTMLElement = document.querySelector(".video-container");
+	// const videoContainer: HTMLElement = document.querySelector(".video-container");
 	const videoElement: HTMLVideoElement = document.querySelector(".video-element");
 	// const altVideoElement: Element = document.querySelector('.video-element');
 	// this script seems to be running even on non video pages so put assign videoSrc conditionally for now
 	const videoSrcPrt = videoElement?.dataset.source;
-	let queryClass: string;
+	// let queryClass: string;
 	let videoSource: string;
 	let videoPixels: string;
 	let videoExt: string;
 
+	// 360p was a bit crappy even at 400vw
+	// if (windowWidth < 500) {
+	// 	videoPixels = "360p";
+	// } else
 	if (windowWidth < 992) {
 		// queryClass = '.video-element--md';
-		videoPixels = "1080p";
+		videoPixels = "540p";
 	} else if (windowWidth < 1200) {
 		// queryClass = '.video-element--lg';
-		videoPixels = "1080p";
+		videoPixels = "720p";
 	} else {
 		// queryClass = '.video-element--xl';
 		videoPixels = "1080p";
@@ -117,16 +121,24 @@ const backgroundImageSet = `url(/images/${videoBase}-960x540.webp) type("image/w
 			// nah, this will have to go in preloader
 			// videoElement.addEventListener("canplay", canPlayCallback);
 			// autoplay if videoAutoplay prop is true
+			// i.e. if the video is somewhere else on the site other than the home page
+			// there won't be a preloader, pass the autoplay prop to this component as 'true'
 			// otherwise leave the autoplay to preloader component
 			console.log(`what does dataset.autoplay come out as: ${videoElement.dataset.autoplay}`);
 			if (videoElement.dataset.autoplay == "true") {
 				videoElement.setAttribute("autoplay", "");
 			}
 
+			// temporarily set autoplay as default for testing edge and chrome
+			// videoElement.setAttribute("autoplay", "");
+			// yep this is definitely the difference between edge and chrome autoplaying or not
+			console.log(`videofullwidth would call setAttribute here`);
+
+			// try adding this class in loader???! nope that's not it
 			videoElement.classList.add("video-element--show");
 			// videoContainer.classList.add('video-container--reveal');
 			console.log(`adding reveal class`);
-			console.log(`setting autoplay on ${videoElement.dataset.source}`);
+			// console.log(`setting autoplay on ${videoElement.dataset.source}`);
 
 			// setTimeout(logBuffered, 5000);
 		}

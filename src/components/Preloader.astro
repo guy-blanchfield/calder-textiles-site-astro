@@ -13,10 +13,12 @@
 		// check if hero__image exists i.e. it's not a hero video instead
 		const heroImage: HTMLImageElement = document.querySelector(".hero__image") ?? undefined;
 		const heroVideo: HTMLMediaElement = document.querySelector(".video-element") ?? undefined;
+		// const heroVideo: HTMLVideoElement = document.querySelector(".video-element");
 		// const heroVideoContainer: HTMLElement = document.querySelector(".video-container") ?? undefined;
 		// const heroVideoContainerSpan: HTMLElement = document.querySelector(".video-container__span") ?? undefined;
 
 		console.log("initialise!!!!!!!!");
+		// heroVideo.setAttribute("autoplay", "");
 
 		// this needs to happen on transition end as well, if it hasn't happened
 		function showHeroText() {
@@ -64,16 +66,36 @@
 				// callback funtion for the 'canplay' event fired by video when it's ready to play
 				function canPlayCallback() {
 					console.log(`Can now play video: ${heroVideo.src}`);
-					console.log(`calling showHeroText function`);
-					showHeroText();
+
 					// showHeroVideo();
 
 					// if video hasn't been set to autoplay by the VideoFullWidthComponent
-					// set it to autoplay now
+					// set it to autoplay now,
+					// actually just play it
 					if (heroVideo.dataset.autoplay == "false") {
 						console.log(`setting autoplay on ${heroVideo.src}`);
+						console.log(`because dataset.autoplay is: ${heroVideo.dataset.autoplay}`);
+						// heroVideo.classList.add("video-element--show");
 						// heroVideo.setAttribute("autoplay", "");
-						heroVideo.play();
+						// NB!! from: https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/play
+						// The play() method may cause the user to be asked to grant permission to play the media,
+						// resulting in a possible delay before the returned promise is resolved.
+						// Be sure your code doesn't expect an immediate response.
+
+						// play() follows the same rules as autoplay, and all modern browsers are cool with it
+						// so play() will do, maybe in a try catch if we want to handle the error
+
+						// edge won't autoplay!!!?
+						// edge won't autoplay when setAttribute is called from here
+						// but will when it's called from VideoFullWidth - why??
+
+						// obvious difference is that calling from here only happens
+						// after the canplay event fires
+						try {
+							heroVideo.play();
+						} catch (err) {
+							console.log(`Error playing video: ${err}`);
+						}
 					}
 
 					// we only want the first canplay event
@@ -82,11 +104,17 @@
 
 					heroVideo.removeEventListener("canplay", canPlayCallback);
 					console.log("removing video event listener");
+
+					console.log(`calling showHeroText function`);
+					showHeroText();
 				}
 
 				if (heroVideo) {
+					// test readystate for edge
+					console.log(`heroVideo readystate: ${heroVideo.readyState}`);
 					// if video is already loaded and playing just manually call the canPlayCallback
 					if (heroVideo.readyState >= 2) {
+						console.log(`calling callback manually because readystate is ${heroVideo.readyState}`);
 						canPlayCallback();
 					} else {
 						// otherwise set an event listener for the canplay event
@@ -167,6 +195,10 @@
 		// when it fires, set loader visibility to hidden so it doesn't interfere with links and buttons
 
 		preLoader.addEventListener("transitionend", () => {
+			// see if setAttribute autoplay works here - nope!
+			// const tempHeroVideo: HTMLMediaElement = document.querySelector(".video-element") ?? undefined;
+			// tempHeroVideo.setAttribute("autoplay", "");
+
 			// set preloader visibility to hidden
 			preLoader.classList.add("loader--hidden");
 			console.log("transitionend event fired - preloader visibility hidden");
@@ -188,16 +220,46 @@
 			// clearTimeout(startLoaderTimeout);
 			// console.log(`the timeout cleared!`);
 
+			// right, setAttribute autoplay here fixes the edge issue
+			// i.e. edge autoplays
+
+			// const tempHeroVideo: HTMLMediaElement = document.querySelector(".video-element") ?? undefined;
+			// tempHeroVideo.setAttribute("autoplay", "");
+
 			preLoader.classList.add("loader--transparent");
 			console.log(`load event fired!`);
 
 			// don't forget to uncomment this!!!! ------------------------------------- < important!
 			// sessionStorage.setItem("preloadComplete", "true");
 			console.log(`preloadComplete is now: ${sessionStorage.getItem("preloadComplete")}`);
+
+			// try initialise here, temporarily
+			// initialise();
+			// initialise here doesn't work
+			// unless the setAttribute is right at the start of the initialise function
+			// (as opposed to inside the canPlayCallback function)
+			// this only applies for calling it from here
+			// NOT calling it from the transitionend event listener callback
+
+			// So, Edge and Chrome just don't like it coming from the canplay eventlistener
+			// presumably because it wants autoplay to have been set before the video is ready to play
+
+			// but setAttribute autoplay here does!
+			// const tempHeroVideo: HTMLMediaElement = document.querySelector(".video-element") ?? undefined;
+			// tempHeroVideo.setAttribute("autoplay", "");
+
+			// right, it seems that whether play() is allowed is the same as whether autoplay is allowed
+			// so we should just use play, once the canplay event fires
+			// play() returns a promise so we could put it in a try catch if we want to use the error for something
+
+			// put the play() in the canPlayCallback (where it was originally!)
 		});
 
 		console.log(`load event listener added`);
 	} else {
+		// this is what happens if there's no preloader
+		// i.e. the session storage item 'preloadcomplete' has already been set
+
 		console.log(`loader is not showing because preloadComplete is: ${sessionStorage.getItem("preloadComplete")}`);
 		// hide the loader
 		preLoader.classList.add("loader--transparent");

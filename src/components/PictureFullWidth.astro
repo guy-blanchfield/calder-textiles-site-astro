@@ -234,6 +234,7 @@ const backgroundImageSet = `url(/images/${imageBase}-20x11.jpg) type("image/jpeg
 	/* OR fades the image in if the picture has had 'picture--blur-loading' added */
 
 	.picture--blur-loading {
+		background-image: -webkit-image-set(var(--backgroundImageSet));
 		background-image: image-set(var(--backgroundImageSet));
 		background-size: cover;
 		/* hero__picture already has position: absolute because of the overlay stuff to put text over the image */

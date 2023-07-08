@@ -139,41 +139,6 @@ const { title, bodyClass = "" } = Astro.props;
     background-color: hsl(var(--bodyBgColour));
 } */
 
-	/* various classes that can be applied by passing a prop bodyClass to the Layout layout */
-	/* each one applies a different background image */
-	/* maybe there might be other variations as well in the future, say bg colour */
-
-	/* maybe this should go in global.css? */
-
-	/* Ok, background-image loses us 4 lighthouse performance points!! 8 as jpg! */
-	/* it is massive, even as webp it's still 1,334k */
-	/* so probably worth exploring other techniques */
-
-	/* probably won't do a backround image */
-	/* but keep this class for now, just in case */
-
-	.body-aboutus {
-		/* fallback image if image-set is not supported */
-		background-image: url("/images/herd-in-field-1440x810.jpg");
-		background-attachment: fixed;
-		background-size: cover;
-
-		/* Re: 1x, 2x - browser will choose  the image that most closely matched the device dpr*/
-		/* regardless of viewport width */
-		/* this is probably ok for our purposes since these images don't display at widths less than 768 */
-		/* (see media query below and also in EmptySection component style) */
-		/* and the average tablet is going to be more than 1x dpr */
-
-		background-image: -webkit-image-set(
-			url("/images/herd-in-field-1440x810.jpg") 1x,
-			url("/images/herd-in-field-2560x1440.webp") 2x
-		);
-		background-image: image-set(
-			url("/images/herd-in-field-1440x810.jpg") 1x,
-			url("/images/herd-in-field-2560x1440.webp") 2x
-		);
-	}
-
 	/* .body-test-bg {
     
 } */
