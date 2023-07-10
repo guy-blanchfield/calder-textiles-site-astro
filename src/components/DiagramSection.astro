@@ -6,9 +6,10 @@ export interface Props {
 	// diagramStackSeparator is a background image on an ::after
 	// for any linking or dividing image that goes between the diagram images
 	// when they're stacked (i.e. on mobile)
+	bgColour?: string;
 }
 
-const { diagramBase, diagramAlt = [], diagramStackSeparator } = Astro.props;
+const { diagramBase, diagramAlt = [], diagramStackSeparator, bgColour = "var(--pageContentBgColour-1)" } = Astro.props;
 
 // tried this with img srcset sizes, no good, use picture instead
 // picture is the obvious choice, just wanted to try and figure out how sizes works
@@ -34,8 +35,8 @@ const diagramMediaMin = "(min-width: 577px)";
 
 <section class="section-diagram">
 	<div class="container">
-		<div class="row no-gutters p-5">
-			<div class="col-sm-4 px-0 align-self-center section-diagram__col">
+		<div class="row no-gutters justify-content-center p-5">
+			<div class="col-sm-4 col-lg-3 px-0 align-self-center section-diagram__col">
 				<picture>
 					<source media={diagramMediaMax} srcset={diagramSrcsetMob1} />
 					<source media={diagramMediaMin} srcset={diagramSrcset1} />
@@ -44,7 +45,7 @@ const diagramMediaMin = "(min-width: 577px)";
 				</picture>
 			</div>
 
-			<div class="col-sm-4 px-0 align-self-center section-diagram__col">
+			<div class="col-sm-4 col-lg-3 px-0 align-self-center section-diagram__col">
 				<picture>
 					<source media={diagramMediaMax} srcset={diagramSrcsetMob2} />
 					<source media={diagramMediaMin} srcset={diagramSrcset2} />
@@ -53,7 +54,7 @@ const diagramMediaMin = "(min-width: 577px)";
 				</picture>
 			</div>
 
-			<div class="col-sm-4 px-0 align-self-center section-diagram__col">
+			<div class="col-sm-4 col-lg-3 px-0 align-self-center section-diagram__col">
 				<picture>
 					<source media={diagramMediaMax} srcset={diagramSrcsetMob3} />
 					<source media={diagramMediaMin} srcset={diagramSrcset3} />
@@ -65,9 +66,10 @@ const diagramMediaMin = "(min-width: 577px)";
 	</div>
 </section>
 
-<style define:vars={{ diagramStackSeparator }}>
+<style define:vars={{ diagramStackSeparator, bgColour }}>
 	.section-diagram {
-		background-color: hsl(240, 2%, 90%);
+		/* background-color: hsl(240, 2%, 90%); */
+		background-color: var(--bgColour);
 	}
 
 	@media (max-width: 576px) {

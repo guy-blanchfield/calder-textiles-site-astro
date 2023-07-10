@@ -20,7 +20,7 @@ import ContactSection from "../components/ContactSection.astro";
 
 	<PageContentSection heading="About Us">
 		<Fragment slot="page-content">
-			<p>
+			<p class="page-content__lead-para">
 				Calder Textiles is a traditional family owned spinning mill located in Dewsbury, West Yorkshire, an area
 				renowned for its textile heritage and expertise.
 			</p>
@@ -42,4 +42,12 @@ import ContactSection from "../components/ContactSection.astro";
 	<ContactSection />
 </Layout>
 
-<style></style>
+<style>
+	/* about us is currently the only page with this bold lead para */
+	/* so itmakes sense to put it here */
+	/* can't go in the PageContentSection bc scoping */
+	/* if we decide we need it elsewhere it'll have to be is:global or put it in global.css */
+	.page-content__lead-para {
+		font-weight: bold;
+	}
+</style>

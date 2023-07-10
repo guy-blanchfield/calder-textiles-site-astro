@@ -367,25 +367,32 @@ const currentPath = Astro.url.pathname;
 	}
 
 	.navbar-caldertextiles__logo:is(:hover, :focus-visible) {
+		/* can't set colour here, set it below in the -svg class */
 		/* color: hsl(var(--offwhite)); */
-		animation: logo-pop 0.4s ease-in-out;
+
+		/* animation: logo-pop 0.4s ease-in-out; */
 		/* transform: scale(1.05); */
+		/* background-color: hsl(var(--white) / 0.2); */
 	}
 
 	@keyframes logo-pop {
 		from {
-			transform: scale(1);
+			/* transform: scale(1); */
+			transform: translateX(0);
 		}
 		50% {
-			transform: scale(1.05);
+			/* transform: scale(1.05); */
+			transform: translateX(1rem);
 		}
 		to {
-			transform: scale(1);
+			/* transform: scale(1); */
+			transform: translateX(0);
 		}
 	}
 
 	.navbar-caldertextiles__logo:is(:hover, :focus-visible) .navbar-caldertextiles__logo-svg {
 		/* color: hsl(var(--offwhite)); */
+		/* color: hsl(var(--navy)); */
 	}
 
 	.navbar-caldertextiles__logo-svg {
@@ -401,7 +408,7 @@ const currentPath = Astro.url.pathname;
 		/* max-width: 100%; */
 	}
 
-	/* to fix the weird flah of alt text in firefox */
+	/* to fix the weird flash of alt text in firefox */
 	/* see: https://stackoverflow.com/questions/68166235/firefox-alt-text-appears-while-loading-image */
 	/* this might not be necessary when the logo is SVG - keep an eye on it */
 	.navbar-caldertextiles__logo-img:-moz-loading {

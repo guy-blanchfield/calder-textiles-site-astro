@@ -101,6 +101,8 @@
 	/* offwhite from the duckeggblue */
 	--offwhite: 198 9% 83%;
 
+	--lightgrey: 240 2% 90%;
+
 	--text: hsl(var(--darkernavy));
 	--muted: hsl(var(--duckegggrey));
 	--accent: hsl(var(--navy));
@@ -109,6 +111,7 @@
 	--pageContentBgColour-1: hsl(var(--duckeggblue));
 	--pageContentBgColour-2: hsl(var(--darkteal));
 	--pageContentBgColour-3: hsl(var(--darknavy));
+	--pageContentBgColour-4: hsl(var(--lightgrey));
 
 	/* -------------- sizes --------------- */
 

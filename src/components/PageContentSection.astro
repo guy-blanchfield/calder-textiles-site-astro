@@ -13,7 +13,8 @@ const { heading, bgColour = "var(--pageContentBgColour-1)" } = Astro.props;
 		<!-- content div just to keep everything together -->
 		<!-- makes it easier to set padding -->
 		<div class="section-pagecontent__content p-3">
-			<h2 class="section-pagecontent__heading display-5 py-5 serif" data-aos="fade-up">{heading}</h2>
+			<!-- h2 was py-5 but it needs more so do it with custom css -->
+			<h2 class="section-pagecontent__heading display-5 serif" data-aos="fade-up">{heading}</h2>
 
 			<div class="row" data-aos="fade-up">
 				<!-- using padding-end (pe-5) to reduce the line length slightly -->
@@ -73,5 +74,7 @@ const { heading, bgColour = "var(--pageContentBgColour-1)" } = Astro.props;
 	.section-pagecontent__heading {
 		/* font-family now handled by .serif utility, see after the :root stuff in global.css */
 		/* font-family: 'Georgia, serif'; */
+		margin-top: 3rem;
+		margin-bottom: 6rem;
 	}
 </style>
