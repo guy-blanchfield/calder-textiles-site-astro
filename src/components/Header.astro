@@ -70,7 +70,14 @@ const currentPath = Astro.url.pathname;
 				<!-- now using astro-icon with local svg for the logo (same in footer) -->
 				<!-- hopefully astro-icon will streamline the svg a bit -->
 				<!-- any svgs that you want to use with astro-icon need to be in src/icons -->
-				<Icon name="caldertextiles-logo-crop" width={logoSize.width} class="navbar-caldertextiles__logo-svg" />
+				<Icon
+					name="caldertextiles-logo-crop"
+					width={logoSize.width}
+					class="navbar-caldertextiles__logo-svg"
+					aria-hidden="true"
+					alt="Calder Textiles"
+				/>
+				<span class="visually-hidden">Calder Textiles Home Page</span>
 			</a>
 
 			<!-- in between the brand link and the navbar collapse we need the hamburger -->
