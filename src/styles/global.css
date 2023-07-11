@@ -190,3 +190,10 @@ footer {
 .nowrap {
 	white-space: nowrap;
 }
+
+/* this lead para class is applied to slot material in individual pages */
+/* scoping means we can't put it in PageContentSection */
+/* so it'll have to go here, at least until we find a better way */
+.page-content__lead-para {
+	font-weight: bold;
+}

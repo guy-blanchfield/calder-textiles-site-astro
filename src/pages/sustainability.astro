@@ -24,7 +24,7 @@ import ContactSection from "../components/ContactSection.astro";
 				<p>
 					Our production process is powered by the latest cogeneration combined heat and power system that harnesses and
 					uses the thermal energy in the form of efficient steam for the dyeing process. CHP is a recognised sustainable
-					way of generating electric whilst also contributing towards reducing CO2 emissions rather than obtaining
+					way of generating electricity whilst also contributing towards reducing CO2 emissions rather than obtaining
 					electric from traditional sources.
 				</p>
 				<p>
@@ -42,14 +42,18 @@ import ContactSection from "../components/ContactSection.astro";
 				</p>
 				<p>
 					Sheep, like us, grow wool continuously and are normally shorn once a year. Shearing does not harm the sheep -
-					in fact it helps to stop then from overheating in summer.
+					in fact it helps to stop them from overheating in summer.
 				</p>
 				<p>Wool is 100% biodegradable and renewable making it a true sustainable fibre.</p>
 			</Fragment>
 		</PageContentSection>
 
 		<!-- <EmptySection /> -->
-		<DiagramSection diagramBase="sustainability-diagram" bgColour="var(--pageContentBgColour-1)" />
+		<DiagramSection
+			diagramBase="sustainability-diagram"
+			bgColour="var(--pageContentBgColour-1)"
+			colModifier="--sustainability"
+		/>
 
 		<ContactSection />
 	</main>

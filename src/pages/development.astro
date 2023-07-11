@@ -15,7 +15,9 @@ import ContactSection from "../components/ContactSection.astro";
 
 	<PageContentSection heading="Development">
 		<Fragment slot="page-content">
-			<p>A key area of our operation is to develop new ranges with and for our customers.</p>
+			<p class="page-content__lead-para">
+				A key area of our operation is to develop new ranges with and for our customers.
+			</p>
 			<p>
 				We work very closely with our customers whether we are creating new shades, be that natural heathers, dyed
 				heathers, stipples or a new colour bank.
@@ -44,6 +46,7 @@ import ContactSection from "../components/ContactSection.astro";
 			"Produced under 1 roof to UK and international customer specifications",
 		]}
 		bgColour="var(--pageContentBgColour-4)"
+		colModifier="--development"
 	/>
 
 	<ContactSection />
