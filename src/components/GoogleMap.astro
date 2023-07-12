@@ -21,7 +21,7 @@ import googleMapsURL from "../data/map-api-key";
 		// Request needed libraries.
 		//@ts-ignore
 		const { Map } = await google.maps.importLibrary("maps");
-		const { AdvancedMarkerView } = await google.maps.importLibrary("marker");
+		// const { AdvancedMarkerView } = await google.maps.importLibrary("marker");
 
 		// The map, centered at Calder Textiles
 		map = new Map(document.getElementById("map"), {
@@ -34,6 +34,9 @@ import googleMapsURL from "../data/map-api-key";
 		});
 
 		// The marker, positioned at Calder Textiles
+
+		// animation only seems to be available in google.maps.Marker
+		// not importLibrary("marker") (AdvancedMarkerView)
 		// let marker = new AdvancedMarkerView({
 		marker = new google.maps.Marker({
 			map: map,
@@ -82,6 +85,6 @@ import googleMapsURL from "../data/map-api-key";
 		/* otherwise it gets tall and narrow at mobile dimensions */
 		padding-bottom: 67%;
 		/* background-color: #ccc */
-		border: 1px solid hsl(var(--lightbluegrey) / 0.25);
+		border: 1px solid hsl(var(--duckeggblue) / 0.25);
 	}
 </style>

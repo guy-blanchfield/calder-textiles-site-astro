@@ -15,6 +15,19 @@
 		url("/fonts/librebaskerville-regular-webfont.woff") format("woff");
 	font-weight: normal;
 	font-style: normal;
+	/* font-display: swap; */
+	/* trying font-display block to stop chrome doing the slow network intervention font-swap */
+	/* see: https://stackoverflow.com/questions/40143098/why-does-this-slow-network-detected-log-appear-in-chrome */
+	/* nah - block just makes it disappear intead of swapping to times */
+	/* try optional - nope this swaps it for times and never unswaps! */
+
+	/* It seems that this font flashing issue is due to chrome detecting a slow network */
+	/* i.e. when throttling with devtools */
+	/* and so hopefully it won't occur out in the wild */
+	/* also, it only occurs when google map api is present */
+
+	/* maybe font-display: block might be the lesser of two evils */
+
 	font-display: swap;
 }
 
