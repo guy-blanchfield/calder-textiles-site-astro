@@ -17,6 +17,16 @@
 		// const heroVideoContainer: HTMLElement = document.querySelector(".video-container") ?? undefined;
 		// const heroVideoContainerSpan: HTMLElement = document.querySelector(".video-container__span") ?? undefined;
 
+		const heroTextDiv: HTMLDivElement = document.querySelector(".hero__text") ?? undefined;
+		// reapply the class to reset the transition
+		// nope, that doesn't work
+		// try a reset class
+		// heroTextDiv.classList.remove("hero__text");
+		// console.log(`resetting hero__text class`);
+		// heroTextDiv?.classList.add("hero__text--reset");
+		// heroTextDiv?.classList.remove("hero__text--visible");
+		// heroTextDiv?.classList.remove("hero__text");
+
 		console.log("initialise!!!!!!!!");
 		// heroVideo.setAttribute("autoplay", "");
 
@@ -25,12 +35,36 @@
 			console.log("showHeroText function is running");
 			console.log(`hero__text: ${document.querySelector(".hero__text")}`);
 
-			const heroTextDiv = document.querySelector(".hero__text");
+			// const msgDiv = document.createElement("div");
+			// let msgNode = document.createTextNode("Classes: ");
+			// msgDiv.appendChild(msgNode);
+			// heroTextDiv.appendChild(msgDiv);
+			// heroTextDiv.classList.forEach((c) => {
+			// 	msgDiv.textContent += `${c}, `;
+			// });
+
+			// heroTextDiv.style.opacity = "0";
+			// console.log(`heroTextDiv.style.opacity: ${heroTextDiv.style.opacity}`);
+
+			// const heroTextDiv = document.querySelector(".hero__text");
 
 			// if the --visible class isn't there, add it
 			if (!heroTextDiv.classList.contains("hero__text--visible")) {
-				heroTextDiv.classList.add("hero__text--visible");
-				console.log(`hero__text--visible class added!`);
+				// heroTextDiv.classList.remove("hero__text--reset");
+				// doing this with a timeout because chrome didn't like the transition delay
+				// it kept showing the div at the end of its transition for the
+				// duration of the delay, then starting the transition
+
+				// it needs a delay because the image or video have a 0.5s fade in time
+				// suppose we could call showHeroText on a timeout instead, but we'll see...
+				// nah cos it's called from at least two different places so makes sense to put
+				// the timeout here
+				// still hate it though
+				setTimeout(() => {
+					heroTextDiv.classList.add("hero__text--visible");
+					console.log(`hero__text--visible class added!`);
+				}, 500);
+				// heroTextDiv.classList.add("hero__text--visible");
 			}
 		}
 

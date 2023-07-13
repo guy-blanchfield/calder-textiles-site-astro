@@ -138,25 +138,35 @@ const currentPath = Astro.url.pathname;
 					<!-- https://docs.astro.build/en/reference/api-reference/#astrourl -->
 					<li class="nav-item active">
 						<!-- and each link needs a class of nav-link -->
-						<a href="/aboutus" class="nav-link" aria-current={currentPath === "/aboutus" ? "page" : false}>About Us</a>
+						<!-- NB dev pathname has no trailing slash, build pathname DOES have trailing slash -->
+						<!-- that's why we're using includes not equality operator  -->
+						<!-- <a href="/aboutus" class="nav-link" aria-current={currentPath === "/aboutus" ? "page" : false}>About Us</a> -->
+						<a href="/aboutus" class="nav-link" aria-current={currentPath.includes("/aboutus") ? "page" : false}
+							>About Us</a
+						>
 					</li>
 
 					<li class="nav-item">
-						<a href="/products" class="nav-link" aria-current={currentPath === "/products" ? "page" : false}>Products</a
+						<a href="/products" class="nav-link" aria-current={currentPath.includes("/products") ? "page" : false}
+							>Products</a
 						>
 					</li>
 					<li class="nav-item">
-						<a href="/development" class="nav-link" aria-current={currentPath === "/development" ? "page" : false}
+						<a href="/development" class="nav-link" aria-current={currentPath.includes("/development") ? "page" : false}
 							>Development</a
 						>
 					</li>
 					<li class="nav-item">
-						<a href="/sustainability" class="nav-link" aria-current={currentPath === "/sustainability" ? "page" : false}
-							>Sustainability</a
+						<a
+							href="/sustainability"
+							class="nav-link"
+							aria-current={currentPath.includes("/sustainability") ? "page" : false}>Sustainability</a
 						>
 					</li>
 					<li class="nav-item">
-						<a href="/contact" class="nav-link" aria-current={currentPath === "/contact" ? "page" : false}>Contact</a>
+						<a href="/contact" class="nav-link" aria-current={currentPath.includes("/contact") ? "page" : false}
+							>Contact</a
+						>
 					</li>
 				</ul>
 			</div>

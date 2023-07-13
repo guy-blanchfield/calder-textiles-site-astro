@@ -249,14 +249,8 @@ const goal = 3;
 	}
 
 	.hero__text {
-		/* padding-top: 100px; */
-		/* might not need z-index and position here now it's going inside the overlay */
-		/* z-index: 1; */
-		/* position: relative; */
-
-		color: hsl(var(--white));
-
-		/* border: 1px solid firebrick; */
+		/* set colour more specifically on h1 and p (see below) */
+		/* color: hsl(var(--white)); */
 
 		/* let's try hiding this until the page has loaded so it comes up after the image / video shows */
 
@@ -268,7 +262,19 @@ const goal = 3;
 		/* transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out; */
 		/*  aos default is animation-timing-function: ease; */
 		/* delay of 0.5s */
-		transition: all 0.3s ease 0.5s;
+
+		/* it's the delay that is causing bs body colour text to show before the transition */
+		/* why only in build though? */
+		/* transition: all 0.3s ease 3s; */
+		transition: all 0.3s ease;
+	}
+
+	.hero__text p,
+	.hero__text h1 {
+		color: hsl(var(--white));
+	}
+
+	.hero__text--reset {
 	}
 
 	.hero__text--visible {
