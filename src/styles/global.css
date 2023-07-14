@@ -7,6 +7,7 @@
 	src: local("Baskerville"), url("/fonts/baskerville-normal.woff") format("woff");
 	font-weight: normal;
 	font-style: normal;
+	font-display: swap;
 }
 
 @font-face {
@@ -181,6 +182,8 @@
 
 body {
 	min-height: 100vh;
+	/* maybe try smallest viewport height */
+	/* min-height: 100svh; */
 	/* margin: 0;  */
 
 	display: flex;

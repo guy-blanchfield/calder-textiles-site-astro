@@ -2,7 +2,8 @@
 import GoogleMap from "../components/GoogleMap.astro";
 ---
 
-<section class="section-contact p-5">
+<!-- nb big padding-y in the custom css, bootstrap wouldn't cut it --><!-- padding x only for sm and above i.e. not for mobile -->
+<section class="section-contact px-sm-5">
 	<div class="container">
 		<div class="row">
 			<div class="col-lg-5 d-flex align-items-center">
@@ -49,6 +50,12 @@ import GoogleMap from "../components/GoogleMap.astro";
 	.section-contact {
 		/* needs a white background, now there's a fixed backgound image on body */
 		background-color: hsl(var(--white));
+
+		/* big padding here! */
+		/* careful that it doesn't clash with bs px that's in the markup */
+		padding-top: 6rem;
+		/* more at the bottom to make up for the py-5 that's on the heading */
+		padding-bottom: 8rem;
 	}
 
 	.section-contact__contact-content {

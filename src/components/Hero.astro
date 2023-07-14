@@ -34,8 +34,6 @@ const { imageBase, imageAlt, overlayClass = "" } = Astro.props;
 // or shorthand
 const currentPath = Astro.url.pathname;
 
-const goal = 3;
-
 // gonna try the astro image integration for this
 // https://docs.astro.build/en/guides/integrations-guide/image/
 
@@ -92,7 +90,8 @@ const goal = 3;
 	<!-- try pt-5 on the hero__text -->
 	<!-- only px here otherwise it overides the custom padding-top that we need to adjust for the nav -->
 	<!-- <div class="hero__overlay d-flex align-items-center px-5 {overlayClass}" class={overlayClass}> -->
-	<div class=`hero__overlay d-flex align-items-center px-5 ${overlayClass}`>
+	<!-- padding x only for sm and above i.e. not for mobile -->
+	<div class=`hero__overlay d-flex align-items-center px-sm-5 ${overlayClass}`>
 		<div class="container">
 			<div class="row">
 				<div class="col-md-6">
@@ -185,9 +184,28 @@ const goal = 3;
 		/* why aren't these vertical padding values doubled as you'd expect??? */
 		/* min-height: calc(100vh - (var(--navbar-brand-logo-height) + (var(--navbar-vertical-padding)*2) + (var(--bs-navbar-padding-y)*2))); */
 		/* min-height: calc(100vh - (var(--navbar-brand-logo-height) + (var(--navbar-vertical-padding)*2) + 0.5rem)); */
-		min-height: calc(100vh - var(--header-height-calc));
+		/* min-height: calc(100vh - var(--header-height-calc)); */
+		/* set a variable for the window height to use in the calc */
+		/* so unsupported units don't break the calc */
+		/* use vh as a fallback */
+		/* --view-height: 100vh; */
+		/* then svh if it's supported */
+		/* --view-height: 100grb; */
 
-		/* close enough! */
+		min-height: calc(var(--view-height) - var(--header-height-calc));
+
+		/* try this fiddle to get round using possibly unsupported units in a calc */
+		/* it's equivalent to 100vh - var(--header-height-calc)) */
+
+		/* first set height with both units (best supported one first) */
+		min-height: 100vh;
+		min-height: 100svh;
+		/* negative margin of the amount we want to subtract */
+		margin-top: calc(var(--header-height-calc) * -1);
+		/* padding of the amount we want to subtract */
+		padding-top: var(--header-height-calc);
+
+		/* seems legit :) */
 
 		/* NB bootstrap uses browser default root font-size, usually 16px */
 

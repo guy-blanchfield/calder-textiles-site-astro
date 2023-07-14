@@ -326,6 +326,13 @@ const currentPath = Astro.url.pathname;
 		}
 
 		.navbar-caldertextiles .nav-link {
+			/* bootstrap defaults are a bit fiddly on mobile */
+			/* give it a bit more space and consider upping the font-size */
+			padding-top: 1rem;
+			padding-bottom: 1rem;
+
+			/* font-size: 1.2rem; */
+
 			/* this'll need adjusting when the proper logo goes in */
 			padding-left: 1rem;
 			border-bottom: 1px solid hsl(var(--duckeggblue) / 0.3);
@@ -333,7 +340,7 @@ const currentPath = Astro.url.pathname;
 
 		/* so the last item in the mobile nav gets closer to the bottom and has no border */
 		.navbar-caldertextiles .nav-item:last-child .nav-link {
-			padding-bottom: 0;
+			padding-bottom: 0.3rem;
 			border: none;
 		}
 	}
