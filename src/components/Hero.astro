@@ -94,7 +94,8 @@ const currentPath = Astro.url.pathname;
 	<div class=`hero__overlay d-flex align-items-center px-sm-5 ${overlayClass}`>
 		<div class="container">
 			<div class="row">
-				<div class="col-md-6">
+				<!-- was col-md-6 but it gets a bit cramped at md with the heading-nostrap font-size increase -->
+				<div class="col-lg-6">
 					<!-- put extra padding here, not on the col div -->
 					<!-- probably needs shifting down a fair bit more, do it in the custom css -->
 					<!-- lose the aos on this div and animate it manually once the loader's finished -->
@@ -103,7 +104,7 @@ const currentPath = Astro.url.pathname;
 						<!-- display-x for a slightly more opinionated heading style -->
 						<!-- tried bootstrap line-height here, not gonna fly -->
 						<!-- do it in custom if you must -->
-						<h1 class="hero__heading display-6 serif">
+						<h1 class=`hero__heading display-6 serif ${Astro.slots.has("hero-para") && 'hero__heading--nostrap'}`>
 							<slot name="hero-heading" />
 						</h1>
 
@@ -190,9 +191,9 @@ const currentPath = Astro.url.pathname;
 		/* use vh as a fallback */
 		/* --view-height: 100vh; */
 		/* then svh if it's supported */
-		/* --view-height: 100grb; */
+		/* --view-height: 100svh; */
 
-		min-height: calc(var(--view-height) - var(--header-height-calc));
+		/* min-height: calc(var(--view-height) - var(--header-height-calc)); */
 
 		/* try this fiddle to get round using possibly unsupported units in a calc */
 		/* it's equivalent to 100vh - var(--header-height-calc)) */
@@ -287,6 +288,13 @@ const currentPath = Astro.url.pathname;
 		transition: all 0.3s ease;
 	}
 
+	@media (max-width: 576px) {
+		.hero__text {
+			/* background-color: hsl(var(--darkernavy) / 0.5); */
+			/* border: 1px solid hsl(var(--darkernavy) / 0.2); */
+		}
+	}
+
 	.hero__text p,
 	.hero__text h1 {
 		color: hsl(var(--white));
@@ -319,6 +327,20 @@ const currentPath = Astro.url.pathname;
 		line-height: 1.4;
 	}
 
+	/* make heading a bit bigger if it's not a strapline */
+	/* the class can be added conditional on the existence of slot 'hero-para' */
+	/* everything up to 991px, 992px is set with media query below */
+	.hero__heading.hero__heading--nostrap {
+		font-size: 2rem;
+	}
+
+	/* yeah we're gonna need another breakpoint... */
+	@media (min-width: 576px) {
+		.hero__heading.hero__heading--nostrap {
+			font-size: 2.5rem;
+		}
+	}
+
 	@media (min-width: 768px) {
 		.hero__heading {
 			/* leave this for now */
@@ -336,18 +358,26 @@ const currentPath = Astro.url.pathname;
 			/* leave this for now */
 			/* line-height: 1.5; */
 			/* make the heading a bit bigger on larger screens */
-			font-size: 2rem;
+			font-size: 2.5rem;
+		}
+
+		/* make heading a bit bigger if it's not a strapline */
+		/* the class can be added conditional on the existence of slot 'hero-para' */
+
+		.hero__heading.hero__heading--nostrap {
+			font-size: 3rem;
 		}
 	}
 
+	/* same font-size for anything over 991 should be ok */
+
+	/*
 	@media (min-width: 1200px) {
 		.hero__heading {
-			/* leave this for now */
-			/* line-height: 1.5; */
-			/* make the heading a bit bigger on larger screens */
 			font-size: 2.5rem;
 		}
 	}
+	*/
 
 	.hero__para {
 		max-width: 40ch;
