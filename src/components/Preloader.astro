@@ -261,7 +261,7 @@
 			console.log(`load event fired!`);
 
 			// don't forget to uncomment this!!!! ------------------------------------- < important!
-			// sessionStorage.setItem("preloadComplete", "true");
+			sessionStorage.setItem("preloadComplete", "true");
 			console.log(`preloadComplete is now: ${sessionStorage.getItem("preloadComplete")}`);
 
 			// ------------------------ unhide the content ----------------------------------------
@@ -351,7 +351,8 @@
 		position: fixed;
 		z-index: 1000100;
 		inset: 0;
-		background-color: var(--accent);
+		/* background-color not here, on loader--loading instead, otherwise it covers the page in blue briefly everytime */
+		/* background-color: var(--accent); */
 		/* border: 1px solid hotpink; */
 		color: hsl(var(--white));
 		width: 100vw;
@@ -364,6 +365,7 @@
 	}
 
 	.loader--loading {
+		background-color: var(--accent);
 		/* background-color: hsl(var(--darkergrey)); */
 		/* visibility isn't transitionable? */
 		/* transition: opacity 0.5s, visibility 0.5s; */

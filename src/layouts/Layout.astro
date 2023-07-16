@@ -118,7 +118,10 @@ const { title, bodyClass = "" } = Astro.props;
 			</Main>
 			<Footer />
 		</div>
-		<noscript>Uh-oh, no scripts!</noscript>
+		<noscript
+			>JavaScript is currently disabled. This site requires JavaScript to function correctly. Please enable JavaScript
+			in your browser.</noscript
+		>
 	</body>
 </html>
 
@@ -128,6 +131,8 @@ const { title, bodyClass = "" } = Astro.props;
 	if (!sessionStorage.getItem("preloadComplete")) {
 		console.log(`inline script from Layout.astro is adding hidden class to content-wrapper`);
 		document.querySelector(".content-wrapper").classList.add("hidden");
+	} else {
+		console.log(`inline script from Layout.astro is NOT adding hidden class to content-wrapper`);
 	}
 </script>
 

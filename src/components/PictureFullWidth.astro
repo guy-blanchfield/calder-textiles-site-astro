@@ -148,13 +148,13 @@ const backgroundImageSet = `url(/images/${imageBase}-20x11.jpg) type("image/jpeg
 			// add 'blur-loading' NOT 'blur-load' (which is the class that identifies which images want a blur-load)
 			// imgLoaded(pictureEl);
 			// maybe we don't need anything to happen here?
-			console.log(`img is complete so adding picture--show`);
+			console.log(`${pictureImg.src} is complete so adding picture--show`);
 			pictureEl.classList.add("picture--show");
 		} else {
 			// add the class that sets a transition
 			// so that picture--show will cause a fade when the load event fires
 
-			console.log(`img is NOT complete so adding picture--blur-loading`);
+			console.log(`${pictureImg.src} is NOT complete so adding picture--blur-loading`);
 			pictureEl.classList.add("picture--blur-loading");
 			pictureImg.addEventListener("load", () => {
 				console.log(`img load event fired so adding picture--show`);

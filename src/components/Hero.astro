@@ -13,6 +13,13 @@ import PictureFullWidth from "../components/PictureFullWidth.astro";
 
 import VideoFullWidth from "../components/VideoFullWidth.astro";
 
+// NB! Scripts from VideoFullWidth will run regardless of the conditional render!!!
+// https://github.com/withastro/astro/issues/5283
+// "Regular <script> are bundled and attached to the head.
+// We wouldn't be able to bundle them if we didn't know if they were going to be used or not.
+// This is a known limitation.
+// is:inline is what you should use if you really do want to conditionally render a script."
+
 // import astro-icon component (for the expand arrow button)
 import { Icon } from "astro-icon";
 

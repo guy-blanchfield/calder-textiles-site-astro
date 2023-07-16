@@ -44,119 +44,128 @@ const backgroundImageSet = `url(/images/${videoBase}-960x540.webp) type("image/w
 </div>
 
 <script>
-	// how to display different sized video according to window size
-	// ideas?!
-	// because autoplay is set to off to start with
-	// it should be possible to write multiple video tags
-	// have most hidden in css, but use media queries to show the appropriate video
+	// given that this script will run regardless of the conditional reneder in Hero component
+	// and there's quite a lot of it,
+	// consider putting all of it inside a condition
 
-	// then use a window.innerWidth in the autoplay function to target the right video element
-	// maybe move the const declaration inside the function
+	// something like:
+	// (yeah that works!)
+	if (document.querySelector(".video-element")) {
+		console.log(`video component script actually running!!`);
+		// how to display different sized video according to window size
+		// ideas?!
+		// because autoplay is set to off to start with
+		// it should be possible to write multiple video tags
+		// have most hidden in css, but use media queries to show the appropriate video
 
-	// use the bootstrap breakpoints to label the elements (see above)
+		// then use a window.innerWidth in the autoplay function to target the right video element
+		// maybe move the const declaration inside the function
 
-	//  might need a on resize function
+		// use the bootstrap breakpoints to label the elements (see above)
 
-	// from https://www.smashingmagazine.com/2021/02/optimizing-video-size-quality/
-	// to stop video loading at all if it's mobile
-	// hopefully will just show the background instead
+		//  might need a on resize function
 
-	const windowWidth: number = window.innerWidth;
-	// const videoContainer: HTMLElement = document.querySelector(".video-container");
-	const videoElement: HTMLVideoElement = document.querySelector(".video-element");
-	// const altVideoElement: Element = document.querySelector('.video-element');
-	// this script seems to be running even on non video pages so put assign videoSrc conditionally for now
-	const videoSrcPrt = videoElement?.dataset.source;
-	// let queryClass: string;
-	let videoSource: string;
-	let videoPixels: string;
-	let videoExt: string;
+		// from https://www.smashingmagazine.com/2021/02/optimizing-video-size-quality/
+		// to stop video loading at all if it's mobile
+		// hopefully will just show the background instead
 
-	// 360p was a bit crappy even at 400vw
-	// if (windowWidth < 500) {
-	// 	videoPixels = "360p";
-	// } else
-	if (windowWidth < 992) {
-		// queryClass = '.video-element--md';
-		videoPixels = "540p";
-	} else if (windowWidth < 1200) {
-		// queryClass = '.video-element--lg';
-		videoPixels = "720p";
-	} else {
-		// queryClass = '.video-element--xl';
-		videoPixels = "1080p";
-	}
+		const windowWidth: number = window.innerWidth;
+		// const videoContainer: HTMLElement = document.querySelector(".video-container");
+		const videoElement: HTMLVideoElement = document.querySelector(".video-element");
+		// const altVideoElement: Element = document.querySelector('.video-element');
+		// this script seems to be running even on non video pages so put assign videoSrc conditionally for now
+		const videoSrcPrt = videoElement?.dataset.source;
+		// let queryClass: string;
+		let videoSource: string;
+		let videoPixels: string;
+		let videoExt: string;
 
-	console.log(`videoPixels: ${videoPixels}`);
-	console.log(`Canplaytype(): ${typeof videoElement?.canPlayType}`);
-	// with codec not specified, logs "maybe" on firefox, chrome, edge
-	console.log(`Can play webm: ${videoElement?.canPlayType("video/webm")}`);
-	// with codec specified, logs "probably" on firefox, chrome, edge
-	console.log(`Can play webm codecs=vp9: ${videoElement?.canPlayType('video/webm;codecs="vp9"')}`);
-	// NB has to be single quotes with double quotes round the codec e.g. "vp9"
-	if (
-		typeof videoElement?.canPlayType === "function" &&
-		videoElement?.canPlayType('video/webm;codecs="vp9"') === "probably"
-	) {
-		videoExt = ".webm";
-	} else {
-		videoExt = ".mp4";
-	}
-
-	console.log(`videoExt: ${videoExt}`);
-
-	videoSource = videoSrcPrt + "-" + videoPixels + videoExt;
-	console.log(`videoSource: ${videoSource}`);
-
-	// console.log(`querying for ${queryClass}`);
-	// const videoElement = document.querySelector(queryClass);
-	// const videoElement = document.querySelector('.video-element--xl');
-
-	function addAutoplay() {
-		console.log("addAutoplay function running, it'll only add autoplay if the data-attribute is set by props,");
-		console.log("mostly it's just adding the video-element--show class to videoElement");
-		// if (windowWidth >= 768 && videoElement) {
-		if (videoElement) {
-			videoElement.src = videoSource;
-			// add event listener that fires when the video is ready to play
-			// nah, this will have to go in preloader
-			// videoElement.addEventListener("canplay", canPlayCallback);
-			// autoplay if videoAutoplay prop is true
-			// i.e. if the video is somewhere else on the site other than the home page
-			// there won't be a preloader, pass the autoplay prop to this component as 'true'
-			// otherwise leave the autoplay to preloader component
-			console.log(`dataset.autoplay: ${videoElement.dataset.autoplay}`);
-			if (videoElement.dataset.autoplay == "true") {
-				videoElement.setAttribute("autoplay", "");
-			}
-
-			// temporarily set autoplay as default for testing edge and chrome
-			// videoElement.setAttribute("autoplay", "");
-			// yep this is definitely the difference between edge and chrome autoplaying or not
-			// console.log(`videofullwidth would call setAttribute here`);
-
-			// try adding this class in loader???! nope that's not it
-			videoElement.classList.add("video-element--show");
-			// videoContainer.classList.add('video-container--reveal');
-			console.log(`video-element--show`);
-			// console.log(`setting autoplay on ${videoElement.dataset.source}`);
-
-			// setTimeout(logBuffered, 5000);
+		// 360p was a bit crappy even at 400vw
+		// if (windowWidth < 500) {
+		// 	videoPixels = "360p";
+		// } else
+		if (windowWidth < 992) {
+			// queryClass = '.video-element--md';
+			videoPixels = "540p";
+		} else if (windowWidth < 1200) {
+			// queryClass = '.video-element--lg';
+			videoPixels = "720p";
+		} else {
+			// queryClass = '.video-element--xl';
+			videoPixels = "1080p";
 		}
+
+		console.log(`videoPixels: ${videoPixels}`);
+		console.log(`Canplaytype(): ${typeof videoElement?.canPlayType}`);
+		// with codec not specified, logs "maybe" on firefox, chrome, edge
+		console.log(`Can play webm: ${videoElement?.canPlayType("video/webm")}`);
+		// with codec specified, logs "probably" on firefox, chrome, edge
+		console.log(`Can play webm codecs=vp9: ${videoElement?.canPlayType('video/webm;codecs="vp9"')}`);
+		// NB has to be single quotes with double quotes round the codec e.g. "vp9"
+		if (
+			typeof videoElement?.canPlayType === "function" &&
+			videoElement?.canPlayType('video/webm;codecs="vp9"') === "probably"
+		) {
+			videoExt = ".webm";
+		} else {
+			videoExt = ".mp4";
+		}
+
+		console.log(`videoExt: ${videoExt}`);
+
+		videoSource = videoSrcPrt + "-" + videoPixels + videoExt;
+		console.log(`videoSource: ${videoSource}`);
+
+		// console.log(`querying for ${queryClass}`);
+		// const videoElement = document.querySelector(queryClass);
+		// const videoElement = document.querySelector('.video-element--xl');
+
+		function addAutoplay() {
+			console.log("addAutoplay function running, it'll only add autoplay if the data-attribute is set by props,");
+			console.log("mostly it's just adding the video-element--show class to videoElement");
+			// if (windowWidth >= 768 && videoElement) {
+			if (videoElement) {
+				videoElement.src = videoSource;
+				// add event listener that fires when the video is ready to play
+				// nah, this will have to go in preloader
+				// videoElement.addEventListener("canplay", canPlayCallback);
+				// autoplay if videoAutoplay prop is true
+				// i.e. if the video is somewhere else on the site other than the home page
+				// there won't be a preloader, pass the autoplay prop to this component as 'true'
+				// otherwise leave the autoplay to preloader component
+				console.log(`dataset.autoplay: ${videoElement.dataset.autoplay}`);
+				if (videoElement.dataset.autoplay == "true") {
+					videoElement.setAttribute("autoplay", "");
+				}
+
+				// temporarily set autoplay as default for testing edge and chrome
+				// videoElement.setAttribute("autoplay", "");
+				// yep this is definitely the difference between edge and chrome autoplaying or not
+				// console.log(`videofullwidth would call setAttribute here`);
+
+				// try adding this class in loader???! nope that's not it
+				videoElement.classList.add("video-element--show");
+				// videoContainer.classList.add('video-container--reveal');
+				console.log(`video-element--show`);
+				// console.log(`setting autoplay on ${videoElement.dataset.source}`);
+
+				// setTimeout(logBuffered, 5000);
+			}
+		}
+
+		window.onload = addAutoplay;
+
+		// function logBuffered() {
+		//     console.log(`videoElement.buffered.start: ${videoElement.buffered.start(0)}`);
+		//     console.log(`videoElement.buffered.length: ${videoElement.buffered.length}`);
+		//     console.log(`videoElement.buffered.end: ${videoElement.buffered.end(0)}`);
+		//     console.log(`videoElement.duration: ${videoElement.duration}`);
+		//     console.log(`videoElement.src: ${videoElement.src}`);
+		// }
+
+		// for manual load for testing
+		// document.querySelector('.hero__heading').addEventListener('click', addAutoplay);
 	}
-
-	window.onload = addAutoplay;
-
-	// function logBuffered() {
-	//     console.log(`videoElement.buffered.start: ${videoElement.buffered.start(0)}`);
-	//     console.log(`videoElement.buffered.length: ${videoElement.buffered.length}`);
-	//     console.log(`videoElement.buffered.end: ${videoElement.buffered.end(0)}`);
-	//     console.log(`videoElement.duration: ${videoElement.duration}`);
-	//     console.log(`videoElement.src: ${videoElement.src}`);
-	// }
-
-	// for manual load for testing
-	// document.querySelector('.hero__heading').addEventListener('click', addAutoplay);
 </script>
 
 <style define:vars={{ backgroundImageSet }}>
