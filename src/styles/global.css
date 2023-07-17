@@ -178,9 +178,11 @@
 }
 
 /* so the anchor link take into account the height of the sticky / fixed header */
+/* take a bit off it (0.5rem) - err on the side of too little padding */
+/* better than a bit of the head image showing through under the header */
 /* NB should be on html not body */
 html {
-	scroll-padding-top: var(--header-height-calc);
+	scroll-padding-top: calc(var(--header-height-calc) - 0.5rem);
 }
 
 /* to make sure the page takes up full height, in the event of there not being */
