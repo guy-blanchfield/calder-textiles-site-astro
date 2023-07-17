@@ -177,6 +177,12 @@
 	--header-height-calc: calc(var(--navbar-brand-logo-height) + (var(--navbar-vertical-padding) * 2) + 0.5rem);
 }
 
+/* so the anchor link take into account the height of the sticky / fixed header */
+/* NB should be on html not body */
+html {
+	scroll-padding-top: var(--header-height-calc);
+}
+
 /* to make sure the page takes up full height, in the event of there not being */
 /* enough content to fill the height */
 

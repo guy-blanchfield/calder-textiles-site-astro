@@ -51,11 +51,20 @@ import GoogleMap from "../components/GoogleMap.astro";
 		/* needs a white background, now there's a fixed backgound image on body */
 		background-color: hsl(var(--white));
 
-		/* big padding here! */
-		/* careful that it doesn't clash with bs px that's in the markup */
-		padding-top: 6rem;
-		/* more at the bottom to make up for the py-5 that's on the heading */
-		padding-bottom: 8rem;
+		/* these values should be the same as those for page-content-section */
+		/* they're set much higher for larger (non-mobile) screens */
+		padding-top: 2rem;
+		padding-bottom: 2rem;
+	}
+
+	@media (min-width: 768px) {
+		.section-contact {
+			/* big padding here! */
+			/* careful that it doesn't clash with bs px that's in the markup */
+			padding-top: 6rem;
+			/* more at the bottom to make up for the py-5 that's on the heading */
+			padding-bottom: 8rem;
+		}
 	}
 
 	.section-contact__contact-content {

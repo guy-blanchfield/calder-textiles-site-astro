@@ -102,14 +102,18 @@ const backgroundImageSet = `url(/images/${imageBase}-20x11.jpg) type("image/jpeg
 	<!-- For portrait it's probably always going to be mobiles, so for a full width image we need say 400, 800, maybe 1200  -->
 	<!-- typical aspect ratio for smart phones is 9:16 - 9:20 -->
 
-	<source media="(orientation: portrait)" srcset={portraitSrcsetWebp} type="image/webp" />
-	<source media="(orientation: portrait)" srcset={portraitSrcset} type="image/jpeg" />
+	<!-- using portrait images on viewports between 576 and 768 looks weird and wrong -->
+	<!-- so use an 'and' here to specify a min-width condition -->
+	<!-- viewports that are portrait and between 576 and 768 will get the fallback image -->
+
+	<source media="(orientation: portrait) and (min-width: 768px)" srcset={portraitSrcsetWebp} type="image/webp" />
+	<source media="(orientation: portrait) and (min-width: 768px)" srcset={portraitSrcset} type="image/jpeg" />
 
 	<!-- because this is picture so there's no 'sizes', browser will assume the image to be 100vw (correctly in this case!) -->
 	<!-- so we probably don't need any other media query, just let the browser select the best image based on the device pixel density -->
 
 	<!-- query here was originally min-width: 768px, but that meant that at landscape orientations less than 768 -->
-	<!-- no image at all was shown (why the fallback image didn't apply, who knows?) -->
+	<!-- no image at all was shown (why the fallback image didn't apply, who knows? duh the jpgs hadn't been created! should work now) -->
 	<!-- either way, try orientation: landscape instead -->
 	<source media="(orientation: landscape)" srcset={landscapeSrcsetWebp} type="image/webp" />
 	<source media="(orientation: landscape)" srcset={landscapeSrcset} type="image/jpeg" />
@@ -303,9 +307,14 @@ const backgroundImageSet = `url(/images/${imageBase}-20x11.jpg) type("image/jpeg
 		/* background-image: none; */
 	}
 
-	@media (max-width: 768px) {
+	/* the height of section-picture needs to be set to 0 in PictureSection using the same media query */
+	/* Or maybe not! Taken the height rule out of PictureSection - keep an eye on it, see how it goes */
+
+	/* also, was 768, trying 576 */
+	/* on second thoughts, let's leave the section pictures in on mobile, for the time being */
+	@media (max-width: 576px) {
 		.section-picture__picture {
-			display: none;
+			/* display: none; */
 		}
 	}
 </style>

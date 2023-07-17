@@ -64,17 +64,29 @@ const { heading, bgColour = "var(--pageContentBgColour-1)" } = Astro.props;
 		/* background-color: rgb(127, 141, 150); */
 		/* background-color: #7f8d96; */
 
-		/* big padding here! */
-		/* careful that it doesn't clash with bs px that's in the markup */
-		padding-top: 6rem;
-		/* more at the bottom to make up for the py-5 that's on the heading */
-		padding-bottom: 8rem;
+		padding-top: 2rem;
+		padding-bottom: 2rem;
 	}
 
 	.section-pagecontent__heading {
-		/* font-family now handled by .serif utility, see after the :root stuff in global.css */
-		/* font-family: 'Georgia, serif'; */
-		margin-top: 3rem;
-		margin-bottom: 6rem;
+		margin-bottom: 2rem;
+	}
+
+	/* extra margin and paddings for the page content spacing on larger screens */
+	@media (min-width: 768px) {
+		.section-pagecontent {
+			/* big padding here for larger screens */
+			/* careful that it doesn't clash with bs px that's in the markup */
+			padding-top: 6rem;
+			/* more at the bottom to make up for the py-5 that's on the heading */
+			padding-bottom: 8rem;
+		}
+
+		.section-pagecontent__heading {
+			/* font-family now handled by .serif utility, see after the :root stuff in global.css */
+			/* font-family: 'Georgia, serif'; */
+			margin-top: 3rem;
+			margin-bottom: 6rem;
+		}
 	}
 </style>

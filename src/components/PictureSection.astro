@@ -1,78 +1,28 @@
 ---
-
-import PictureFullWidth from './PictureFullWidth.astro';
+import PictureFullWidth from "./PictureFullWidth.astro";
 
 // some prop drilling required to get the imageBase from the page that calls it
 // through to the pictureFullWidth component
 
 export interface Props {
-    imageBase: string;
-    imageAlt?: string;
+	imageBase: string;
+	imageAlt?: string;
 }
 
-
-
-const { imageBase, imageAlt = '' } = Astro.props;
-
+const { imageBase, imageAlt = "" } = Astro.props;
 ---
 
-
 <section class="section-picture">
+	<!-- lazyLoad is true by default, you could leave it out here -->
+	<!-- NB! from web.dev https://web.dev/lazy-loading-images/ -->
+	<!-- One thing you will want to avoid is lazy loading images that are in the viewport during startup. -->
 
-    <!-- lazyLoad is true by default, you could leave it out here -->
-    <!-- NB! from web.dev https://web.dev/lazy-loading-images/ -->
-    <!-- One thing you will want to avoid is lazy loading images that are in the viewport during startup. -->
-
-    <PictureFullWidth imageBase={imageBase} pictureClasses="section-picture__picture picture--blur-load" imageClasses="section-picture__image" lazyLoad={true} />
-    
-
+	<PictureFullWidth
+		imageBase={imageBase}
+		pictureClasses="section-picture__picture picture--blur-load"
+		imageClasses="section-picture__image"
+		lazyLoad={true}
+	/>
 </section>
 
-
-<style>
-
-
-/* need to find a way to lazy load this, or hide it until it's required */
-/* and still have it behave like a background, i.e. fixed to the viewport */
-/* performance hit is massive if it has to load up front */
-
-/* ok, what we know */
-/* display: none takes it out of the paint, so performance is good (97 with display: none) */
-
-/* yeah, going to abandon this idea for now */
-/* just have the image in the flow of the document as a section */
-
-.section-picture {
-
-    /* position: sticky;
-    top: 10px; */
-
-    /* trying some fixed backgroundy type behaviour */
-    /* position: fixed;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0; */
-
-    /* display: none; */
-
-    /* z-index: -1; */
-    /* position: relative; */
-    /* height: 30rem; */
-    /* border: 1px solid hotpink; */
-    /* overflow: hidden; */
-}
-
-@media(max-width: 768px) {
-
-    .section-picture {
-        height: 0;
-    }
-
-}
-
-/* .section-picture--show {
-    display: block;
-} */
-
-</style>
+<style></style>
