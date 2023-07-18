@@ -189,13 +189,12 @@ html {
 /* enough content to fill the height */
 
 body {
-	min-height: 100vh;
-	/* maybe try smallest viewport height */
-	/* min-height: 100svh; */
-	/* margin: 0;  */
+	/* the min-height flex thing tp get the content to stretch to fill the page */
+	/* is now in Layout.astro style section bc it needs to be applied to the content-wrapper div*/
+	/* min-height: 100vh; */
 
-	display: flex;
-	flex-direction: column;
+	/* display: flex; */
+	/* flex-direction: column; */
 
 	font-family: "tex_gyre_heros", Arial, Helvetica, sans-serif;
 }

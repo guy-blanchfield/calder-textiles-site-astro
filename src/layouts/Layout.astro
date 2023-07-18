@@ -154,7 +154,16 @@ const { title, bodyClass = "" } = Astro.props;
     
 } */
 
-	/* checked in devtools > network, browser will not download any of the above images if this media query is met */
+	.content-wrapper {
+		/* replaces stuff on body to get the content to stretch to fill the window */
+
+		/* vh fallback for browsers that don't support svh */
+		min-height: 100vh;
+		min-height: 100svh;
+
+		display: flex;
+		flex-direction: column;
+	}
 
 	@media (max-width: 768px) {
 		.body-aboutus {
