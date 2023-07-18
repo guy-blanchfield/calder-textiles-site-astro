@@ -1,0 +1,14 @@
+/* circular border as an option */
+.hero__page-content-link--bordered {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 3rem;
+	min-height: 3rem;
+	border-radius: 50%;
+
+	border: 2px solid hsl(var(--white) / 0.7);
+
+	/* box-shadow: offset-x, offset-y, blur-radius, spread-radius, colour - one day you might remember this */
+	box-shadow: 2px 10px 10px 0px hsl(0 0% 0% / 0.3);
+}
