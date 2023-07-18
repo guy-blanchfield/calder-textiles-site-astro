@@ -240,15 +240,17 @@ const backgroundImage = `url(/images/${imageBase}-20x11.jpg)`;
 	/* this sets opacity to 1, which shows the image immediately if the picture only has 'picture--blur-load' */
 	/* OR fades the image in if the picture has had 'picture--blur-loading' added */
 
-	/* NB hero images are using the picture--blur-load class */
+	/* NB hero images *are* using the picture--blur-load class */
 	/* but the blur bg image is hardly ever seen because the hero images preload */
 	/* i.e. they're not lazy loaded, so they've usually loaded by the time the scripts get going */
 	/* at least I think that's what's happening! */
+	/* yeah, tested this plenty and the blur bg *will* be applied if the image takes long enough */
 
 	.picture--blur-loading {
 		/* background-image: -webkit-image-set(var(--backgroundImageSet)); */
 		/* background-image: image-set(var(--backgroundImageSet)); */
 		background-image: var(--backgroundImage);
+
 		background-size: cover;
 		/* hero__picture already has position: absolute because of the overlay stuff to put text over the image */
 		/* position: relative won't work for hero__picture, it won't contain the img for a start */

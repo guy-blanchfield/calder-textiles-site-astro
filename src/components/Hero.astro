@@ -229,8 +229,6 @@ const currentPath = Astro.url.pathname;
 		/* --accent is the nav bar colour */
 		background-color: var(--accent);
 
-		/* border: 1px solid blue; */
-
 		display: flex;
 	}
 
@@ -332,6 +330,9 @@ const currentPath = Astro.url.pathname;
 		max-width: 18ch;
 
 		line-height: 1.4;
+
+		/* this'll be a good place for text-wrap rule */
+		/* but mdn says experimental use with caution */
 	}
 
 	/* make heading a bit bigger if it's not a strapline */
@@ -389,6 +390,8 @@ const currentPath = Astro.url.pathname;
 	.hero__para {
 		max-width: 40ch;
 		line-height: 1.75rem;
+		/* this'll be a good place for text-wrap rule */
+		/* but mdn says experimental use with caution */
 	}
 
 	.hero__page-content-link {
