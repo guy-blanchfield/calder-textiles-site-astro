@@ -29,7 +29,11 @@ const videoSourcePart = `/video/${videoBase}`;
 
 // not sure how the hero's gonna look on mobile yet, aspect-wise
 
-const backgroundImageSet = `url(/images/${videoBase}-960x540.webp) type("image/webp"), url(/images/${videoBase}-960x540.jpg) type("image/jpeg")`;
+// not doing the large backgound image, but let's try the 20px blurred image thing
+// just so there's not a big blank space while the video loads
+// doesn't need to be an imageset, just a single image
+const backgroundImage = `url(/images/${videoBase}-20x11.jpg)`;
+// const backgroundImageSet = `url(/images/${videoBase}-960x540.webp) type("image/webp"), url(/images/${videoBase}-960x540.jpg) type("image/jpeg")`;
 // const backgroundImageSet = `url(/images/${videoBase}-1920x1088.webp) type("image/webp"), url(/images/${videoBase}-960x540.jpg) type("image/jpeg")`;
 ---
 
@@ -168,7 +172,7 @@ const backgroundImageSet = `url(/images/${videoBase}-960x540.webp) type("image/w
 	}
 </script>
 
-<style define:vars={{ backgroundImageSet }}>
+<style define:vars={{ backgroundImage }}>
 	/* probably need a container for the video, if only for postion relative */
 
 	.video-container {
@@ -181,14 +185,17 @@ const backgroundImageSet = `url(/images/${videoBase}-960x540.webp) type("image/w
 
 		flex-grow: 1;
 
+		/* don't need an imageset here, just one 20px jpg */
+		/* background-image: -webkit-image-set(var(--backgroundImageSet)); */
 		/* background-image: image-set(var(--backgroundImageSet)); */
+		background-image: var(--backgroundImage);
 		/* background-color: hsl(var(--offwhite)); */
 		background-position: top center;
 		background-size: cover;
 
 		/* from PictureFullWidth hero__picture */
 
-		/* video doesn't any of these - probably bc its a flex item */
+		/* video doesn't like any of these - probably bc its a flex item */
 		/* (it has a container div which is a flex item, unlike the image which has picture) */
 
 		/* width: 100%; */
