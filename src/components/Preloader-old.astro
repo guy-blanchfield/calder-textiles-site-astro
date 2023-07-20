@@ -1,0 +1,252 @@
+---
+---
+
+<!-- see: https://www.youtube.com/watch?v=-HS9IIuT_Mo&t=418s --><!-- or, if you want something fancier https://www.youtube.com/watch?v=Gx35fMhDPWs --><!-- might need to do something to disable scroll while preloader is showing --><!-- yeah really need to do this! --><!-- lets create this div with the script, so we can be sure it's ready in time --><!-- the script here isn't deferred --><!-- tried that, didn't take for some reason -->
+<div class="loader loader--blank"></div>
+
+<!-- try is:inline here so it loads quicker (and before the google map stuff) -->
+<!-- nah - try hiding all the content until the scripts have loaded -->
+<script>
+	// maybe put the init function in a separate module and import it, if that'll work
+
+	import { initialise, initialiseOld } from "../js/initialise-ts";
+
+	initialise();
+
+	// end initialise function ----------------------------------------------------------------------
+
+	// try something like this
+	// (it's ok we don't need cookie consent to do this!)
+	// (sesion storage is considered strictly necessary)
+	// https://stackoverflow.com/questions/48054601/how-to-show-website-preloader-only-once
+
+	// right, what's gonna happen with the preloader is this.
+	// if it takes more than a certain time to load, we add a --loading class to the preloader div
+	// the --loading class has the ::after so the spinner appears
+	// and a transition rule, so it fades when the --hidden class is applied
+
+	// otherwise the window load event will just add the --hidden class to the preloader div
+	// and the transition (fade) will happen every time you reload the page or go to a new page
+
+	// think the best option is to make the loader blank (tried white, the dark blue is better)
+	// up until it's required to start looking like a loader
+	// then it'll cover the ugly stuff but not flash up like a loader when load is instantaneous
+
+	// NB don't get thrown by the blue background that will always flash before the hero image is loaded
+
+	// yeah this way is not that different to no loader when load is instant, just that the nav disappears momentarily
+	// this'll do for now
+
+	// remove session storage item for testing
+	// console.log(`storage item removed`);
+	// sessionStorage.removeItem('preloadComplete');
+	// console.log(`session storage item is now: ${sessionStorage.getItem('preloadComplete')}`);
+
+	const preLoader = document.querySelector(".loader");
+
+	// if preloadComplete hasn't been set yet
+	// go ahead and show the loader
+	// (add loader--loading to the classlist)
+
+	// so ensure loader is hidden to start off with in <style>
+
+	if (!sessionStorage.getItem("preloadComplete")) {
+		// only add the loader--loading class if we need the loader
+		// because that class adds the transition
+		// we don't want the transition happening every time a new page loads
+		// loader--loading also adds the animation, using ::after
+		preLoader.classList.add("loader--loading");
+		// also add a class to the body to prevent scrolling while loader is showing
+		document.body.classList.add("loader-showing");
+		console.log(
+			`loader is now loader--loading because preloadComplete is: ${sessionStorage.getItem("preloadComplete")}`
+		);
+
+		// add eventlistener for the transitionend when the loader fades out
+		// when it fires, set loader visibility to hidden so it doesn't interfere with links and buttons
+
+		preLoader.addEventListener("transitionend", () => {
+			// see if setAttribute autoplay works here - nope!
+			// const tempHeroVideo: HTMLMediaElement = document.querySelector(".video-element") ?? undefined;
+			// tempHeroVideo.setAttribute("autoplay", "");
+
+			// set preloader visibility to hidden
+			preLoader.classList.add("loader--hidden");
+			console.log("transitionend event fired - preloader visibility hidden");
+			// remove the body class that was disabling scrolling
+			document.body.classList.remove("loader-showing");
+			console.log("remove body class loader-showing");
+
+			// this is the first place we need to call the initialise function
+			// i.e. when the window load event has fired AND the preloader has finished its fade out
+			// the preloader fade out is initiated by adding the class 'loader--transparent' to the preloader
+			initialiseOld();
+		});
+
+		console.log(`transition event listener added`);
+
+		window.addEventListener("load", () => {
+			// clear the timeout, so the --loading class doesn't get added
+			// so there won't be a transition when the --transparent class gets added
+			// clearTimeout(startLoaderTimeout);
+			// console.log(`the timeout cleared!`);
+
+			// right, setAttribute autoplay here fixes the edge issue
+			// i.e. edge autoplays
+
+			// const tempHeroVideo: HTMLMediaElement = document.querySelector(".video-element") ?? undefined;
+			// tempHeroVideo.setAttribute("autoplay", "");
+
+			preLoader.classList.add("loader--transparent");
+			console.log(`load event fired!`);
+
+			// don't forget to uncomment this!!!! ------------------------------------- < important!
+			sessionStorage.setItem("preloadComplete", "true");
+			console.log(`preloadComplete is now: ${sessionStorage.getItem("preloadComplete")}`);
+
+			// ------------------------ unhide the content ----------------------------------------
+
+			// think once we've got this far, we can unhide the content
+			// maybe think about putting these into initialise
+			// if we want to be sure that the fonts are loaded before we show *anything*
+			// then they should go in initialise, but that's a bit extreme
+			// certainly consider it if we change from the native font stack to tex gyre
+			document.querySelector(".content-wrapper").classList.remove("hidden");
+			console.log("unhide the content wrapper!");
+
+			// ------------------------------------------------------------------------------------
+
+			// try initialise here, temporarily
+			// initialise();
+			// initialise here doesn't work
+			// unless the setAttribute is right at the start of the initialise function
+			// (as opposed to inside the canPlayCallback function)
+			// this only applies for calling it from here
+			// NOT calling it from the transitionend event listener callback
+
+			// So, Edge and Chrome just don't like it coming from the canplay eventlistener
+			// presumably because it wants autoplay to have been set before the video is ready to play
+
+			// but setAttribute autoplay here does!
+			// const tempHeroVideo: HTMLMediaElement = document.querySelector(".video-element") ?? undefined;
+			// tempHeroVideo.setAttribute("autoplay", "");
+
+			// right, it seems that whether play() is allowed is the same as whether autoplay is allowed
+			// so we should just use play, once the canplay event fires
+			// play() returns a promise so we could put it in a try catch if we want to use the error for something
+
+			// put the play() in the canPlayCallback (where it was originally!)
+		});
+
+		console.log(`load event listener added`);
+	} else {
+		// this is what happens if there's no preloader
+		// i.e. the session storage item 'preloadcomplete' has already been set
+
+		console.log(`loader is not showing because preloadComplete is: ${sessionStorage.getItem("preloadComplete")}`);
+		// hide the loader
+		preLoader.classList.add("loader--transparent");
+		// set loader visibility to hidden so it doesn't interfere with links and buttons
+		preLoader.classList.add("loader--hidden");
+
+		// this is the second place we need to call the initialise function
+		// i.e. if preloadComplete is already set and we're skipping the loader
+
+		// No! No! No!
+		// initialise can't run just cos there's no preloader
+		// it has to wait till the hero image is complete
+		// put the initialise in an event listener for domcontentloaded
+		// otherwise we can't get a reference for heroImage.decode
+		window.addEventListener("DOMContentLoaded", () => {
+			initialiseOld();
+			console.log(`dom content must be loaded!`);
+		});
+		// initialise();
+	}
+
+	// console.log("preloader script running");
+</script>
+
+<style>
+	/* to disable scrolling while loader is showing */
+	body.loader-showing {
+		/* height: 100vh; */
+		/* overflow-y: hidden; */
+		position: fixed;
+		/* this is width for horizontal writing-mode */
+		inline-size: 100%;
+		overflow-y: scroll;
+	}
+
+	body.loader-hidden {
+		/* static is the default position for body */
+		position: static;
+		overflow-y: auto;
+	}
+
+	/* NB google maps z-index appears to be 1000000 plus a few; */
+	/* so I suppose we're gonna have to go 1000100 or maybe 2000000! */
+
+	.loader {
+		position: fixed;
+		z-index: 1000100;
+		inset: 0;
+		/* background-color not here, on loader--loading instead, otherwise it covers the page in blue briefly everytime */
+		/* background-color: var(--accent); */
+		/* border: 1px solid hotpink; */
+		color: hsl(var(--white));
+		width: 100vw;
+		height: 100vh;
+		align-items: center;
+		justify-content: center;
+		display: flex;
+
+		/* visibility: hidden; */
+	}
+
+	.loader--loading {
+		background-color: var(--accent);
+		/* background-color: hsl(var(--darkergrey)); */
+		/* visibility isn't transitionable? */
+		/* transition: opacity 0.5s, visibility 0.5s; */
+		/* background-color: var(--accent); */
+		transition: opacity 0.5s ease-in;
+
+		/* will-change: opacity; */
+	}
+
+	.loader--loading::after {
+		content: "";
+		display: flex;
+		width: 70px;
+		height: 70px;
+		border: 5px solid var(--accent-2);
+		/* border-top-color so a quarter of the circle is a different colour */
+		border-top-color: hsl(var(--white));
+		border-radius: 50%;
+
+		animation: loading 0.75s linear infinite;
+	}
+
+	@keyframes loading {
+		from {
+			transform: rotate(0turn);
+		}
+		/* 50% { transform: scale(0.75) } */
+		to {
+			transform: rotate(1turn);
+		}
+	}
+
+	.loader--transparent {
+		opacity: 0;
+	}
+
+	.loader--hidden {
+		/* visibility breaks the transition */
+		/* but we definitely need it hidden otherwise no links or buttons work! */
+		/* so add this class with an event listener for transition end */
+		/* also add it if preloadComplete is true */
+		visibility: hidden;
+	}
+</style>
