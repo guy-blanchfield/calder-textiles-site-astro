@@ -5,10 +5,7 @@
 <div class="loader loader--blank"></div>
 
 <script>
-	import { initialise, initialiseOld } from "../js/initialise-ts";
-
-	// just to test the import
-	// initialise();
+	import initialise from "../js/initialise";
 
 	// right, what's gonna happen with the preloader is this.
 	// if it's the first time the site has loaded we set session storage item
@@ -25,15 +22,11 @@
 	// otherwise the window load event will just add the --hidden class to the preloader div
 	// and the transition (fade) will happen every time you reload the page or go to a new page
 
-	// think the best option is to make the loader blank (tried white, the dark blue is better)
-	// up until it's required to start looking like a loader
-	// then it'll cover the ugly stuff but not flash up like a loader when load is instantaneous
-
-	// NB don't get thrown by the blue background that will always flash before the hero image is loaded
+	// ------------------- refs ------------------------------------------------------
 
 	// first get a reference to the preLoader element
 	// this will be passed into the functions
-	const preLoader: HTMLElement | null = document.querySelector(".loader") as HTMLElement;
+	const preLoader: HTMLElement = document.querySelector(".loader");
 
 	// ------------------- functions ------------------------------------------------------
 
@@ -71,7 +64,7 @@
 		// this is the first place we need to call the initialise function
 		// i.e. when the window load event has fired AND the preloader has finished its fade out
 		// the preloader fade out is initiated by adding the class 'loader--transparent' to the preloader
-		initialiseOld();
+		initialise();
 	}
 
 	function handleWindowLoad(loader: HTMLElement) {
@@ -121,7 +114,7 @@
 		// but we can't initialise until the hero image is complete
 		// otherwise we can't get a reference for heroImage.decode
 		// so put the initialise in an event listener for domcontentloaded
-		window.addEventListener("DOMContentLoaded", initialiseOld);
+		window.addEventListener("DOMContentLoaded", initialise);
 	}
 </script>
 
