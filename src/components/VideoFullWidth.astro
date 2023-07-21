@@ -110,8 +110,7 @@ const backgroundImage = `url(/images/${videoBase}-20x11.jpg)`;
 			typeof videoElement?.canPlayType === "function" &&
 			videoElement?.canPlayType('video/webm;codecs="vp9"') === "probably"
 		) {
-			// temporarily force to mp4 not webm
-			videoExt = ".mp4";
+			videoExt = ".webm";
 		} else {
 			videoExt = ".mp4";
 		}
