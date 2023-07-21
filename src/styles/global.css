@@ -80,7 +80,7 @@
 
 	Navy
 
-	Rgb	rgb(42, 51, 69)
+	Rgb	rgb(43, 52, 70)
 	Hex	#2a3345
 	Hsl	hsl(220, 24%, 22%)
 	Hwb	hwb(220, 16%, 73%)
@@ -96,17 +96,17 @@
 
 	Dark Teal
 
-	Rgb	rgb(91, 113, 121)
-	Hex	#5b7179
+	Rgb	rgb(92, 114, 122)
+	Hex	#5c727a
 	Hsl	hsl(196, 14%, 42%)
 	Hwb	hwb(196, 36%, 53%)
 	Cmyk cmyk(25%, 7%, 0%, 53%)
 
 	Dark Navy
 
-	Rgb	rgb(27, 33, 42)
+	Rgb	rgb(28, 34, 43)
 	Hex	#1b212a
-	Hsl	hsl(216, 22%, 14%)
+	Hsl	hsl(216, 21%, 14%)
 	Hwb	hwb(216, 11%, 84%)
 	Cmyk cmyk(36%, 21%, 0%, 84%)
 
@@ -139,14 +139,15 @@
 	--darkteal: 196 14% 42%;
 
 	--navy: 220 24% 22%;
-	--darknavy: 216 22% 14%;
-	--darkernavy: 217 8% 20%;
+	--darknavy: 216 21% 14%;
+	--darkernavy: 216 8% 20%;
 
 	--white: 0 0% 100%;
 	/* offwhite from the duckeggblue */
 	--offwhite: 198 9% 83%;
 
-	--lightgrey: 240 2% 90%;
+	--lightgrey: 0 0% 91%;
+	--darkgrey: 0 0% 64%;
 
 	--text: hsl(var(--darkernavy));
 	--muted: hsl(var(--duckegggrey));

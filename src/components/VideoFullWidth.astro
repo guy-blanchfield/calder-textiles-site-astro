@@ -39,7 +39,7 @@ const backgroundImage = `url(/images/${videoBase}-20x11.jpg)`;
 
 <!-- NB autoplay getting set with js below, leave it off here --><!-- preload=none will stop browser downloading any part of the video unless it has to --><!-- i.e. when autoplay is set by the js -->
 <div class="video-container">
-	<video class="video-element" data-source={videoSourcePart} data-autoplay={videoAutoplay} muted loop plays-inline>
+	<video class="video-element" data-source={videoSourcePart} data-autoplay={videoAutoplay} muted loop playsinline>
 		<!-- <source src={videoSourceMdWebm} type="video/webm" /> -->
 		<!-- <source src={videoSourceMp4} type="video/mp4" /> -->
 
@@ -110,7 +110,8 @@ const backgroundImage = `url(/images/${videoBase}-20x11.jpg)`;
 			typeof videoElement?.canPlayType === "function" &&
 			videoElement?.canPlayType('video/webm;codecs="vp9"') === "probably"
 		) {
-			videoExt = ".webm";
+			// temporarily force to mp4 not webm
+			videoExt = ".mp4";
 		} else {
 			videoExt = ".mp4";
 		}
