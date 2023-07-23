@@ -39,6 +39,9 @@ const backgroundImage = `url(/images/${videoBase}-20x11.jpg)`;
 
 <!-- NB autoplay getting set with js below, leave it off here --><!-- preload=none will stop browser downloading any part of the video unless it has to --><!-- i.e. when autoplay is set by the js -->
 <div class="video-container">
+	<!-- temporary text to see what's going on with the video in iOS -->
+	<!-- <div class="video-status">Some text to show the status of the video</div> -->
+
 	<video class="video-element" data-source={videoSourcePart} data-autoplay={videoAutoplay} muted loop playsinline>
 		<!-- <source src={videoSourceMdWebm} type="video/webm" /> -->
 		<!-- <source src={videoSourceMp4} type="video/mp4" /> -->
@@ -84,6 +87,8 @@ const backgroundImage = `url(/images/${videoBase}-20x11.jpg)`;
 		let videoPixels: string;
 		let videoExt: string;
 
+		let fooBar = false;
+
 		// 360p was a bit crappy even at 400vw
 		// if (windowWidth < 500) {
 		// 	videoPixels = "360p";
@@ -119,6 +124,13 @@ const backgroundImage = `url(/images/${videoBase}-20x11.jpg)`;
 
 		videoSource = videoSrcPrt + "-" + videoPixels + videoExt;
 		console.log(`videoSource: ${videoSource}`);
+
+		// temporarily log all this to the screen for testing iOS
+		// const videoStatus = document.querySelector(".video-status");
+		// videoStatus.innerHTML = ``;
+		// videoStatus.innerHTML += `<p>Video Source: ${videoSource}</p>`;
+		// videoStatus.innerHTML += `<p>Video Ext: ${videoExt}</p>`;
+		// videoStatus.innerHTML += `<p>Can play webm/vp9: ${videoElement?.canPlayType('video/webm;codecs="vp9"')}`;
 
 		// console.log(`querying for ${queryClass}`);
 		// const videoElement = document.querySelector(queryClass);
@@ -173,6 +185,18 @@ const backgroundImage = `url(/images/${videoBase}-20x11.jpg)`;
 </script>
 
 <style define:vars={{ backgroundImage }}>
+	/*
+	.video-status {
+		color: white;
+		background-color: var(--accent);
+		position: absolute;
+		top: 0;
+		left: 0;
+		padding: 1rem;
+		z-index: 1000;
+	}
+	*/
+
 	/* probably need a container for the video, if only for postion relative */
 
 	.video-container {

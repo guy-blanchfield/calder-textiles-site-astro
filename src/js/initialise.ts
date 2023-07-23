@@ -49,17 +49,68 @@ function initialise() {
 		// if video is already loaded and playing just manually call the canPlayCallback
 		if (heroVideo.readyState >= 2) {
 			console.log(`calling callback manually because readystate is ${heroVideo.readyState}`);
-			canPlayCallback();
+			// canPlayCallback();
+			handleVideoReady();
 		} else {
 			// otherwise set an event listener for the canplay event
 			console.log(`adding video event listener`);
-			heroVideo.addEventListener("canplay", canPlayCallback);
+			// heroVideo.addEventListener("canplay", canPlayCallback);
+			// try loadedmetadata event instead of canplay event (because safari)
+			// in tests with throttling at 3G, there was a 1 millisecond difference between the
+			// loadedmetadata event and the canplay event, so this should be ok
+			heroVideo.addEventListener("loadedmetadata", handleVideoReady);
 		}
 	}
 
+	function handleVideoReady() {
+		const eventTime = new Date();
+		console.log(`Video ready: ${heroVideo.src}`);
+		console.log(
+			`metadataloaded event fired: ${eventTime.getHours()}:${eventTime.getMinutes()}:${eventTime.getSeconds()}:${eventTime.getMilliseconds()}`
+		);
+		// const videoStatus = document.querySelector(".video-status");
+		// temp for testing
+		// videoStatus.innerHTML += `<p>Video ready: ${heroVideo.src}</p>`;
+
+		// if video hasn't been set to autoplay by the VideoFullWidthComponent, play it now
+		if (heroVideo.dataset.autoplay == "false") {
+			console.log(`trying to play() ${heroVideo.src}`);
+
+			// play() follows the same rules as autoplay, and all modern browsers are cool with it
+			// so play() will do, maybe in a try catch if we want to handle the error
+			try {
+				heroVideo.play();
+				// temp for testing
+				// videoStatus.innerHTML += `<p>Playing video OK</p>`;
+			} catch (err) {
+				console.log(`Error playing video: ${err}`);
+				// temp for testing
+				// videoStatus.innerHTML += `<p>Error playing video: ${err}</p>`;
+			}
+		}
+
+		// we only want the first canplay event
+		// (it fires after every time the video buffers)
+		// so remove this eventlistener
+		heroVideo.removeEventListener("canplay", canPlayCallback);
+		console.log("removing video event listener");
+
+		// show the hero text
+		console.log(`calling showHeroText function`);
+		showHeroText();
+	}
+
 	// callback function for the video element 'canplay' event fired by video when it's ready to play
+	// we can delete this now it's been replaced by handleVideoReady
 	function canPlayCallback() {
+		const eventTime = new Date();
 		console.log(`Can now play video: ${heroVideo.src}`);
+		console.log(
+			`canplay event fired: ${eventTime.getHours()}:${eventTime.getMinutes()}:${eventTime.getSeconds()}:${eventTime.getMilliseconds()}`
+		);
+		// const videoStatus = document.querySelector(".video-status");
+		// temp for testing
+		// videoStatus.innerHTML += `<p>Can now play video: ${heroVideo.src}</p>`;
 
 		// if video hasn't been set to autoplay by the VideoFullWidthComponent, play it now
 		if (heroVideo.dataset.autoplay == "false") {
@@ -69,8 +120,12 @@ function initialise() {
 			// so play() will do, maybe in a try catch if we want to handle the error
 			try {
 				heroVideo.play();
+				// temp for testing
+				// videoStatus.innerHTML += `<p>Playing video OK</p>`;
 			} catch (err) {
 				console.log(`Error playing video: ${err}`);
+				// temp for testing
+				// videoStatus.innerHTML += `<p>Error playing video: ${err}</p>`;
 			}
 		}
 

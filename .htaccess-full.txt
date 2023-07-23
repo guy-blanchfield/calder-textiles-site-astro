@@ -1,8 +1,8 @@
 #Protect Directory
-# AuthName "Dialog prompt"
-# AuthType Basic   
-# AuthUserFile /home/closeyou/caldertextiles.guyblanchfield.co.uk/.htpasswd  
-# require valid-user
+AuthName "Dialog prompt"
+AuthType Basic   
+AuthUserFile /home/closeyou/caldertextiles.guyblanchfield.co.uk/.htpasswd  
+require valid-user
 
 
 # add mime types
