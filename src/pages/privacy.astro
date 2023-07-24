@@ -1,0 +1,274 @@
+---
+import Layout from "../layouts/Layout.astro";
+// import Hero from '../components/Hero.astro';
+import PageContentSection from "../components/PageContentSection.astro";
+// import PictureSection from '../components/PictureSection.astro';
+// import ContactSection from '../components/ContactSection.astro';
+// import EmptySection from '../components/EmptySection.astro';
+
+// email obfuscation
+import obfuscateEmail from "../js/obfuscate-email";
+
+const emailSpan = obfuscateEmail("enquiries@caldertextiles.co.uk", "section-privacy__email");
+---
+
+<Layout title="Privacy : Calder Textiles">
+	<PageContentSection heading="Privacy" textColour="var(--accent)" bgColour="hsl(var(--white)" columnLayout={1}>
+		<Fragment slot="page-content">
+			<h2 class="section-privacy__h2">Our Contact Details</h2>
+			<p class="section-privacy__address">
+				<span class="fw-bold">Calder Textiles Ltd</span><br />
+				Dewsbury Mills<br />
+				Thornhill Road<br />
+				Dewsbury<br />
+				WF12 9QE<br />
+				United Kingdom
+			</p>
+
+			<p class="section-privacy__details">
+				<span class="fw-bold">Phone:</span>
+				<a href="tel:+441924456411" class="section-privacy__phone">+44 (0)1924 456 411</a><br />
+				<!-- <span class="fw-bold">F</span> +44 (0)1924 487 387<br /> -->
+				<span class="fw-bold">Email:</span>
+				<span class="section-page-content__email-span" set:html={emailSpan} />
+			</p>
+
+			<h2 class="section-privacy__h2">1. Introduction</h2>
+
+			<p class="section-privacy__p">
+				Calder Textiles Ltd is a private limited company. This Privacy Notice explains how we use any personal data
+				(also referred to as 'information') we collect about you. It describes:
+			</p>
+			<ul class="section-privacy__ul">
+				<li>what information we collect about you;</li>
+				<li>how we use your information;</li>
+				<li>who we share your information with;</li>
+				<li>your rights regarding our use of your information;</li>
+				<li>how long we keep your information; and</li>
+				<li>how to contact us.</li>
+			</ul>
+
+			<h2 class="section-privacy__h2">2. How do we use your information?</h2>
+
+			<p class="section-privacy__p">We use your information to:</p>
+
+			<ul class="section-privacy__ul">
+				<li>
+					process your request for news items about our company and, if you agree, to email you about other services we
+					think may be of interest to you;
+				</li>
+				<li>
+					process your personal data for research purposes as outlined in the consent process through which you supplied
+					this to us
+				</li>
+				<li>
+					email you about similar goods and services to those you've purchased from us which you may be interested in;
+					and
+				</li>
+				<li>
+					enter and perform a contract with you or to perform any steps you require from us before entering into the
+					contract. If you do not provide information required by us to enter into a contract with you, we will not be
+					able to enter into that agreement with you or provide you the services you require.
+				</li>
+			</ul>
+
+			<p class="section-privacy__p">
+				We will rely on one of the following legal grounds (as appropriate) to process your personal data:
+			</p>
+
+			<ul class="section-privacy__ul">
+				<li>
+					to enter and perform a contract with you or to perform any steps you require from us before entering into a
+					contract;
+				</li>
+				<li>to pursue our legitimate business interests in providing and marketing our products and services;</li>
+				<li>your specific consent to us using your information, which you can withdraw at any time;</li>
+				<li>to comply with our legal obligations and establish, exercise or defend our legal rights; and</li>
+				<li>those other purposes that you have agreed with us.</li>
+			</ul>
+
+			<h2 class="section-privacy__h2">3. Who do we share your information with?</h2>
+
+			<p class="section-privacy__p">We share information with the following third parties:</p>
+			<ul class="section-privacy__ul">
+				<li>data processors, who are our suppliers who provide us services;</li>
+				<li>
+					if you become an employee or freelancer your information will be passed on to and stored with our processing
+					partners in relation to payroll, healthcare and invoice payments. The use of this personal data is restricted
+					to the extent necessary for the performance of the contract between us;
+				</li>
+				<li>
+					persons connected with any sale, merger, acquisition, disposal, reorganisation or similar change of our
+					business
+				</li>
+				<li>
+					local and foreign regulators, governments, law enforcement authorities, advisors, courts, tribunals and
+					arbitrators; and
+				</li>
+				<li>other third parties, with your consent.</li>
+			</ul>
+
+			<h2 class="section-privacy__h2">4. What are your rights in relation to our use of your information?</h2>
+
+			<p class="section-privacy__p">
+				You have rights under data protection law in relation to our use of your personal data, including to:
+			</p>
+
+			<ul class="section-privacy__ul">
+				<li>
+					request access to your information by submitting a request to <span
+						class="section-page-content__email-span"
+						set:html={emailSpan}
+					/>
+				</li>
+				<li>update or amend your information if it is inaccurate or incomplete;</li>
+				<li>
+					object to certain uses of your personal data including direct marketing and processing based on legitimate
+					interests and processing for purposes of scientific or historical research and statistics on grounds relating
+					to your particular situation;
+				</li>
+				<li>
+					request the deletion of your information, or restrict its use, in certain circumstances (for example, subject
+					to lawful exceptions applying, you can request that we erase your information where the information is no
+					longer necessary for the purpose for which it was collected;
+				</li>
+				<li>to withdraw any consent you have provided in respect of our use of your information;</li>
+				<li>
+					to request a copy of the information you have provided to us, to use for your own purposes (often called your
+					right to data portability); and
+				</li>
+				<li>to lodge a complaint with the relevant data protection supervisory authority in your jurisdiction.</li>
+				<li>
+					If you have subscribed to us or agreed to be on a contact list to receive information from us, you can ask to
+					be removed at any time by using the unsubscribe link included in any e-communications or by emailing <span
+						class="section-page-content__email-span"
+						set:html={emailSpan}
+					/>
+				</li>
+			</ul>
+
+			<h2 class="section-privacy__h2">5. How long do we keep your information?</h2>
+
+			<p class="section-privacy__p">
+				Personal data of employees and freelancers will be kept for no longer than is necessary, and that period of time
+				will be determined with reference to applicable statutory limitation periods in your jurisdiction.
+			</p>
+
+			<p class="section-privacy__p">
+				Our policy is to destroy employment applications 1 (one) year after their submission if they have not led to an
+				offer of employment, unless during the submission process you agreed to a longer retention period on the basis
+				of being considered for future work opportunities we may have. If you are engaged with us 'to perform a
+				contract', then local market data retention legislation may apply to elements of the information you supply to
+				us.
+			</p>
+
+			<p class="section-privacy__p">
+				Any other information obtained as set out in section 2 above will be kept for no longer than is necessary and
+				will be determined with reference to applicable statutory limitation periods in your jurisdiction, or otherwise
+				as agreed between us.
+			</p>
+
+			<p class="section-privacy__p">
+				We will keep our retention policies under review to ensure that your data is not stored for longer than is
+				strictly necessary.
+			</p>
+
+			<h2 class="section-privacy__h2">6. How to contact us?</h2>
+
+			<p class="section-privacy__p">
+				If you have any questions about this Privacy Notice or the information we hold about you, you can contact us:
+			</p>
+
+			<ul class="section-privacy__ul">
+				<li>
+					by email: <span class="section-page-content__email-span" set:html={emailSpan} />
+				</li>
+				<li>by post: Calder Textiles Ltd, Dewsbury Mills, Thornhill Road, Dewsbury, WF12 9QE, United Kingdom</li>
+			</ul>
+
+			<!-- <p class="section-privacy__p">Enquiries from outside of the European Union can still be made via the above email or postal route.</p> -->
+
+			<h2 class="section-privacy__h2">7. Changes to this Privacy Notice</h2>
+
+			<p class="section-privacy__p">
+				We keep this Privacy Notice under regular review and we will place any updates on this webpage. This Privacy
+				Notice was last updated on 24 July 2023.
+			</p>
+
+			<h2 class="section-privacy__h2">8. How to complain</h2>
+
+			<p class="section-privacy__p">
+				If you have any concerns about our use of your personal information, you can make a complaint to us at the
+				address above.
+			</p>
+			<p class="section-privacy__p">
+				You can also complain to the ICO if you are unhappy with how we have used your data.
+			</p>
+			<p class="section-privacy__p">The ICO's address:</p>
+
+			<p class="section-privacy__p">
+				Information Commissioner's Office<br />
+				Wycliffe House<br />
+				Water Lane<br />
+				Wilmslow<br />
+				Cheshire<br />
+				SK9 5AF
+			</p>
+
+			<p class="section-privacy__p">
+				Helpline number: <a href="tel:+443031231113" class="section-privacy__link">0303 123 1113</a>
+			</p>
+			<p class="section-privacy__p">
+				ICO website: <a href="https://www.ico.org.uk/" class="section-privacy__link">www.ico.org.uk</a>
+			</p>
+		</Fragment>
+	</PageContentSection>
+	<!-- <ContactSection /> -->
+</Layout>
+
+<style>
+	.section-privacy__h2 {
+		font-size: 1.5rem;
+		font-weight: bold;
+		color: var(--muted);
+		/* margin-top: 2rem; */
+		margin-bottom: 2rem;
+	}
+
+	.section-privacy__h2:not(:first-of-type) {
+		margin-top: 4rem;
+	}
+
+	.section-privacy__p {
+		max-width: 100ch;
+	}
+
+	.section-privacy__ul {
+		max-width: 85ch;
+		color: hsl(var(--darkergrey));
+		margin-top: 2rem;
+		margin-bottom: 2rem;
+	}
+
+	.section-privacy__ul li {
+		margin-bottom: 1rem;
+	}
+
+	/* :global needed here because the a tag gets inserted with set:html */
+	/* so astro doesn't add the scoping hash code thingy */
+
+	:global(.section-privacy__email),
+	.section-privacy__phone,
+	.section-privacy__link {
+		/* color: var(--text); */
+		color: var(--accent-2);
+		text-decoration: none;
+	}
+
+	:global(.section-privacy__email):is(:hover, :focus-visible),
+	:is(.section-privacy__phone, .section-privacy__link):is(:hover, :focus-visible) {
+		color: var(--accent-2);
+		/* text-decoration: none; */
+		border-bottom: 1px dotted var(--accent-2);
+	}
+</style>

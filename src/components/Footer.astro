@@ -1,112 +1,121 @@
 ---
-
-import { Icon } from 'astro-icon';
-
+import { Icon } from "astro-icon";
 ---
 
 <!-- <footer class="footer-caldertextiles py-4 px-2"> -->
 <footer class="footer-caldertextiles">
-    <!-- -fluid so it goes to 100% width -->
-    <div class="container-fluid px-5 py-4 footer-caldertextiles__panel panel--logo">
+	<!-- -fluid so it goes to 100% width -->
+	<div class="container-fluid px-5 py-4 footer-caldertextiles__panel panel--logo">
+		<div class="footer-caldertextiles__logo">
+			<Icon name="caldertextiles-logo-crop" width="150" class="footer-caldertextiles__logo-svg" />
+		</div>
+	</div>
 
-        <div class="footer-caldertextiles__logo">
-            <Icon name="caldertextiles-logo-crop" width="150" class="footer-caldertextiles__logo-svg" />
-        </div>
+	<div class="container-fluid px-4 py-4 footer-caldertextiles__panel panel--text">
+		<div class="row">
+			<div class="col">UK Registered Company No. 1803068</div>
 
-    </div>
+			<!-- vertical margins here when not sm or above (i.e. mobile) because everything stacks -->
+			<div class="col-sm-auto ms-sm-auto text-sm-end px-sm-5 my-3 my-sm-0">
+				<a href="/privacy" class="footer-caldertextiles__link">Privacy</a> | <a
+					href="/contact"
+					class="footer-caldertextiles__link">Contact</a
+				>
+			</div>
 
-    <div class="container-fluid px-4 py-4 footer-caldertextiles__panel panel--text">
-
-        <div class="row">
-            <div class="col">UK Registered Company No. 1803068</div>
-
-            <!-- vertical margins here when not sm or above (i.e. mobile) because everything stacks -->
-            <div class="col-sm-auto ms-sm-auto text-sm-end px-sm-5 my-3 my-sm-0"><a href="#" class="footer-caldertextiles__link">Privacy</a>  | <a href="#" class="footer-caldertextiles__link">Contact</a></div>
-
-            <div class="col-sm-auto text-sm-end">Site designed by <a href="https://www.wolfstarconsultancy.com" title="Wolfstar website - opens a new window / tab" target="_blank" class="footer-caldertextiles__wolfstar-link">Wolfstar</a></div>
-        </div>
-
-    </div>
-
+			<div class="col-sm-auto text-sm-end">
+				Site designed by <a
+					href="https://www.wolfstarconsultancy.com"
+					title="Wolfstar website - opens a new window / tab"
+					target="_blank"
+					class="footer-caldertextiles__wolfstar-link">Wolfstar</a
+				>
+			</div>
+		</div>
+	</div>
 </footer>
 
 <style>
+	.footer-caldertextiles {
+		/* border: 1px solid magenta; */
+	}
 
-.footer-caldertextiles {
-    /* border: 1px solid magenta; */
-}
+	.footer-caldertextiles__logo {
+		color: var(--accent);
+		/* color: #f0f; */
+	}
 
-.footer-caldertextiles__logo {
-    color: var(--accent);
-    /* color: #f0f; */
-}
+	.footer-caldertextiles__panel {
+		/* padding: 2rem; */
+	}
 
-.footer-caldertextiles__panel {
-    /* padding: 2rem; */
-}
+	.panel--logo {
+		display: flex;
+		justify-content: end;
+		background-color: hsl(var(--white));
+		/* border: solid 1px hotpink; */
+	}
 
-.panel--logo {
-    display: flex;
-    justify-content: end;
-    background-color: hsl(var(--white));
-    /* border: solid 1px hotpink; */
-}
+	.panel--text {
+		background-color: var(--text);
+		color: hsl(var(--white));
+		/* border: solid 1px yellow; */
+	}
 
-.panel--text {
-    background-color: var(--text);
-    color: hsl(var(--white));
-    /* border: solid 1px yellow; */
-}
+	.footer-caldertextiles__link,
+	.footer-caldertextiles__wolfstar-link {
+		color: hsl(var(--white));
+		text-decoration: none;
+		/* position relative for the ::after positioning */
+		position: relative;
+	}
 
+	.footer-caldertextiles__wolfstar-link {
+		font-weight: bold;
+	}
 
+	.footer-caldertextiles__link:hover,
+	.footer-caldertextiles__wolfstar-link:hover {
+		color: hsl(var(--white));
+	}
 
-.footer-caldertextiles__link, .footer-caldertextiles__wolfstar-link {
-    color: hsl(var(--white));
-    text-decoration: none;
-    /* position relative for the ::after positioning */
-    position: relative;
-}
+	.footer-caldertextiles__link::after,
+	.footer-caldertextiles__wolfstar-link::after {
+		content: "";
+		position: absolute;
+		/* background-color: var(--muted); */
+		height: 1px;
+		width: 100%;
+		border-radius: 2px;
+		bottom: -0.3rem;
+		left: 0;
 
-.footer-caldertextiles__wolfstar-link {
-    font-weight: bold;
-}
+		transform: scaleX(0);
+		transition: transform 200ms ease-in-out;
+	}
 
-.footer-caldertextiles__link:hover, .footer-caldertextiles__wolfstar-link:hover {
-    color: hsl(var(--white));
-}
+	/* tried doing this with :is, ended up harder to read and still didn't work! */
+	.footer-caldertextiles__link:hover::after,
+	.footer-caldertextiles__wolfstar-link:hover::after,
+	.footer-caldertextiles__link:focus-visible::after,
+	.footer-caldertextiles__wolfstar-link:focus-visible::after {
+		transform: scaleX(1);
+	}
 
-.footer-caldertextiles__link::after, .footer-caldertextiles__wolfstar-link::after {
-    content: '';
-    position: absolute;
-    /* background-color: var(--muted); */
-    height: 1px;
-    width: 100%;
-    border-radius: 2px;
-    bottom: -0.3rem; 
-    left: 0; 
+	/* doing the background-color in separate ruleset in case we want different color underline for different links */
+	/* tried this with :is also nope */
+	.footer-caldertextiles__link::after,
+	.footer-caldertextiles__wolfstar-link::after {
+		background-color: var(--muted);
+	}
 
-    transform: scaleX(0);
-    transition: transform 200ms ease-in-out;
-}
+	.footer-caldertextiles__link:focus-visible,
+	.footer-caldertextiles__wolfstar-link:focus-visible {
+		outline: none;
+		background-color: hsl(var(--white) / 0.25);
+	}
 
-/* tried doing this with :is, ended up harder to read and still didn't work! */
-.footer-caldertextiles__link:hover::after, .footer-caldertextiles__wolfstar-link:hover::after, .footer-caldertextiles__link:focus-visible::after, .footer-caldertextiles__wolfstar-link:focus-visible::after {
-    transform: scaleX(1);
-}
-
-/* doing the background-color in separate ruleset in case we want different color underline for different links */
-/* tried this with :is also nope */
-.footer-caldertextiles__link::after, .footer-caldertextiles__wolfstar-link::after {
-    background-color: var(--muted);
-}
-
-.footer-caldertextiles__link:focus-visible, .footer-caldertextiles__wolfstar-link:focus-visible {
-    outline: none;
-    background-color: hsl(var(--white) / 0.25);
-}
-
-.footer-caldertextiles__link::after {
-    /* background-color: hsl(var(--white)); */
-}
-
+	.footer-caldertextiles__link::after {
+		/* background-color: hsl(var(--white)); */
+	}
 </style>

@@ -1,5 +1,9 @@
 ---
 import GoogleMap from "../components/GoogleMap.astro";
+
+import obfuscateEmail from "../js/obfuscate-email";
+
+const emailSpan = obfuscateEmail("tim.booth@caldertextiles.co.uk", "section-contact__email");
 ---
 
 <!-- nb big padding-y in the custom css, bootstrap wouldn't cut it --><!-- padding x only for sm and above i.e. not for mobile -->
@@ -26,12 +30,11 @@ import GoogleMap from "../components/GoogleMap.astro";
 						</p>
 
 						<p class="section-contact__details">
-							<span class="fw-bold">T</span> +44 (0)1924 456 411<br />
+							<span class="fw-bold">T</span>
+							<a href="tel:+441924456411" class="section-contact__phone">+44 (0)1924 456 411</a><br />
 							<span class="fw-bold">F</span> +44 (0)1924 487 387<br />
 							<span class="fw-bold">E</span>
-							<a href="mailto:tim.Booth@caldertextiles.com" class="section-contact__email"
-								>&#116;&#105;&#109;.Booth&#64;&#99;&#97;&#108;&#100;&#101;&#114;textiles.com</a
-							>
+							<span class="section-contact__email-span" set:html={emailSpan} />
 						</p>
 					</div>
 				</div>
@@ -82,12 +85,17 @@ import GoogleMap from "../components/GoogleMap.astro";
 		max-width: 42ch;
 	}
 
-	.section-contact__email {
+	/* .section-contact__email is the class in the set:html email obfuscation thing */
+	/* it needs to be :global otherwise the class in the a tag won't work because astro can't process it */
+	/* so it doesn't get its scope hash code thingy */
+
+	:global(.section-contact__email),
+	.section-contact__phone {
 		color: var(--text);
 		text-decoration: none;
 	}
-
-	.section-contact__email:is(:hover, :focus-visible) {
+	:global(.section-contact__email):is(:hover, :focus-visible),
+	.section-contact__phone:is(:hover, :focus-visible) {
 		color: var(--accent-2);
 	}
 </style>

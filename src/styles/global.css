@@ -148,9 +148,10 @@
 
 	--lightgrey: 0 0% 91%;
 	--darkgrey: 0 0% 64%;
+	--darkergrey: 0 0% 37%;
 
 	--text: hsl(var(--darkernavy));
-	--muted: hsl(var(--duckegggrey));
+	--muted: hsl(var(--darkgrey));
 	--accent: hsl(var(--navy));
 	--accent-2: hsl(var(--duckeggblue));
 
@@ -158,6 +159,7 @@
 	--pageContentBgColour-2: hsl(var(--darkteal));
 	--pageContentBgColour-3: hsl(var(--darknavy));
 	--pageContentBgColour-4: hsl(var(--lightgrey));
+	--pageContentBgColour-white: hsl(var(--white));
 
 	/* -------------- sizes --------------- */
 

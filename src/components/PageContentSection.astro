@@ -1,10 +1,17 @@
 ---
 export interface Props {
 	heading: string;
+	textColour?: string;
 	bgColour?: string;
+	columnLayout?: number;
 }
 
-const { heading, bgColour = "var(--pageContentBgColour-1)" } = Astro.props;
+const {
+	heading,
+	textColour = "hsl(var(--white))",
+	bgColour = "var(--pageContentBgColour-1)",
+	columnLayout = 2,
+} = Astro.props;
 ---
 
 <!-- nb big padding-y in the custom css, bootstrap wouldn't cut it --><!-- padding x only for sm and above i.e. not for mobile -->
@@ -19,7 +26,8 @@ const { heading, bgColour = "var(--pageContentBgColour-1)" } = Astro.props;
 			<div class="row" data-aos="fade-up">
 				<!-- using padding-end (pe-sm-5) to reduce the line length slightly -->
 				<!-- only for sm and above i.e. not for mobile -->
-				<div class="col-md-5 pe-sm-5">
+				<!-- this will do for now, columnLayout is either going to be 1 or 2, 2 is the default -->
+				<div class={`${columnLayout === 2 ? "col-md-5" : columnLayout === 1 ? "" : ""} pe-sm-5`}>
 					<div class="section-pagecontent__text">
 						<slot name="page-content" />
 					</div>
@@ -53,13 +61,14 @@ const { heading, bgColour = "var(--pageContentBgColour-1)" } = Astro.props;
 	</div>
 </section>
 
-<style define:vars={{ bgColour }}>
+<style define:vars={{ textColour, bgColour }}>
 	.section-pagecontent {
 		/* to make the section stretch to fit main (if there's no other sections) */
 		/* main has display: flex, flex-direction: column */
 		flex: 1;
 
-		color: hsl(var(--white));
+		/* color: hsl(var(--white)); */
+		color: var(--textColour);
 		background-color: var(--bgColour);
 		/* background-color: rgb(127, 141, 150); */
 		/* background-color: #7f8d96; */
