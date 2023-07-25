@@ -231,13 +231,23 @@ const currentPath = Astro.url.pathname;
 		/* probably want width and height not min-width, min-height */
 		/* firstly to match the image exactly, secondly to stick to the dimensions of the hero, which has min-vh-100 */
 		width: 100%;
-		height: 100%;
+		/* height: 100%; */
+
+		/* try the same fiddle to set the height, 100% is making it too high and messing up the align items center */
+		min-height: 100vh;
+		min-height: 100svh;
+		/* negative margin of the amount we want to subtract */
+		margin-top: calc(var(--header-height-calc) * -1);
+		/* padding of the amount we want to subtract */
+		padding-top: var(--header-height-calc);
+
 		/* background: linear-gradient(to left, hsl(0 0 0 / 0.9), hsl(0 0 0 / 0)); */
 
 		/* importantly we need padding-top to be the height of the navbar (which is position fixed) */
 		/* try 6rem for now, it's an approximation */
 		/* remember to adjust if py value on navbar changes */
-		padding-top: 6rem;
+		/* think this is redundant now, just let it center (or go to the top on mobile) */
+		/* padding-top: 6rem; */
 
 		/* border: 1px solid green; */
 
@@ -288,6 +298,7 @@ const currentPath = Astro.url.pathname;
 		.hero__text {
 			/* background-color: hsl(var(--darkernavy) / 0.5); */
 			/* border: 1px solid hsl(var(--darkernavy) / 0.2); */
+			/* yeah I know it should be mobile first but the text position here feels like the exception */
 		}
 	}
 
