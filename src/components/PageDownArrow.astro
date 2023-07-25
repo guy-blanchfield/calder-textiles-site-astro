@@ -1,0 +1,74 @@
+---
+// import astro-icon component
+import { Icon } from "astro-icon";
+
+export interface Props {
+	anchorLink: string;
+	ariaLabel: string; // Page Content
+	className?: string;
+}
+
+const { anchorLink, ariaLabel, className = "page-down-link" } = Astro.props;
+---
+
+<a class:list={[className]} href={anchorLink} aria-label={ariaLabel}>
+	<!-- was span, now using astro-icon -->
+	<!-- <span class="material-symbols-outlined"> -->
+	<!-- arrow_downward -->
+	<!-- try simple expand more chevron -->
+	<!-- expand_more -->
+	<!-- nah try expand_circle_down -->
+	<!-- expand_circle_down -->
+	<!-- </span> -->
+	<!-- gonna have to use the svg for this, bc we need the lighter weight -->
+	<!-- name was ic:outline-expand-circle-down -->
+	<Icon name="expand_circle_down_FILL0_wght200_GRAD0_opsz48" class="page-down-link__icon" />
+</a>
+
+<style>
+	.page-down-link {
+		position: absolute;
+		z-index: 1;
+		bottom: 1.5rem;
+		right: 2rem;
+		/* font-size: 3rem; */
+		/* color: hsl(var(--white)/0.7); */
+		opacity: 0.7;
+
+		text-decoration: none;
+		transition: all 0.2s ease-in;
+	}
+
+	/* .page-down-link:hover, */
+	/* .page-down-link:focus-visible { */
+	.page-down-link:is(:hover, :focus-visible) {
+		/* color: hsl(var(--white)); */
+		/* border-color: hsl(var(--white)); */
+		opacity: 1;
+		transform: scale(1.2);
+		outline: none;
+		/* animation: icon-pop 0.5s ease-in-out forwards; */
+	}
+
+	@keyframes icon-pop {
+		from {
+			opacity: 0.7;
+			transform: scale(1);
+		}
+		50% {
+			opacity: 1;
+			transform: scale(1.2);
+		}
+		to {
+			transform: scale(1);
+			/* opacity: 1; */
+		}
+	}
+
+	.page-down-link__icon {
+		/* NB fill not color for svg */
+		fill: hsl(var(--white));
+		width: 3rem;
+		height: auto;
+	}
+</style>

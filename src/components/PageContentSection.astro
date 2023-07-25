@@ -1,9 +1,12 @@
 ---
+import PageDownArrow from "./PageDownArrow.astro";
+
 export interface Props {
 	heading: string;
 	textColour?: string;
 	bgColour?: string;
 	columnLayout?: number;
+	fixedHeight?: boolean;
 }
 
 const {
@@ -11,15 +14,18 @@ const {
 	textColour = "hsl(var(--white))",
 	bgColour = "var(--pageContentBgColour-1)",
 	columnLayout = 2,
+	fixedHeight = true,
 } = Astro.props;
 ---
 
 <!-- nb big padding-y in the custom css, bootstrap wouldn't cut it --><!-- padding x only for sm and above i.e. not for mobile -->
-<section class="section-pagecontent px-sm-5" id="page-content">
-	<div class="container">
+<section class:list={["section-pagecontent px-sm-5", { fixedHeight }]}>
+	<!-- put the id on the container because the negative margin fiddle for the min-height means the anchor links to the wrong place if it's the actual page-content div -->
+	<div class="container" id="content">
 		<!-- content div just to keep everything together -->
 		<!-- makes it easier to set padding -->
-		<div class="section-pagecontent__content p-3">
+		<!-- horizontal padding only here, set the vertical padding in custom (because of the negative margin fiddle)  -->
+		<div class="section-pagecontent__content px-3">
 			<!-- h2 was py-5 but it needs more so do it with custom css -->
 			<h2 class="section-pagecontent__heading display-5 serif" data-aos="fade-up">{heading}</h2>
 
@@ -59,12 +65,17 @@ const {
 			</div>
 		</div>
 	</div>
+
+	<PageDownArrow anchorLink="#contact" ariaLabel="Contact Section" />
 </section>
 
 <style define:vars={{ textColour, bgColour }}>
 	.section-pagecontent {
 		/* to make the section stretch to fit main (if there's no other sections) */
 		/* main has display: flex, flex-direction: column */
+		/* this is probably redundant if we're setting a min-height */
+		/* maybe we need to not set min-height if there's no other sections */
+		/* perhaps use a prop to determine which height setting is used */
 		flex: 1;
 
 		/* color: hsl(var(--white)); */
@@ -73,8 +84,24 @@ const {
 		/* background-color: rgb(127, 141, 150); */
 		/* background-color: #7f8d96; */
 
+		/* padding-top now in __content (see below in the @media for explanation) */
+		/* padding-top: 2rem; */
+		/* let's lose all padding from section-page-content except the horizontal bootstrap stuff */
+		/* and the padding top for the negative margin min-height fiddle */
+		/* try and do it all on __content */
+		/* padding-bottom: 2rem; */
+
+		/* now needs a position relative for the positioning of the page down arrow */
+		position: relative;
+		/* some z-index adjustment needed on hero otherwise this overlaps it b/c position relative / negative margin */
+
+		border: 1px solid red;
+	}
+
+	.section-pagecontent__content {
 		padding-top: 2rem;
 		padding-bottom: 2rem;
+		border: 1px solid yellow;
 	}
 
 	.section-pagecontent__heading {
@@ -86,9 +113,19 @@ const {
 		.section-pagecontent {
 			/* big padding here for larger screens */
 			/* careful that it doesn't clash with bs px that's in the markup */
-			padding-top: 6rem;
+
+			/* the padding-top is redundant now because padding-top needs to be */
+			/* set as part of the negative margin min-height fiddle */
+			/* put on the __content class instead */
+			/* padding-top: 6rem; */
+
 			/* more at the bottom to make up for the py-5 that's on the heading */
-			padding-bottom: 8rem;
+			/* padding-bottom: 8rem; */
+		}
+
+		.section-pagecontent__content {
+			padding-top: 6rem;
+			padding-bottom: 4rem;
 		}
 
 		.section-pagecontent__heading {
@@ -96,6 +133,39 @@ const {
 			/* font-family: 'Georgia, serif'; */
 			margin-top: 3rem;
 			margin-bottom: 6rem;
+		}
+	}
+
+	.fixedHeight {
+		/* fiddle to get round using possibly unsupported units in a calc */
+		/* it's equivalent to 100vh - var(--header-height-calc)) */
+
+		/* first set height with both units (best supported one first) */
+		min-height: 100vh;
+		min-height: 100svh;
+		/* negative margin of the amount we want to subtract */
+		margin-top: calc(var(--header-height-calc) * -1);
+		/* padding of the amount we want to subtract */
+		/* and take off an extra 0.5rem to cover the bit of wriggle room we added on the scroll-padding-top */
+		/* this means that the content starts slightly higher than it should */
+		/* but better to start too high than too low otherwise a gap shows */
+		padding-top: calc((var(--header-height-calc) - 0.5rem));
+
+		/* take off an extra 0.5rem to cover the bit of wriggle room we added on the scroll-padding-top */
+		/* min-height: calc(100svh - (var(--header-height-calc) - 0.5rem)); */
+
+		/* flex: initial; */
+	}
+
+	/* adjust fixedHeight for larger screens */
+	/* we're adding the 6rem that is set in the media query above */
+	/* no, we don't need to adjust this - the problem is the negatve margin not the padding */
+	/* we might need the padding for positioning, but we don't need it in calculating the height */
+	@media (min-width: 768px) {
+		.fixedHeight {
+			/* padding-top: calc((var(--header-height-calc) - 0.5rem) + 6rem); */
+			/* padding-top: calc((var(--header-height-calc) - 0.5rem)); */
+			/* padding-top: calc(var(--header-height-calc) + 6.5rem); */
 		}
 	}
 </style>
