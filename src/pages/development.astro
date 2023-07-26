@@ -13,7 +13,11 @@ import ContactSection from "../components/ContactSection.astro";
 		<!-- <Fragment slot="hero-para">One of the UK's foremost woollen yarn spinners with a world-wide reputation for excellence.</Fragment> -->
 	</Hero>
 
-	<PageContentSection heading="Development" pageDownAnchorLink="#diagram">
+	<PageContentSection
+		heading="Development"
+		pageDownAnchorLink="#diagram"
+		pageDownAriaLabel="Next section: Development diagram"
+	>
 		<Fragment slot="page-content">
 			<p class="page-content__lead-para">
 				A key area of our operation is to develop new ranges with and for our customers.
@@ -47,6 +51,7 @@ import ContactSection from "../components/ContactSection.astro";
 		]}
 		bgColour="var(--pageContentBgColour-4)"
 		colModifier="--development"
+		pageDownArrowFillColour="var(--darkgrey)"
 	/>
 
 	<ContactSection />

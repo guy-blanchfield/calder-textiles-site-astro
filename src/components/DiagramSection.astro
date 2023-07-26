@@ -1,4 +1,6 @@
 ---
+import PageDownArrow from "./PageDownArrow.astro";
+
 export interface Props {
 	diagramBase: string;
 	diagramAlt?: Array<string>;
@@ -10,6 +12,9 @@ export interface Props {
 	// adds a modifier class so the separator bg images can be specified in the style section
 	// e.g. --sustainability-1, --sustainability-2
 	colModifier?: string;
+	sectionFixedHeight?: boolean;
+	// also need to drill a prop down into the pageDownArrow if required (default is --white)
+	pageDownArrowFillColour?: string;
 }
 
 const {
@@ -18,6 +23,8 @@ const {
 	diagramStackSeparator = "",
 	bgColour = "var(--pageContentBgColour-1)",
 	colModifier = "",
+	sectionFixedHeight = true,
+	pageDownArrowFillColour = "var(--white)",
 } = Astro.props;
 
 // tried this with img srcset sizes, no good, use picture instead
@@ -42,59 +49,75 @@ const diagramMediaMax = "(max-width: 576px)";
 const diagramMediaMin = "(min-width: 577px)";
 ---
 
-<section class="section-diagram" id="diagram">
-	<div class="container">
-		<div class="row no-gutters justify-content-center p-5">
-			<!-- 1 column at xs (default) 3 columns at sm to lg, 3 quarter width columns at xl and above -->
-			<!-- so the diagrams don't get too big at larger screen sizes -->
-			<div
-				class={`col-sm-4 col-xl-3 px-0 align-self-center section-diagram__col ${
-					colModifier && "section-diagram__col" + colModifier + "-1"
-				}`}
-			>
-				<!-- <div class="col-sm-4 px-0 align-self-center section-diagram__col"> -->
-				<picture>
-					<source media={diagramMediaMax} srcset={diagramSrcsetMob1} />
-					<source media={diagramMediaMin} srcset={diagramSrcset1} />
+<div class="wrapper" class:list={[{ sectionFixedHeight }]}>
+	<!-- wrapper div uses the negative margin / padding fiddle to get round using calc with svh. 
+		No other padding or margin or any other styling should be used on it
+		if fixedHeight isn't true it'll do nothing at all, just wrap -->
+	<section class="section-diagram d-flex align-items-center" id="diagram">
+		<div class="container">
+			<div class="row no-gutters justify-content-center p-5">
+				<!-- 1 column at xs (default) 3 columns at sm to lg, 3 quarter width columns at xl and above -->
+				<!-- so the diagrams don't get too big at larger screen sizes -->
+				<div
+					class={`col-sm-4 col-xl-3 px-0 align-self-center section-diagram__col ${
+						colModifier && "section-diagram__col" + colModifier + "-1"
+					}`}
+				>
+					<!-- <div class="col-sm-4 px-0 align-self-center section-diagram__col"> -->
+					<picture>
+						<source media={diagramMediaMax} srcset={diagramSrcsetMob1} />
+						<source media={diagramMediaMin} srcset={diagramSrcset1} />
 
-					<img src={diagramFallback1} alt={diagramAlt[0]} class="section-diagram__img" />
-				</picture>
-			</div>
+						<img src={diagramFallback1} alt={diagramAlt[0]} class="section-diagram__img" />
+					</picture>
+				</div>
 
-			<div
-				class={`col-sm-4 col-xl-3 px-0 align-self-center section-diagram__col ${
-					colModifier && "section-diagram__col" + colModifier + "-2"
-				}`}
-			>
-				<!-- <div class="col-sm-4 px-0 align-self-center section-diagram__col"> -->
-				<picture>
-					<source media={diagramMediaMax} srcset={diagramSrcsetMob2} />
-					<source media={diagramMediaMin} srcset={diagramSrcset2} />
+				<div
+					class={`col-sm-4 col-xl-3 px-0 align-self-center section-diagram__col ${
+						colModifier && "section-diagram__col" + colModifier + "-2"
+					}`}
+				>
+					<!-- <div class="col-sm-4 px-0 align-self-center section-diagram__col"> -->
+					<picture>
+						<source media={diagramMediaMax} srcset={diagramSrcsetMob2} />
+						<source media={diagramMediaMin} srcset={diagramSrcset2} />
 
-					<img src={diagramFallback2} alt={diagramAlt[1]} class="section-diagram__img" />
-				</picture>
-			</div>
+						<img src={diagramFallback2} alt={diagramAlt[1]} class="section-diagram__img" />
+					</picture>
+				</div>
 
-			<div class="col-sm-4 col-xl-3 px-0 align-self-center section-diagram__col">
-				<!-- <div class="col-sm-4 px-0 align-self-center section-diagram__col"> -->
-				<picture>
-					<source media={diagramMediaMax} srcset={diagramSrcsetMob3} />
-					<source media={diagramMediaMin} srcset={diagramSrcset3} />
+				<div class="col-sm-4 col-xl-3 px-0 align-self-center section-diagram__col">
+					<!-- <div class="col-sm-4 px-0 align-self-center section-diagram__col"> -->
+					<picture>
+						<source media={diagramMediaMax} srcset={diagramSrcsetMob3} />
+						<source media={diagramMediaMin} srcset={diagramSrcset3} />
 
-					<img src={diagramFallback3} alt={diagramAlt[2]} class="section-diagram__img" />
-				</picture>
+						<img src={diagramFallback3} alt={diagramAlt[2]} class="section-diagram__img" />
+					</picture>
+				</div>
 			</div>
 		</div>
-	</div>
-</section>
+		<PageDownArrow anchorLink="#contact" ariaLabel="Next section: Contact" fillColour={pageDownArrowFillColour} />
+	</section>
+</div>
 
 <style define:vars={{ diagramStackSeparator, bgColour }}>
 	.section-diagram {
 		/* background-color: hsl(240, 2%, 90%); */
 		background-color: var(--bgColour);
+
+		/* now needs to be position relative b/c of the absolute positioning of the page down arrow */
+		position: relative;
+		/* and the z-index thing so it doesn't overlap on top of the previous section */
+		/* z-index: -2; */
+		flex: 1;
 	}
 
 	@media (max-width: 576px) {
+		/* bit of extra bottom padding for mobile so the bottom diagram doesn't run into the pagedownarrow */
+		.section-diagram {
+			padding-bottom: 3rem;
+		}
 		.section-diagram__col:not(:last-child)::after {
 			content: "";
 			display: block;
@@ -131,4 +154,6 @@ const diagramMediaMin = "(min-width: 577px)";
 		max-width: 100%;
 		/* border: 1px solid yellow; */
 	}
+
+	/* fixedHeight now in global.css */
 </style>

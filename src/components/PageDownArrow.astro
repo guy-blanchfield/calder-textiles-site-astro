@@ -6,9 +6,10 @@ export interface Props {
 	anchorLink: string;
 	ariaLabel: string; // Page Content
 	className?: string;
+	fillColour?: string;
 }
 
-const { anchorLink, ariaLabel, className = "page-down-link" } = Astro.props;
+const { anchorLink, ariaLabel, className = "page-down-link", fillColour = "var(--white)" } = Astro.props;
 ---
 
 <a class:list={[className]} href={anchorLink} aria-label={ariaLabel}>
@@ -22,10 +23,10 @@ const { anchorLink, ariaLabel, className = "page-down-link" } = Astro.props;
 	<!-- </span> -->
 	<!-- gonna have to use the svg for this, bc we need the lighter weight -->
 	<!-- name was ic:outline-expand-circle-down -->
-	<Icon name="expand_circle_down_FILL0_wght200_GRAD0_opsz48" class="page-down-link__icon" />
+	<Icon name="expand_circle_down_FILL0_wght200_GRAD0_opsz48" class="page-down-link__icon" alt="Arrow pointing down" />
 </a>
 
-<style>
+<style define:vars={{ fillColour }}>
 	.page-down-link {
 		position: absolute;
 		z-index: 1;
@@ -67,7 +68,9 @@ const { anchorLink, ariaLabel, className = "page-down-link" } = Astro.props;
 
 	.page-down-link__icon {
 		/* NB fill not color for svg */
-		fill: hsl(var(--white));
+		/* fill: hsl(var(--white)); */
+		/* dynamic fill colout from prop */
+		fill: hsl(var(--fillColour));
 		width: 3rem;
 		height: auto;
 	}
