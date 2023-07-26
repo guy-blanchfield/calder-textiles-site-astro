@@ -185,6 +185,7 @@
 /* better than a bit of the head image showing through under the header */
 /* NB should be on html not body */
 html {
+	/* this is what's causing the slight vertical shift in the navbar when linking from the menu to #content (about us) */
 	scroll-padding-top: calc(var(--header-height-calc) - 0.5rem);
 }
 
@@ -199,8 +200,19 @@ body {
 	/* display: flex; */
 	/* flex-direction: column; */
 
+	/* this is what's making the text shake slightly on reload! */
+	/* think we can ignore this - it's only on dev, not build */
 	font-family: "tex_gyre_heros", Arial, Helvetica, sans-serif;
 }
+
+/* If browser supports font-size-adjust, use this */
+/* https://www.smashingmagazine.com/2016/08/ways-to-reduce-content-shifting-on-page-load/ */
+/* nope */
+/* @supports (font-size-adjust: none) { */
+/* body { */
+/* font-size-adjust: 5; */
+/* } */
+/* } */
 
 /* main fills all the space between header & footer */
 main {
