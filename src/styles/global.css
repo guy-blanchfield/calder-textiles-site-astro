@@ -185,7 +185,10 @@
 /* better than a bit of the head image showing through under the header */
 /* NB should be on html not body */
 html {
-	/* this is what's causing the slight vertical shift in the navbar when linking from the menu to #content (about us) */
+	/* thought scroll-padding was causing the slight vertical shift in the navbar when */
+	/* linking from the menu to #content (about us) */
+	/* but's actually the sticky header and it's only in firefox, so leave it for now */
+
 	scroll-padding-top: calc(var(--header-height-calc) - 0.5rem);
 }
 

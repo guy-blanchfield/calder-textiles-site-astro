@@ -136,36 +136,49 @@ const currentPath = Astro.url.pathname;
 					<!-- see also: https://petermekhaeil.com/til/astro-url/ -->
 					<!-- astro.url is equivalent to new URL(Astro.request.url) -->
 					<!-- https://docs.astro.build/en/reference/api-reference/#astrourl -->
-					<li class="nav-item active">
+					<li class="nav-item" id="nav-item__aboutus">
 						<!-- and each link needs a class of nav-link -->
 						<!-- NB dev pathname has no trailing slash, build pathname DOES have trailing slash -->
 						<!-- that's why we're using includes not equality operator  -->
 						<!-- <a href="/aboutus" class="nav-link" aria-current={currentPath === "/aboutus" ? "page" : false}>About Us</a> -->
-						<a href="/#content" class="nav-link" aria-current={currentPath.includes("/#content") ? "page" : false}
-							>About Us</a
+						<a
+							href="/#aboutus"
+							class="nav-link"
+							id="nav-link__aboutus"
+							aria-current={currentPath.includes("/#content") ? "page" : false}>About Us</a
 						>
 					</li>
 
-					<li class="nav-item">
-						<a href="/products" class="nav-link" aria-current={currentPath.includes("/products") ? "page" : false}
-							>Products</a
+					<li class="nav-item" id="nav-item__products">
+						<a
+							href="/products"
+							class="nav-link"
+							id="nav-link__products"
+							aria-current={currentPath.includes("/products") ? "page" : false}>Products</a
 						>
 					</li>
-					<li class="nav-item">
-						<a href="/development" class="nav-link" aria-current={currentPath.includes("/development") ? "page" : false}
-							>Development</a
+					<li class="nav-item" id="nav-item__development">
+						<a
+							href="/development"
+							class="nav-link"
+							id="nav-link__development"
+							aria-current={currentPath.includes("/development") ? "page" : false}>Development</a
 						>
 					</li>
-					<li class="nav-item">
+					<li class="nav-item" id="nav-item__sustainability">
 						<a
 							href="/sustainability"
 							class="nav-link"
+							id="nav-link__sustainability"
 							aria-current={currentPath.includes("/sustainability") ? "page" : false}>Sustainability</a
 						>
 					</li>
-					<li class="nav-item">
-						<a href="/contact" class="nav-link" aria-current={currentPath.includes("/contact") ? "page" : false}
-							>Contact</a
+					<li class="nav-item" id="nav-item__contact">
+						<a
+							href="/contact"
+							class="nav-link"
+							id="nav-link__contact"
+							aria-current={currentPath.includes("/contact") ? "page" : false}>Contact</a
 						>
 					</li>
 				</ul>
@@ -181,6 +194,28 @@ const currentPath = Astro.url.pathname;
 <!-- should be ok to bundle -->
 <!-- not required now we're using css selectors to show and hide the icons -->
 <!-- archived in hamburger-toggle-old.js -->
+
+<script>
+	// consider putting this stuff in initialise
+	// but maybe it makes more sense to keep it in header with the navmenu
+
+	// detect hash change
+	window.addEventListener("hashchange", handleURLChange);
+	// detect page load
+	window.addEventListener("DOMContentLoaded", handleURLChange);
+
+	function handleURLChange() {
+		console.log(`URL Change being handled! URL: ${location.href}`);
+		if (location.href.includes("aboutus")) {
+			// NB changing the aria-current attribute NOT classlist
+			document.querySelector("#nav-link__aboutus").setAttribute("aria-current", "page");
+			console.log("updating the navitems");
+		} else {
+			document.querySelector("#nav-link__aboutus").setAttribute("aria-current", "false");
+			console.log(`just updating navitem about us`);
+		}
+	}
+</script>
 
 <style>
 	header {
@@ -207,6 +242,14 @@ const currentPath = Astro.url.pathname;
 
 		/* height: calc(var(--navbar-brand-logo-height) + (var(--navbar-vertical-padding)*2) + 0.5rem); */
 		/* --header-height-calc is defined in global.css */
+
+		/* what can be done to stop the shift when clicking about us? */
+		/* it's caused by bs sticky-top */
+		/* tried taking off the bs class sticky-top, and setting it here using -1px */
+		/* worse */
+		/* it's only happening firefox, so probably for now */
+		/* until we get a better idea */
+
 		height: var(--header-height-calc);
 		overflow: visible;
 		/* border: 1px solid fuchsia; */

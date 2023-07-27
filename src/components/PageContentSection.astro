@@ -6,6 +6,7 @@ import PageDownArrow from "./PageDownArrow.astro";
 // default it to #contact / Next section: Contact, that's what it'll be most of the time
 export interface Props {
 	heading: string;
+	anchorId?: string;
 	textColour?: string;
 	bgColour?: string;
 	columnLayout?: number;
@@ -16,6 +17,7 @@ export interface Props {
 
 const {
 	heading,
+	anchorId = "content",
 	textColour = "hsl(var(--white))",
 	bgColour = "var(--pageContentBgColour-1)",
 	columnLayout = 2,
@@ -30,7 +32,7 @@ const {
 	<!-- wrapper div uses the negative margin / padding fiddle to get round using calc with svh. 
 		No other padding or margin should be used on it
 		if fixedHeight isn't true it'll do nothing at all, just wrap -->
-	<section class="section-pagecontent px-sm-5" id="content">
+	<section class="section-pagecontent px-sm-5" id={anchorId}>
 		<!-- put the id on the container because the negative margin fiddle for the min-height means the anchor links to the wrong place if it's the actual page-content div -->
 		<div class="container">
 			<!-- content div just to keep everything together -->

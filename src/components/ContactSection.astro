@@ -3,51 +3,59 @@ import GoogleMap from "../components/GoogleMap.astro";
 
 import obfuscateEmail from "../js/obfuscate-email";
 
+export interface Props {
+	sectionFixedHeight?: boolean;
+}
+
+const { sectionFixedHeight = true } = Astro.props;
+
 const emailSpan = obfuscateEmail("tim.booth@caldertextiles.co.uk", "section-contact__email");
 ---
 
-<!-- nb big padding-y in the custom css, bootstrap wouldn't cut it --><!-- padding x only for sm and above i.e. not for mobile -->
-<section class="section-contact px-sm-5" id="contact">
-	<div class="container">
-		<div class="row">
-			<div class="col-lg-5 d-flex align-items-center">
-				<div class="section-contact__contact-content">
-					<h3 class="section-contact__heading fs-2 pb-4 serif" data-aos="fade-up">Contact Us</h3>
-					<p class="section-contact__intro fw-bold py-2" data-aos="fade-up">
-						Talk to us. You can depend on our experienced sales team. Their knowledge will provide you with the ideal
-						yarn solution and a successful working relationship, wherever you are in the world.
-					</p>
-
-					<!-- wrapper div to keep address and contact details together for the aos transition -->
-					<div data-aos="fade-up">
-						<p class="section-contact__address">
-							<span class="fw-bold">Calder Textiles Ltd</span><br />
-							Dewsbury Mills<br />
-							Thornhill Road<br />
-							Dewsbury<br />
-							WF12 9QE<br />
-							United Kingdom
+<div class="wrapper" class:list={[{ sectionFixedHeight }]}>
+	<!-- nb big padding-y in the custom css, bootstrap wouldn't cut it --><!-- padding x only for sm and above i.e. not for mobile -->
+	<section class="section-contact px-sm-5" id="contact">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-5 d-flex align-items-center">
+					<div class="section-contact__contact-content">
+						<h3 class="section-contact__heading fs-2 pb-4 serif" data-aos="fade-up">Contact Us</h3>
+						<p class="section-contact__intro fw-bold py-2" data-aos="fade-up">
+							Talk to us. You can depend on our experienced sales team. Their knowledge will provide you with the ideal
+							yarn solution and a successful working relationship, wherever you are in the world.
 						</p>
 
-						<p class="section-contact__details">
-							<span class="fw-bold">T</span>
-							<a href="tel:+441924456411" class="section-contact__phone">+44 (0)1924 456 411</a><br />
-							<span class="fw-bold">F</span> +44 (0)1924 487 387<br />
-							<span class="fw-bold">E</span>
-							<span class="section-contact__email-span" set:html={emailSpan} />
-						</p>
+						<!-- wrapper div to keep address and contact details together for the aos transition -->
+						<div data-aos="fade-up">
+							<p class="section-contact__address">
+								<span class="fw-bold">Calder Textiles Ltd</span><br />
+								Dewsbury Mills<br />
+								Thornhill Road<br />
+								Dewsbury<br />
+								WF12 9QE<br />
+								United Kingdom
+							</p>
+
+							<p class="section-contact__details">
+								<span class="fw-bold">T</span>
+								<a href="tel:+441924456411" class="section-contact__phone">+44 (0)1924 456 411</a><br />
+								<span class="fw-bold">F</span> +44 (0)1924 487 387<br />
+								<span class="fw-bold">E</span>
+								<span class="section-contact__email-span" set:html={emailSpan} />
+							</p>
+						</div>
 					</div>
 				</div>
-			</div>
-			<div class="col-lg-7 pt-5 pt-lg-0">
-				<!-- google maps here -->
-				<!-- div is in the GoogleMap component -->
-				<GoogleMap />
-				<!-- </div> -->
+				<div class="col-lg-7 pt-5 pt-lg-0">
+					<!-- google maps here -->
+					<!-- div is in the GoogleMap component -->
+					<GoogleMap />
+					<!-- </div> -->
+				</div>
 			</div>
 		</div>
-	</div>
-</section>
+	</section>
+</div>
 
 <style>
 	.section-contact {
@@ -58,6 +66,8 @@ const emailSpan = obfuscateEmail("tim.booth@caldertextiles.co.uk", "section-cont
 		/* they're set much higher for larger (non-mobile) screens */
 		padding-top: 2rem;
 		padding-bottom: 2rem;
+
+		flex: 1;
 	}
 
 	@media (min-width: 768px) {
