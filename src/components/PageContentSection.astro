@@ -11,6 +11,7 @@ export interface Props {
 	bgColour?: string;
 	columnLayout?: number;
 	sectionFixedHeight?: boolean;
+	pageDownArrow?: boolean;
 	pageDownAnchorLink?: string;
 	pageDownAriaLabel?: string;
 }
@@ -22,6 +23,7 @@ const {
 	bgColour = "var(--pageContentBgColour-1)",
 	columnLayout = 2,
 	sectionFixedHeight = true,
+	pageDownArrow = true,
 	pageDownAnchorLink = "#contact",
 	pageDownAriaLabel = "Next section: Contact",
 } = Astro.props;
@@ -78,8 +80,7 @@ const {
 				</div>
 			</div>
 		</div>
-
-		<PageDownArrow anchorLink={pageDownAnchorLink} ariaLabel={pageDownAriaLabel} />
+		{pageDownArrow && <PageDownArrow anchorLink={pageDownAnchorLink} ariaLabel={pageDownAriaLabel} />}
 	</section>
 </div>
 

@@ -205,15 +205,11 @@ const currentPath = Astro.url.pathname;
 	window.addEventListener("DOMContentLoaded", handleURLChange);
 
 	function handleURLChange() {
-		console.log(`URL Change being handled! URL: ${location.href}`);
-		if (location.href.includes("aboutus")) {
-			// NB changing the aria-current attribute NOT classlist
-			document.querySelector("#nav-link__aboutus").setAttribute("aria-current", "page");
-			console.log("updating the navitems");
-		} else {
-			document.querySelector("#nav-link__aboutus").setAttribute("aria-current", "false");
-			console.log(`just updating navitem about us`);
-		}
+		// check if we're viewing the about us section (probably /#aboutus)
+		// if true, set the about us nav-link aria-current attribute to page
+		// else set it to false
+		const ariaCurrentValue = location.href.includes("aboutus") ? "page" : "false";
+		document.querySelector("#nav-link__aboutus").setAttribute("aria-current", ariaCurrentValue);
 	}
 </script>
 

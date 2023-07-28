@@ -13,6 +13,9 @@ const emailSpan = obfuscateEmail("tim.booth@caldertextiles.co.uk", "section-cont
 ---
 
 <div class="wrapper" class:list={[{ sectionFixedHeight }]}>
+	<!-- wrapper div uses the negative margin / padding fiddle to get round using calc with svh. 
+		No other padding or margin or any other styling should be used on it
+		if fixedHeight isn't true it'll do nothing at all, just wrap -->
 	<!-- nb big padding-y in the custom css, bootstrap wouldn't cut it --><!-- padding x only for sm and above i.e. not for mobile -->
 	<section class="section-contact px-sm-5" id="contact">
 		<div class="container">

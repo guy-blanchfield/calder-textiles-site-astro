@@ -1,3 +1,10 @@
+/* test autoprefixer */
+/* from: https://stackoverflow.com/questions/75035565/postcss-autoprefixer-setup-in-an-astro-project */
+/* text-size-adjust: 100%; in src/styles/global.css to cause a -webkit-text-size-adjust: 100%; */
+html {
+	text-size-adjust: 100%;
+}
+
 /* ---------------- @fontface stuff ------------------- */
 
 /* this is the true baskerville */
@@ -281,19 +288,22 @@ footer {
 	/* first set height with both units (best supported one first) */
 	min-height: 100vh;
 	min-height: 100svh;
+
 	/* negative margin of the amount we want to subtract */
 	/* take off an extra 1rem to cover the bit of wriggle room we added on the scroll-padding-top */
 	/* for some reason it needs to be 1rem, the wriggle room in the scroll padding is 0.5rem, */
 	/* so I suppose it must be that we need 0.5 at either end?! */
 	margin-top: calc((var(--header-height-calc) - 1rem) * -1);
+
 	/* padding of the amount we want to subtract */
 	/* and take off an extra 1rem to cover the bit of wriggle room we added on the scroll-padding-top */
 	/* this means that the content starts slightly higher than it should */
 	/* but better to start too high than too low otherwise a gap shows */
 	padding-top: calc((var(--header-height-calc) - 1rem));
 
-	/* take off an extra 0.5rem to cover the bit of wriggle room we added on the scroll-padding-top */
-	/* min-height: calc(100svh - (var(--header-height-calc) - 0.5rem)); */
+	/* tried the var fallback thing (instead of the -ve margin fiddle), 
+	/* not gonna work because the fallback is for an invalid var */
+	/* i.e a reference to a variable that has not yet been set or declared, NOT one that contains an invalid unit */
 
 	/* needs both display: flex AND flex: 1 */
 	/* display: flex so that the section inside it can flex grow */
