@@ -67,7 +67,9 @@ import googleMapsURL from "../data/map-api-key";
 </script>
 
 <!-- think this needs to be is:inline too, because of the query parameters -->
-<script is:inline src={googleMapsURL} async defer></script>
+<!-- <script is:inline src={googleMapsURL} async defer></script> -->
+<!-- gets google maps url from .env -->
+<script is:inline src={import.meta.env.MAPS_URL} async defer></script>
 
 <style>
 	.section-contact__contact-map {
