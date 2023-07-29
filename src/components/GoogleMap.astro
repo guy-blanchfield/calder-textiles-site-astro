@@ -1,5 +1,4 @@
 ---
-import googleMapsURL from "../data/map-api-key";
 ---
 
 <!-- this probably belongs in contact component --><!-- and just have the script bits of the google map stuff in the GoogleMap component --><!-- yeah that doesn't seem to work --><!-- so either have the whole div here or put everything in ContactSection and lose GoogleMap component --><!-- if you put everything in ContactSection, remember to get the stuff from this <style> -->
@@ -67,7 +66,7 @@ import googleMapsURL from "../data/map-api-key";
 </script>
 
 <!-- think this needs to be is:inline too, because of the query parameters -->
-<script is:inline src={googleMapsURL} async defer></script>
+<script is:inline src={import.meta.env.MAPS_URL} async defer></script>
 
 <style>
 	.section-contact__contact-map {
