@@ -66,7 +66,8 @@
 </script>
 
 <!-- think this needs to be is:inline too, because of the query parameters -->
-<script is:inline src={import.meta.env.MAPS_URL} async defer></script>
+<!-- or maybe not... -->
+<script src={import.meta.env.MAPS_URL} async defer></script>
 
 <style>
 	.section-contact__contact-map {

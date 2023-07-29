@@ -1,0 +1,43 @@
+---
+---
+
+<!-- this probably belongs in contact component --><!-- and just have the script bits of the google map stuff in the GoogleMap component --><!-- yeah that doesn't seem to work --><!-- so either have the whole div here or put everything in ContactSection and lose GoogleMap component --><!-- if you put everything in ContactSection, remember to get the stuff from this <style> -->
+<div class="section-contact__contact-map" id="map">
+	<!-- google maps here -->
+</div>
+
+<!-- think this script needs to be is:inline so it blocks -->
+<!-- it needs to have executed before the external google script calls initMap -->
+<!-- tried deferring it - made no difference to lighthouse performance -->
+
+<script is:inline>
+	const myKey = import.meta.env.MAPS_API_KEY;
+
+	// prettier-ignore
+
+	(g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})
+        ({key: myKey, v: "weekly"});
+</script>
+
+<!-- tested this. Can confirm type=module does cause it to defer, without it, it runs first -->
+<script is:inline type="module" src="/scripts/google-map.js"></script>
+
+<style>
+	.section-contact__contact-map {
+		/* min-height: 30rem;  */
+		/* min-height: 100%; */
+		position: relative;
+		/* padding-top and padding-bottom is based on the parent element’s width. */
+		/* So if you had an element that is 500px wide, and padding-top of 100%, the padding-top would be 500px. */
+		/* see: https://css-tricks.com/aspect-ratio-boxes/ */
+		/* without the padding or a min-height the map box will have height of 0 */
+		/* so padding-bottom is what's giving it height */
+		/* and the percentage is a percentage of the width */
+		/* so 75% is 4/3, 66.67% is 3/2, 56.25% is 16/9 */
+		/* it's better than using min-height bc it stays proportional */
+		/* otherwise it gets tall and narrow at mobile dimensions */
+		padding-bottom: 67%;
+		/* background-color: #ccc */
+		border: 1px solid hsl(var(--duckeggblue) / 0.25);
+	}
+</style>
