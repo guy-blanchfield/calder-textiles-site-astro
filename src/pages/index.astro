@@ -8,7 +8,7 @@ import EmptySection from "../components/EmptySection.astro";
 ---
 
 <Layout title="Calder Textiles : Home">
-	<Hero imageBase="sheep-walking-mountain" imageAlt="Sheep walking on the mountain">
+	<Hero imageBase="sheep-walking-mountain" imageAlt="Sheep walking on the mountain" anchorLink="#aboutus">
 		<!-- using Fragment here, span also works, but fragment produces tidier markup -->
 		<Fragment slot="hero-heading">Welcome to <br />Calder Textiles</Fragment>
 		<Fragment slot="hero-para">
@@ -16,7 +16,7 @@ import EmptySection from "../components/EmptySection.astro";
 		</Fragment>
 	</Hero>
 
-	<PageContentSection heading="About Us" bgColour="var(--pageContentBgColour-1)">
+	<PageContentSection heading="About Us" bgColour="var(--pageContentBgColour-1)" anchorId="aboutus">
 		<Fragment slot="page-content">
 			<p class="page-content__lead-para">
 				Calder Textiles is a traditional family owned spinning mill located in Dewsbury, West Yorkshire, an area

@@ -25,16 +25,20 @@ import PageDownArrow from "./PageDownArrow.astro";
 // some prop drilling required to get the imageBase from the page that calls it
 // through to the pictureFullWidth component
 
+// and also to set an alternative anchor link for the little down arrow if required
+// it should default to #content
+
 export interface Props {
 	imageBase: string;
 	imageAlt: string;
 	overlayClass?: string;
+	anchorLink?: string;
 }
 
 // might need an extra prop here to determine whether hero image needs the gradient overlay
 // or maybe just a classlist to pass to the overlay div
 
-const { imageBase, imageAlt, overlayClass = "" } = Astro.props;
+const { imageBase, imageAlt, overlayClass = "", anchorLink = "#content" } = Astro.props;
 
 // const curentPath = new URL(Astro.request.url).pathname;
 // or shorthand
@@ -147,7 +151,7 @@ const currentPath = Astro.url.pathname;
 	<!-- from a11y -->
 	<!-- "A link is focusable and can be triggered by the enter key. -->
 	<!-- A link will redirect you to a new page or a section within the same page." -->
-	<PageDownArrow anchorLink="#content" ariaLabel="Page Content" />
+	<PageDownArrow anchorLink={anchorLink} ariaLabel="Page Content" />
 </div>
 
 <script>
