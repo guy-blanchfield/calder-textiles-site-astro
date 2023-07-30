@@ -8,67 +8,20 @@
 
 <!-- think this script needs to be is:inline so it blocks -->
 <!-- it needs to have executed before the external google script calls initMap -->
-<!-- tried deferring it - made no difference to lighthouse performance -->
+
 <script is:inline>
-	// Initialize and add the map
-	let map;
-	let marker;
+	const apiKey = import.meta.env.MAPS_API_KEY;
 
-	async function initMap() {
-		// The location of Calder Textiles
-		const caldertextiles = { lat: 53.680525, lng: -1.63789 };
-		// Request needed libraries.
-		//@ts-ignore
-		const { Map } = await google.maps.importLibrary("maps");
-		// const { AdvancedMarkerView } = await google.maps.importLibrary("marker");
+	// prettier-ignore
 
-		// The map, centered at Calder Textiles
-		map = new Map(document.getElementById("map"), {
-			zoom: 13,
-			center: caldertextiles,
-			mapId: "CALDER_TEXTILES",
-			// options: {
-			// gestureHandling: "greedy",
-			// },
-		});
-
-		// The marker, positioned at Calder Textiles
-
-		// animation only seems to be available in google.maps.Marker
-		// not importLibrary("marker") (AdvancedMarkerView)
-		// let marker = new AdvancedMarkerView({
-		marker = new google.maps.Marker({
-			map: map,
-			draggable: false,
-			// little drop animation on the marker
-			animation: google.maps.Animation.DROP,
-			// bounce probably better
-			// animation: google.maps.Animation.BOUNCE,
-			position: caldertextiles,
-			title: "Calder Textiles",
-		});
-
-		marker.addListener("click", toggleBounce);
-	}
-
-	// see following for animated marker stuff
-	// https://developers.google.com/maps/documentation/javascript/examples/marker-animations
-
-	function toggleBounce() {
-		if (marker.getAnimation() !== null) {
-			marker.setAnimation(null);
-		} else {
-			marker.setAnimation(google.maps.Animation.BOUNCE);
-		}
-	}
-
-	window.initMap = initMap;
+	(g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})
+        ({key: apiKey, v: "weekly"});
 </script>
 
-<!-- think this needs to be is:inline too, because of the query parameters -->
-<!-- or maybe not... -->
-<script src={import.meta.env.MAPS_URL} async defer></script>
+<!-- tested this. Can confirm type=module does cause it to defer, without it, it runs first -->
+<script is:inline type="module" src="/scripts/google-map.js"></script>
 
+<!-- try is global for the google map animation -->
 <style>
 	.section-contact__contact-map {
 		/* min-height: 30rem;  */
@@ -86,5 +39,43 @@
 		padding-bottom: 67%;
 		/* background-color: #ccc */
 		border: 1px solid hsl(var(--duckeggblue) / 0.25);
+	}
+
+	/* google maps marker bounce animation */
+	/* these need to be :global() */
+
+	/* set the default transition time */
+	/* don't need this it gets set in google-map js */
+	/* :global(.section-contact__contact-map) { */
+	/* --delay-time: 0.5s; */
+	/* } */
+
+	:global(@keyframes drop) {
+		0% {
+			transform: translateY(-200px) scaleY(0.9);
+			opacity: 0;
+		}
+		5% {
+			opacity: 0.7;
+		}
+		50% {
+			transform: translateY(0px) scaleY(1);
+			opacity: 1;
+		}
+		65% {
+			transform: translateY(-17px) scaleY(0.9);
+			opacity: 1;
+		}
+		75% {
+			transform: translateY(-22px) scaleY(0.9);
+			opacity: 1;
+		}
+		100% {
+			transform: translateY(0px) scaleY(1);
+			opacity: 1;
+		}
+	}
+	:global(.drop) {
+		animation: drop 0.3s linear forwards var(--delay-time);
 	}
 </style>

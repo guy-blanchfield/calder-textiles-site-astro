@@ -60,28 +60,17 @@ const { title, bodyClass = "" } = Astro.props;
 		<!-- NB google fonts automatically supplies regular, so weights and styles only need to be specified if you want more than regular  -->
 		<!-- <link href="https://fonts.googleapis.com/css2?family=Martel&display=swap" rel="stylesheet"> -->
 
-		<!-- try preloading the locally hosted fonts (@font-face in global.css) -->
-		<!-- this looks to have fixed the problem of the serif font appearing first as the correct font  -->
-		<!-- then momentarily changing to system font than back to the correct font -->
+		<!-- preloading the locally hosted fonts (@font-face in global.css) -->
+		<!-- only preload woff2 fonts, otherwise browser will download both regardless, all mobile broswers will support woff2 -->
 		<link rel="preload" href="/fonts/librebaskerville-regular-webfont.woff2" as="font" type="font/woff2" crossorigin />
-		<link rel="preload" href="/fonts/librebaskerville-regular-webfont.woff" as="font" type="font/woff" crossorigin />
 
 		<link rel="preload" href="/fonts/texgyreheros-regular-webfont.woff" as="font" type="font/woff" crossorigin />
 		<link rel="preload" href="/fonts/texgyreheros-bold-webfont.woff" as="font" type="font/woff" crossorigin />
-		<!-- <link rel="preload" href="/fonts/baskerville-normal.woff" as="font" type="font/woff" crossorigin> -->
 
 		<!-- <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" /> -->
 
-		<!-- custom styles -->
-		<!-- probably don't need reset, there's one built into bootstrap -->
-		<!-- <link rel="stylesheet" href="jwc-reset.css"> -->
-		<!-- <link rel="stylesheet" href="style.css"> -->
-
 		<!-- icon can't use rel=preload -->
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-
-		<!-- tried deferred style for unhiding the section picture (acting as background image) -->
-		<!-- worked but didn't help performance score -->
 
 		<!-- cdn scripts -->
 
