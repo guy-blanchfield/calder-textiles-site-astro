@@ -1,7 +1,13 @@
 ---
 ---
 
-<!-- this probably belongs in contact component --><!-- and just have the script bits of the google map stuff in the GoogleMap component --><!-- yeah that doesn't seem to work --><!-- so either have the whole div here or put everything in ContactSection and lose GoogleMap component --><!-- if you put everything in ContactSection, remember to get the stuff from this <style> -->
+<!-- 
+	tried putting the div in contact component
+	 and just have the script bits of the google map stuff in the GoogleMap component 
+	 but that doesn't seem to work, either have the whole div here or put everything 
+	 in ContactSection and lose GoogleMap component.
+	 if you put everything in ContactSection, remember to get the stuff from this <style> 
+-->
 <div class="section-contact__contact-map" id="map">
 	<!-- google maps here -->
 </div>
@@ -18,10 +24,9 @@
         ({key: apiKey, v: "weekly"});
 </script>
 
-<!-- tested this. Can confirm type=module does cause it to defer, without it, it runs first -->
+<!-- tested this to confirm that type=module does cause it to defer, without it, it runs first -->
 <script is:inline type="module" src="/scripts/google-map.js"></script>
 
-<!-- try is global for the google map animation -->
 <style>
 	.section-contact__contact-map {
 		/* min-height: 30rem;  */
@@ -41,14 +46,8 @@
 		border: 1px solid hsl(var(--duckeggblue) / 0.25);
 	}
 
-	/* google maps marker bounce animation */
+	/* google maps marker drop animation */
 	/* these need to be :global() */
-
-	/* set the default transition time */
-	/* don't need this it gets set in google-map js */
-	/* :global(.section-contact__contact-map) { */
-	/* --delay-time: 0.5s; */
-	/* } */
 
 	:global(@keyframes drop) {
 		0% {
