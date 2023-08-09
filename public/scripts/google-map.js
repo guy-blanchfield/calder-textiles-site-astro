@@ -57,5 +57,4 @@ const intersectionObserver = new IntersectionObserver((entries) => {
 	}
 });
 
-setTimeout(initMap, 3000);
-// initMap();
+initMap();
