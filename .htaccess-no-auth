@@ -1,9 +1,11 @@
 #Protect Directory
-AuthName "Dialog prompt"
-AuthType Basic   
-AuthUserFile /home/closeyou/caldertextiles.guyblanchfield.co.uk/.htpasswd  
-require valid-user
+# AuthName "Dialog prompt"
+# AuthType Basic   
+# AuthUserFile /home/closeyou/caldertextiles.guyblanchfield.co.uk/.htpasswd  
+# require valid-user
 
+# 404 page
+ErrorDocument 404 /404.html
 
 # add mime types
 # this doesn't seem to be absolutely necessary but seeing as we're specifying
