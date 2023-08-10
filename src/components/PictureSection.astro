@@ -1,4 +1,5 @@
 ---
+import Hero from "./Hero.astro";
 import PictureFullWidth from "./PictureFullWidth.astro";
 
 // some prop drilling required to get the imageBase from the page that calls it
@@ -7,22 +8,58 @@ import PictureFullWidth from "./PictureFullWidth.astro";
 export interface Props {
 	imageBase: string;
 	imageAlt?: string;
+	sectionFixedHeight?: boolean;
 }
 
-const { imageBase, imageAlt = "" } = Astro.props;
+// think we want sectionFixedHeight to default to false for the picture
+// it'll always be pretty high / deep because of the aspect ratio of the images
+// unless we want to do the object-fit thing on it and have it fit to the min-height
+
+// so we don't really need the wrapper div but keep it for consistency and
+// also for if we do the object-fit thing later
+// we probably should because the wider the screen, the deeper the image is going to be
+// so it could get annoyingly deep to scroll past
+
+// the image has already got an object-fit rule in pictureFullWidth so it shouldn't be too tricky
+// to get it working... honest
+
+// when pictureFullWidth is in Hero, its parent is the div with the view height -margin +padding thing
+// whereas here that div will be the grandparent so the section-picture div might need some dimensions or flex
+// or something to make the object-fit work
+
+const { imageBase, imageAlt = "", sectionFixedHeight = false } = Astro.props;
 ---
 
-<section class="section-picture">
-	<!-- lazyLoad is true by default, you could leave it out here -->
-	<!-- NB! from web.dev https://web.dev/lazy-loading-images/ -->
-	<!-- One thing you will want to avoid is lazy loading images that are in the viewport during startup. -->
+<div class="wrapper" class:list={[{ sectionFixedHeight }]}>
+	<!-- wrapper div uses the negative margin / padding fiddle to get round using calc with svh. 
+		No other padding or margin should be used on it
+		if fixedHeight isn't true it'll do nothing at all, just wrap -->
+	<section class="section-picture">
+		<!-- lazyLoad is true by default, you could leave it out here -->
+		<!-- NB! from web.dev https://web.dev/lazy-loading-images/ -->
+		<!-- One thing you will want to avoid is lazy loading images that are in the viewport during startup. -->
 
-	<PictureFullWidth
-		imageBase={imageBase}
-		pictureClasses="section-picture__picture picture--blur-load"
-		imageClasses="section-picture__image"
-		lazyLoad={true}
-	/>
-</section>
+		<PictureFullWidth
+			imageBase={imageBase}
+			pictureClasses="section-picture__picture picture--blur-load"
+			imageClasses="section-picture__image"
+			lazyLoad={true}
+		/>
+	</section>
+</div>
 
-<style></style>
+<style>
+	.section-picture {
+		flex: 1;
+		/* background-color: hotpink; */
+		/* border: 1px solid aqua; */
+
+		/* try a few things */
+		/* yep fixed height makes object-fit happen */
+		/* height: 600px; */
+		/* flex? */
+		/* it's already centering vertically (cropping toward the centre) */
+		/* display: flex; */
+		/* align-items: center; */
+	}
+</style>

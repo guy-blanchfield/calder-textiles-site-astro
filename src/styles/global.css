@@ -228,6 +228,12 @@ body {
 /* } */
 /* } */
 
+img {
+	/* don't seem to make any difference re setting width and height in img tags, but keep these rules anyway */
+	max-width: 100%;
+	height: auto;
+}
+
 /* main fills all the space between header & footer */
 main {
 	/* background-color: fuchsia; */

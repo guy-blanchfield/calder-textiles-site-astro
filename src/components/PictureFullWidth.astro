@@ -131,7 +131,18 @@ const backgroundImage = `url(/images/${imageBase}-20x11.jpg)`;
 	<!-- firefox doesn't download the image -->
 	<!-- chrome doesn't download the image -->
 	<!-- edge doesn't download the image -->
-	<img src={fallbackSrc} alt={imageAlt} class:list={imageClasses} loading={lazyLoad ? "lazy" : "eager"} />
+
+	<!-- width and height settings so chrome will lazy load properly -->
+	<!-- fallbacksrc is 960x540 so try that -->
+
+	<img
+		src={fallbackSrc}
+		alt={imageAlt}
+		class:list={imageClasses}
+		loading={lazyLoad ? "lazy" : "eager"}
+		width="960"
+		height="540"
+	/>
 </picture>
 
 <script>
