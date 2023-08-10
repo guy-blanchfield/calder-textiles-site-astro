@@ -132,7 +132,7 @@ const backgroundImage = `url(/images/${imageBase}-20x11.jpg)`;
 	<!-- chrome doesn't download the image -->
 	<!-- edge doesn't download the image -->
 
-	<!-- width and height settings so chrome will lazy load properly -->
+	<!-- width and height settings to aid lazy loading -->
 	<!-- fallbacksrc is 960x540 so try that -->
 
 	<img
@@ -201,10 +201,21 @@ const backgroundImage = `url(/images/${imageBase}-20x11.jpg)`;
 		/* tried doing this as flex-grow: 1 (like the video container div), problematic, leave as is */
 	}
 
-	.hero__picture {
+	.hero__picture,
+	.section-picture__picture {
 		/* keep as position absolute, even though section-picture__picture is position: relative - trust me */
 		position: absolute;
 		z-index: 0;
+	}
+
+	/* narrower screens need section-picture__picture to be relative so the image can shrink */
+	/* see the media query in pictureSection (min-width 992) for the min-height stuff */
+	/* 992 is where it goes to a 2 column layout so it makes sense to put the query there */
+	@media (max-width: 991px) {
+		.section-picture__picture {
+			/* keep as position: relative - trust me */
+			position: relative;
+		}
 	}
 
 	.hero__image,
@@ -270,8 +281,14 @@ const backgroundImage = `url(/images/${imageBase}-20x11.jpg)`;
 	}
 
 	/* try this as blur-loading for now, see what happens */
+	/* not really sure was going on here, seems to be working ok without these */
 	.section-picture__picture.picture--blur-loading {
-		position: relative;
+		/* position: relative; */
+	}
+
+	.section-picture__picture {
+		/* position: relative; */
+		/* position: absolute; */
 	}
 
 	/* the pulsing overlay to indicate that something's happening */
