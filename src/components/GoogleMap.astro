@@ -41,7 +41,19 @@
 		/* so 75% is 4/3, 66.67% is 3/2, 56.25% is 16/9 */
 		/* it's better than using min-height bc it stays proportional */
 		/* otherwise it gets tall and narrow at mobile dimensions */
+
+		/* this all works because google map gives itself position: absolute and */
+		/* applies an inline style of position: relative; overflow: hidden to its parent div    */
 		padding-bottom: 67%;
+
+		/* same principle for the width */
+		/* this only became necessary when the parent */
+		/* (bootstrap col in ContactSection) got display: flex in order to do vertical align center */
+		/* without this, map div has height but no width (just a 2px vertical line) */
+		/* in the end, decided not to go with align-items-center on it anyway - looks odd */
+		/* but leave this on here, for future robustness */
+		padding-right: 100%;
+
 		/* background-color: #ccc */
 		border: 1px solid hsl(var(--duckeggblue) / 0.25);
 	}
