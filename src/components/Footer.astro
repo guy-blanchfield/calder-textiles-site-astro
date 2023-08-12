@@ -1,15 +1,11 @@
 ---
-import { Icon } from "astro-icon";
+// icon import now in the footerLogo component, not needed here
+// import { Icon } from "astro-icon";
 ---
 
 <!-- <footer class="footer-caldertextiles py-4 px-2"> -->
 <footer class="footer-caldertextiles">
-	<!-- -fluid so it goes to 100% width -->
-	<div class="container-fluid px-5 py-4 footer-caldertextiles__panel panel--logo">
-		<div class="footer-caldertextiles__logo">
-			<Icon name="caldertextiles-logo-crop" width="150" class="footer-caldertextiles__logo-svg" />
-		</div>
-	</div>
+	<!-- put the logo in a component just in case we need it and delete it here -->
 
 	<div class="container-fluid px-4 py-4 footer-caldertextiles__panel panel--text">
 		<div class="row align-items-center">
@@ -54,6 +50,10 @@ import { Icon } from "astro-icon";
 		justify-content: end;
 		background-color: hsl(var(--white));
 		/* border: solid 1px hotpink; */
+
+		/* try losing the logo completely */
+		/* yeah, looks good */
+		/* put the logo in a component just in case we need it and delete it */
 	}
 
 	/* hide logo panel on mobile */
