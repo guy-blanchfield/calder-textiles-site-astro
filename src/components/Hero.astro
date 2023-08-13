@@ -15,7 +15,7 @@ import VideoFullWidth from "../components/VideoFullWidth.astro";
 
 // NB! Scripts from VideoFullWidth will run regardless of the conditional render!!!
 // https://github.com/withastro/astro/issues/5283
-// "Regular <script> are bundled and attached to the head.
+// "Regular script tags are bundled and attached to the head.
 // We wouldn't be able to bundle them if we didn't know if they were going to be used or not.
 // This is a known limitation.
 // is:inline is what you should use if you really do want to conditionally render a script."
@@ -329,6 +329,8 @@ const currentPath = Astro.url.pathname;
 		/* font-size: 3.3rem; */
 
 		/* NB we're currently using a <br> in the heading slot so the max-width might be redundant - keep in for now */
+		/* it only really comes into effect when it goes to a 1 column layout */
+		/* NB gonna try a nowrap span on the text in 'products' to stop it breaking in an odd place occasionally */
 		max-width: 18ch;
 
 		line-height: 1.4;
@@ -362,8 +364,8 @@ const currentPath = Astro.url.pathname;
 	/* is using display-6 bs class */
 	/* actual size will change depending on the font */
 	/* e.g. libre baskerville is bigger than baskerville normal */
-
-	@media (min-width: 992px) {
+	/* min-width was 992 but that's a bit small to go to the bigger font-size, try 1200 */
+	@media (min-width: 1200px) {
 		.hero__heading {
 			/* leave this for now */
 			/* line-height: 1.5; */
