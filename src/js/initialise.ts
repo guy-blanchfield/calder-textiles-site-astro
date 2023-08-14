@@ -7,6 +7,19 @@ function initialise() {
 
 	// functions ---------------------------------------------
 
+	function handleHeroTextTransition() {
+		heroTextDiv.classList.add("hero__text--visible");
+		console.log(`hero__text--visible class added!`);
+		// now add a listener for the transitionend so we can amend the transition property
+		// once the transition has run
+		// otherwise there's a tendency for chrome to try and transition it (fade it out and move it down)
+		// when navigating to a new page
+		heroTextDiv.addEventListener("transitionend", () => {
+			heroTextDiv.classList.add("hero__text--transitioncomplete");
+			console.log(`hero__text--transitionend class added!`);
+		});
+	}
+
 	function showHeroText() {
 		console.log("showHeroText function");
 
@@ -19,11 +32,7 @@ function initialise() {
 			// so we'll use a setTimeout with a half second delay
 
 			// it needs a delay because the image or video have a 0.5s fade in time
-
-			setTimeout(() => {
-				heroTextDiv.classList.add("hero__text--visible");
-				console.log(`hero__text--visible class added!`);
-			}, 500);
+			setTimeout(handleHeroTextTransition, 500);
 		}
 	}
 
@@ -63,11 +72,11 @@ function initialise() {
 	}
 
 	function handleVideoReady() {
-		const eventTime = new Date();
+		// const eventTime = new Date();
 		console.log(`Video ready: ${heroVideo.src}`);
-		console.log(
-			`metadataloaded event fired: ${eventTime.getHours()}:${eventTime.getMinutes()}:${eventTime.getSeconds()}:${eventTime.getMilliseconds()}`
-		);
+		// console.log(
+		// `metadataloaded event fired: ${eventTime.getHours()}:${eventTime.getMinutes()}:${eventTime.getSeconds()}:${eventTime.getMilliseconds()}`
+		// );
 		// const videoStatus = document.querySelector(".video-status");
 		// temp for testing
 		// videoStatus.innerHTML += `<p>Video ready: ${heroVideo.src}</p>`;

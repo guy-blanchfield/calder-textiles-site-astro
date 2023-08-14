@@ -316,6 +316,11 @@ const currentPath = Astro.url.pathname;
 		transform: translateY(0);
 	}
 
+	/* to remove the transition from hero__text */
+	.hero__text--transitioncomplete {
+		transition: none;
+	}
+
 	.hero__heading {
 		/*  font-family is handled by the utility class 'serif' now */
 		/* see above, under the :root stuff */
