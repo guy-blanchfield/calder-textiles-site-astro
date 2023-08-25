@@ -52,7 +52,7 @@ async function initMap() {
 
 	//  content for the infoWindow
 	const infoWindowContent = `
-		<h4>Calder Textiles</h4>
+		<h5>Calder Textiles</h5>
 		<p>
 			Dewsbury Mills<br />
 			Thornhill Road<br />
@@ -65,6 +65,8 @@ async function initMap() {
 	//  create the infoWindow
 	const infowindow = new InfoWindow({
 		content: infoWindowContent,
+		// so opening the infoWindow doesn't cause the map to shift
+		disableAutoPan: true,
 		ariaLabel: "Calder Textiles",
 	});
 
