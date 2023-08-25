@@ -32,7 +32,8 @@ export default defineConfig({
 	],
 	vite: {
 		esbuild: {
-			drop: ["console", "debugger"],
+			// uncomment this for production!!
+			// drop: ["console", "debugger"],
 		},
 		// this works!
 		// NB: won't do the js in public/scripts
