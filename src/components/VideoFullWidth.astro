@@ -43,6 +43,9 @@ const backgroundImage = `url(/images/${videoBase}-20x11.jpg)`;
 		let videoPixels: string;
 		let videoExt: string;
 
+		// is video autoplay (is it somewhere other than the homepage)
+		const isVideoAutoplay: boolean = videoElement.dataset.autoplay == "true" ? true : false;
+
 		// 360p was a bit crappy even at 400vw
 		// the number is the height of the video btw
 		if (windowWidth < 992) {
@@ -71,6 +74,22 @@ const backgroundImage = `url(/images/${videoBase}-20x11.jpg)`;
 		videoSource = videoSrcPrt + "-" + videoPixels + videoExt;
 		console.log(`videoSource: ${videoSource}`);
 
+		// right, if this isn't the first load, we want to show the video
+		// as soon as possible so it doesn't keep showing the blur and transition
+		// on every refresh or return to the homepage
+		// so set source here, instead of waiting for window.load
+
+		// set it conditionally by !isVideoAutoplay (assigned above)
+		// just in case it's a video somewhere other than the homepage
+		// use the set source function, that will also add the --show class
+
+		// the play command will come later in initialise.js > handleVideoReady()
+		// we want the video to show as soon as possible
+
+		if (sessionStorage.getItem("preloadComplete")) {
+			setSource();
+		}
+
 		// temporarily log all this to the screen for testing iOS
 		// const videoStatus = document.querySelector(".video-status");
 		// videoStatus.innerHTML = ``;
@@ -87,16 +106,26 @@ const backgroundImage = `url(/images/${videoBase}-20x11.jpg)`;
 			// i.e. if the video is somewhere else on the site other than the home page
 			// there won't be a preloader, pass the autoplay prop to this component as 'true'
 			// otherwise leave the play() to preloader component
-			console.log(`dataset.autoplay: ${videoElement.dataset.autoplay}`);
-			if (videoElement.dataset.autoplay == "true") {
+			console.log(`dataset.autoplay: ${isVideoAutoplay}`);
+			if (isVideoAutoplay) {
 				videoElement.setAttribute("autoplay", "");
 			}
 		}
 
+		// NB setSource() can be called from 2 places
+		// either after all the vars have been set (above)
+		// or in the window.onload callback (below)
 		function setSource() {
-			videoElement.src = videoSource;
-			// fade-in the video
-			videoElement.classList.add("video-element--show");
+			// if src has not already been set (i.e. is video is autoplay / not on the home page)
+			// set it now
+
+			// console.log(`${videoElement.src ? "src is true" : "src is false"}`);
+
+			if (!videoElement.src) {
+				videoElement.src = videoSource;
+				// fade-in the video
+				videoElement.classList.add("video-element--show");
+			}
 		}
 
 		window.onload = () => {
@@ -134,7 +163,10 @@ const backgroundImage = `url(/images/${videoBase}-20x11.jpg)`;
 		/* don't need an imageset here, just one 20px jpg */
 		/* background-image: -webkit-image-set(var(--backgroundImageSet)); */
 		/* background-image: image-set(var(--backgroundImageSet)); */
+
+		/* commented temporarily --------------------------------------------------------------- */
 		background-image: var(--backgroundImage);
+		/* background-color: #f0f; */
 		/* background-color: hsl(var(--offwhite)); */
 		background-position: top center;
 		background-size: cover;
@@ -181,7 +213,7 @@ const backgroundImage = `url(/images/${videoBase}-20x11.jpg)`;
 		/* background-color: hotpink; */
 
 		opacity: 0;
-		transition: opacity 0.5s ease-in;
+		transition: opacity 250ms ease-in;
 
 		/* will-change: opacity; */
 
@@ -191,6 +223,7 @@ const backgroundImage = `url(/images/${videoBase}-20x11.jpg)`;
 		/* height: 100%; */
 	}
 
+	/* this class is applied by setSource() (see above) */
 	.video-element--show {
 		opacity: 1;
 	}

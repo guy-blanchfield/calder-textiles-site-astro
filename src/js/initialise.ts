@@ -55,14 +55,17 @@ function initialise() {
 	}
 
 	function heroVideoReady() {
-		// if video is already loaded and playing just manually call the canPlayCallback
-		if (heroVideo.readyState >= 2) {
+		// if video is already loaded and playing just manually call the handleVideoReady function
+		// this was formerly readyState >= 2 but it seems a readystate of 1 was too late to catch the loadedmetadata event
+		// yeah according to mdn readystate 1 is eqivalent to HAVE_METADATA
+		// it's always 0 on chrome, and alternates between 0 and 1 on firefox
+		if (heroVideo.readyState >= 1) {
 			console.log(`calling callback manually because readystate is ${heroVideo.readyState}`);
 			// canPlayCallback();
 			handleVideoReady();
 		} else {
 			// otherwise set an event listener for the canplay event
-			console.log(`adding video event listener`);
+			console.log(`adding video event listener because readystate was ${heroVideo.readyState}`);
 			// heroVideo.addEventListener("canplay", canPlayCallback);
 			// try loadedmetadata event instead of canplay event (because safari)
 			// in tests with throttling at 3G, there was a 1 millisecond difference between the

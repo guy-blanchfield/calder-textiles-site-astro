@@ -120,6 +120,8 @@ const { title, bodyClass = "" } = Astro.props;
 <!-- inline script (i.e. non-deferred) to set the hidden class -->
 <!-- so we can test for the preloadComplete session storage key -->
 <script is:inline>
+	// sessionStorage preloadComplete is set in Preloader handleWindowLoad function
+
 	if (!sessionStorage.getItem("preloadComplete")) {
 		// is:inline scripts are excluded from the esbuild console drop so comment these out
 		// console.log(`inline script from Layout.astro is adding hidden class to content-wrapper`);
