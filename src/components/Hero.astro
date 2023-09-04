@@ -291,6 +291,13 @@ const currentPath = Astro.url.pathname;
 		/* it's the delay that is causing bs body colour text to show before the transition */
 		/* why only in build though? */
 		/* transition: all 0.3s ease 3s; */
+
+		/* try targeting specific transition properties instead of all */
+		/* to see if it'll fix the chrome reverse transition issue */
+		/* needs checking!!! */
+		/* seems ok, but can't reproduce the problem on test site either */
+		/* so will need checking again, maybe after restart */
+		/* transition: opacity 0.3s ease, transform 0.3s ease; */
 		transition: all 0.3s ease;
 	}
 

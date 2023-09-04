@@ -42,6 +42,11 @@ const {
 			<!-- horizontal padding only here, set the vertical padding in custom (because of the negative margin fiddle)  -->
 			<div class="section-pagecontent__content px-3">
 				<!-- h2 was py-5 but it needs more so do it with custom css -->
+
+				<!-- ideas about the sketchy scrolling on about us in firefox -->
+				<!-- disable the transition until page is loaded -->
+				<!-- that way it wouldn't affect the scroll within page, only the anchor link to new page -->
+				<!-- we'd have to use custom css not aos -->
 				<h2 class="section-pagecontent__heading display-5 serif" data-aos="fade-up">{heading}</h2>
 
 				<div class="row" data-aos="fade-up">
@@ -84,7 +89,32 @@ const {
 	</section>
 </div>
 
+<script>
+	/*
+	window.onload = () => {
+		document.querySelectorAll(".custom-fade-up-hide").forEach((element) => element.classList.add("custom-fade-up"));
+	};
+	*/
+</script>
+
 <style define:vars={{ textColour, bgColour }}>
+	/* custom fade up stuff */
+	/* so the transition can be applied on window.onload */
+	/* to stop it stuttering when linking to index#aboutus */
+
+	/* nah that hasn't made any difference!! */
+
+	/* .custom-fade-up-hide {
+		opacity: 0;
+		transform: translateY(200px);
+		transition: opacity 0.3s ease, transform 0.3s ease;
+	}
+
+	.custom-fade-up {
+		opacity: 1;
+		transform: translateY(0);
+	} */
+
 	.section-pagecontent {
 		/* to make the section stretch to fit main (if there's no other sections) */
 		/* main has display: flex, flex-direction: column */
