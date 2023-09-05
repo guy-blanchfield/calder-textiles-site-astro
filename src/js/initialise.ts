@@ -24,16 +24,17 @@ function initialise() {
 		console.log("showHeroText function");
 
 		// if the --visible class isn't there, add it
-		if (!heroTextDiv.classList.contains("hero__text--visible")) {
-			// tried doing this with a delay on the transition property in the --visible class
-			// but chrome didn't like it, it kept showing the div at the end of its transition
-			// for the duration of the delay, then starting the transition
+		// not sure we need this conditional, classList.add should be smart enough
+		// if (!heroTextDiv.classList.contains("hero__text--visible")) {
+		// tried doing this with a delay on the transition property in the --visible class
+		// but chrome didn't like it, it kept showing the div at the end of its transition
+		// for the duration of the delay, then starting the transition
 
-			// so we'll use a setTimeout with a half second delay
+		// so we'll use a setTimeout with a half second delay
 
-			// it needs a delay because the image or video have a 0.5s fade in time
-			setTimeout(handleHeroTextTransition, 500);
-		}
+		// it needs a delay because the image or video have a 0.5s fade in time
+		setTimeout(handleHeroTextTransition, 500);
+		// }
 	}
 
 	async function fontsReady() {
@@ -74,6 +75,20 @@ function initialise() {
 		}
 	}
 
+	function playVideo(video: HTMLMediaElement) {
+		// play() follows the same rules as autoplay, and all modern browsers are cool with it
+		// so play() will do, maybe in a try catch if we want to handle the error
+		try {
+			video.play();
+			// temp for testing
+			// videoStatus.innerHTML += `<p>Playing video OK</p>`;
+		} catch (err) {
+			console.log(`Error playing video: ${err}`);
+			// temp for testing
+			// videoStatus.innerHTML += `<p>Error playing video: ${err}</p>`;
+		}
+	}
+
 	function handleVideoReady() {
 		// const eventTime = new Date();
 		console.log(`Video ready: ${heroVideo.src}`);
@@ -85,20 +100,11 @@ function initialise() {
 		// videoStatus.innerHTML += `<p>Video ready: ${heroVideo.src}</p>`;
 
 		// if video hasn't been set to autoplay by the VideoFullWidthComponent, play it now
+		// AND if location hash is not #aboutus - I says nah, transition still stutters, it's not the video
 		if (heroVideo.dataset.autoplay == "false") {
 			console.log(`trying to play() ${heroVideo.src}`);
 
-			// play() follows the same rules as autoplay, and all modern browsers are cool with it
-			// so play() will do, maybe in a try catch if we want to handle the error
-			try {
-				heroVideo.play();
-				// temp for testing
-				// videoStatus.innerHTML += `<p>Playing video OK</p>`;
-			} catch (err) {
-				console.log(`Error playing video: ${err}`);
-				// temp for testing
-				// videoStatus.innerHTML += `<p>Error playing video: ${err}</p>`;
-			}
+			playVideo(heroVideo);
 		}
 
 		// we only want the first canplay event
@@ -130,15 +136,7 @@ function initialise() {
 
 			// play() follows the same rules as autoplay, and all modern browsers are cool with it
 			// so play() will do, maybe in a try catch if we want to handle the error
-			try {
-				heroVideo.play();
-				// temp for testing
-				// videoStatus.innerHTML += `<p>Playing video OK</p>`;
-			} catch (err) {
-				console.log(`Error playing video: ${err}`);
-				// temp for testing
-				// videoStatus.innerHTML += `<p>Error playing video: ${err}</p>`;
-			}
+			playVideo;
 		}
 
 		// we only want the first canplay event

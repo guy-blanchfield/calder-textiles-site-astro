@@ -128,10 +128,12 @@ const backgroundImage = `url(/images/${videoBase}-20x11.jpg)`;
 			}
 		}
 
-		window.onload = () => {
+		// this was window.onload but we're using the window load event quite a lot
+		// so addEventListener is safer
+		window.addEventListener("load", () => {
 			setSource();
 			addAutoplay();
-		};
+		});
 	} // end if
 </script>
 

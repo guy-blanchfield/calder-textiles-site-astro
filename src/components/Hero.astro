@@ -294,11 +294,11 @@ const currentPath = Astro.url.pathname;
 
 		/* try targeting specific transition properties instead of all */
 		/* to see if it'll fix the chrome reverse transition issue */
-		/* needs checking!!! */
+		/* checked on build preview 05/09/2023 */
 		/* seems ok, but can't reproduce the problem on test site either */
 		/* so will need checking again, maybe after restart */
-		/* transition: opacity 0.3s ease, transform 0.3s ease; */
-		transition: all 0.3s ease;
+		transition: opacity 0.3s ease, transform 0.3s ease;
+		/* transition: all 0.3s ease; */
 	}
 
 	@media (max-width: 576px) {
@@ -324,6 +324,7 @@ const currentPath = Astro.url.pathname;
 	}
 
 	/* to remove the transition from hero__text */
+	/* this gets added by initialise > handleHeroTextTransition() */
 	.hero__text--transitioncomplete {
 		transition: none;
 	}

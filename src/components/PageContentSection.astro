@@ -49,7 +49,7 @@ const {
 				<!-- we'd have to use custom css not aos -->
 				<h2 class="section-pagecontent__heading display-5 serif" data-aos="fade-up">{heading}</h2>
 
-				<div class="row" data-aos="fade-up">
+				<div class="row section-pagecontent__row" data-aos="fade-up">
 					<!-- using padding-end (pe-sm-5) to reduce the line length slightly -->
 					<!-- only for sm and above i.e. not for mobile -->
 					<!-- this will do for now, columnLayout is either going to be 1 or 2, 2 is the default -->
@@ -95,6 +95,52 @@ const {
 		document.querySelectorAll(".custom-fade-up-hide").forEach((element) => element.classList.add("custom-fade-up"));
 	};
 	*/
+
+	// if url has #aboutus on load, remove transition from page content bc it's a bit stuttery on firefox
+	// probably because of the video??
+	// if url has a #
+
+	// tried this on a window load event, but it doesn't remove the attributes quickly enough before aos animates
+	// this seems to work this way, although keep an eye on it, when we do the build
+
+	// something like this but adding the aos-animate once window has loaded
+
+	// hmm maybe it's actually the hero text transition that's the problem?? nope still skanky
+	// even with video not playing and heroText not called, it's still skanky!!!! wtf?
+
+	let sectionPageContent: HTMLElement;
+	let aosElements: NodeList;
+
+	if (location.hash === "#aboutus") {
+		sectionPageContent = document.querySelector(".section-pagecontent__content");
+		aosElements = sectionPageContent.querySelectorAll('[data-aos="fade-up"]');
+
+		console.log(`aosElements length: ${aosElements.length}`);
+		aosElements.forEach((aosElement: HTMLElement) => {
+			// aosElement.removeAttribute("data-aos")
+			// delete aosElement.dataset.aos;
+			// belt and braces - take the aos classes off as well, doesn't really need it
+			// aosElement.classList.remove("aos-animate", "aos-init");
+			console.log(`deleting: ${aosElement}`);
+		});
+
+		// console.log("removing data-aoses: " + aosElements);
+		// document.documentElement.classList.add("scroll-auto");
+
+		// window.addEventListener("load", windowLoadHandler);
+	}
+
+	function windowLoadHandler() {
+		//  now add the aos classes back in
+		//  nah this doesn't work
+		aosElements.forEach((aosElement: HTMLElement) => {
+			// aosElement.classList.add("aos-init", "aos-animate");
+			aosElement.classList.add("aos-init");
+			// aosElement.setAttribute("data-aos", "fade-up");
+			// console.log(`deleting: ${aosElement}`);
+			console.log(`Adding class back for: ${aosElement}`);
+		});
+	}
 </script>
 
 <style define:vars={{ textColour, bgColour }}>

@@ -149,6 +149,17 @@ const { title, bodyClass = "" } = Astro.props;
     
 } */
 
+	/* script will add this class if url has a hash in it on loading */
+	/* so it doesn't smooth scroll on linking to a new page with a hash */
+	/* but still smooth scrolls for within page anchor links */
+	/* it gets added to html tag, that's where bootstrap is setting scroll-behaviour: smooth */
+
+	/* NB this didn't work :( */
+	/* about us page content fade up was still stuttery on linking to #aboutus from another page */
+	.scroll-auto {
+		scroll-behavior: auto;
+	}
+
 	.content-wrapper {
 		/* replaces stuff on body to get the content to stretch to fill the window */
 
