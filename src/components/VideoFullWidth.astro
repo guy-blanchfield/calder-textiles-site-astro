@@ -121,12 +121,12 @@ const backgroundImage = `url(/images/${videoBase}-20x11.jpg)`;
 		function setSource() {
 			// ------------------- to fix the stuttery page content fade-up ----------------------------
 
-			// The stuttery fade-up is caused the presence of the video.
+			// The stuttery fade-up in firefox is caused the presence of the video.
 			// It doesn't matter if the video's playing or not, just that it's there
 			// the only time the transition is smooth is when the the video src isn't set
 
-			// so if url has #aboutus on load, delay setting the video src until the pageContent fade-up transition
-			// has completed
+			// so if url has #aboutus on load, delay setting the video src until the
+			// pageContent fade-up transition has completed
 
 			// NB tested this and it almost certainly makes a difference
 			// it's possible that some of the problem is hardware acceleration in firefox
@@ -134,12 +134,25 @@ const backgroundImage = `url(/images/${videoBase}-20x11.jpg)`;
 
 			// get a reference to one of the transitioning page content elements
 			const pageContentHeading = document.querySelector(".section-pagecontent__heading");
-			const falseyVar = false;
+
+			// the following let is a ref id for the setTimeout that we create below
+			// think the returned value from a setTimeout is an integer id
+			let transitionEndFallback: number;
 
 			if (location.hash === "#aboutus") {
 				console.log("setting transitionend listener");
 				pageContentHeading.addEventListener("transitionend", pageContentTransitionEndHandler);
 				// pageContentHeading.setAttribute("data-event-transitioneend", "true");
+
+				// in the case of a page reload when url is #aboutus and user has scrolled back to the top
+				// i.e. the video is showing and playing, the reload will not set video source
+				// because it's waiting for the page content transitionend, but that won't come until the
+				// page content is in view (or close enough to the view port for the intersection observer to do its thing)
+				// so we need a fallback
+				// probably a settimeout, say half a second
+				// the timeout will need to be cancelled by the transition end
+				//  it's initialised above - typescript doesn't like it being declared inside an if
+				transitionEndFallback = setTimeout(pageContentTransitionEndHandler, 500);
 			} else {
 				doSetSource();
 			}
@@ -153,17 +166,19 @@ const backgroundImage = `url(/images/${videoBase}-20x11.jpg)`;
 				console.log("page content transitionend!");
 				doSetSource();
 				pageContentHeading.removeEventListener("transitionend", pageContentTransitionEndHandler);
+				// cancel the fallback timeout
+				clearTimeout(transitionEndFallback);
+				console.log("clear the fallback timeout");
 			}
 
 			// the actual set source procedure
 			function doSetSource() {
-				// probaly don't need this conditional now, set source should only be called once (from one place)
-				if (!videoElement.src) {
-					console.log("setting video source");
-					videoElement.src = videoSource;
-					// fade-in the video
-					videoElement.classList.add("video-element--show");
-				}
+				// probaly don't need any conditional now (was if (!videoElement.src)),
+				// set source should only be called once (from one place)
+				console.log("setting video source");
+				videoElement.src = videoSource;
+				// fade-in the video
+				videoElement.classList.add("video-element--show");
 			}
 		}
 
