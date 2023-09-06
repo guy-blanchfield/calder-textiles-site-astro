@@ -79,16 +79,18 @@ const backgroundImage = `url(/images/${videoBase}-20x11.jpg)`;
 		// on every refresh or return to the homepage
 		// so set source here, instead of waiting for window.load
 
-		// set it conditionally by !isVideoAutoplay (assigned above)
-		// just in case it's a video somewhere other than the homepage
-		// use the set source function, that will also add the --show class
-
 		// the play command will come later in initialise.js > handleVideoReady()
 		// we want the video to show as soon as possible
 
-		if (sessionStorage.getItem("preloadComplete")) {
-			setSource();
-		}
+		// do we need a condition here at all?
+		// why not just set source here and wait for either initialise to video.play()
+		// or the onload to set autoplay
+
+		//  seems like we don't!
+
+		// if (sessionStorage.getItem("preloadComplete")) {
+		setSource();
+		// }
 
 		// temporarily log all this to the screen for testing iOS
 		// const videoStatus = document.querySelector(".video-status");
@@ -112,26 +114,63 @@ const backgroundImage = `url(/images/${videoBase}-20x11.jpg)`;
 			}
 		}
 
-		// NB setSource() can be called from 2 places
+		// NB setSource() used be called from 2 places
 		// either after all the vars have been set (above)
 		// or in the window.onload callback (below)
+		// but now it's just called once after the vars are set
 		function setSource() {
-			// if src has not already been set (i.e. is video is autoplay / not on the home page)
-			// set it now
+			// ------------------- to fix the stuttery page content fade-up ----------------------------
 
-			// console.log(`${videoElement.src ? "src is true" : "src is false"}`);
+			// The stuttery fade-up is caused the presence of the video.
+			// It doesn't matter if the video's playing or not, just that it's there
+			// the only time the transition is smooth is when the the video src isn't set
 
-			if (!videoElement.src) {
-				videoElement.src = videoSource;
-				// fade-in the video
-				videoElement.classList.add("video-element--show");
+			// so if url has #aboutus on load, delay setting the video src until the pageContent fade-up transition
+			// has completed
+
+			// NB tested this and it almost certainly makes a difference
+			// it's possible that some of the problem is hardware acceleration in firefox
+			// tried that off, but it was generally better on
+
+			// get a reference to one of the transitioning page content elements
+			const pageContentHeading = document.querySelector(".section-pagecontent__heading");
+			const falseyVar = false;
+
+			if (location.hash === "#aboutus") {
+				console.log("setting transitionend listener");
+				pageContentHeading.addEventListener("transitionend", pageContentTransitionEndHandler);
+				// pageContentHeading.setAttribute("data-event-transitioneend", "true");
+			} else {
+				doSetSource();
+			}
+
+			// following 2 functions are only required by setSource
+			// so they're nested inside setSource
+
+			// named function for the event listener
+			// so it can be removed once it has run
+			function pageContentTransitionEndHandler() {
+				console.log("page content transitionend!");
+				doSetSource();
+				pageContentHeading.removeEventListener("transitionend", pageContentTransitionEndHandler);
+			}
+
+			// the actual set source procedure
+			function doSetSource() {
+				// probaly don't need this conditional now, set source should only be called once (from one place)
+				if (!videoElement.src) {
+					console.log("setting video source");
+					videoElement.src = videoSource;
+					// fade-in the video
+					videoElement.classList.add("video-element--show");
+				}
 			}
 		}
 
 		// this was window.onload but we're using the window load event quite a lot
 		// so addEventListener is safer
 		window.addEventListener("load", () => {
-			setSource();
+			// setSource();
 			addAutoplay();
 		});
 	} // end if

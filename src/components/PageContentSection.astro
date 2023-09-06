@@ -96,51 +96,7 @@ const {
 	};
 	*/
 
-	// if url has #aboutus on load, remove transition from page content bc it's a bit stuttery on firefox
-	// probably because of the video??
-	// if url has a #
-
-	// tried this on a window load event, but it doesn't remove the attributes quickly enough before aos animates
-	// this seems to work this way, although keep an eye on it, when we do the build
-
-	// something like this but adding the aos-animate once window has loaded
-
-	// hmm maybe it's actually the hero text transition that's the problem?? nope still skanky
-	// even with video not playing and heroText not called, it's still skanky!!!! wtf?
-
-	let sectionPageContent: HTMLElement;
-	let aosElements: NodeList;
-
-	if (location.hash === "#aboutus") {
-		sectionPageContent = document.querySelector(".section-pagecontent__content");
-		aosElements = sectionPageContent.querySelectorAll('[data-aos="fade-up"]');
-
-		console.log(`aosElements length: ${aosElements.length}`);
-		aosElements.forEach((aosElement: HTMLElement) => {
-			// aosElement.removeAttribute("data-aos")
-			// delete aosElement.dataset.aos;
-			// belt and braces - take the aos classes off as well, doesn't really need it
-			// aosElement.classList.remove("aos-animate", "aos-init");
-			console.log(`deleting: ${aosElement}`);
-		});
-
-		// console.log("removing data-aoses: " + aosElements);
-		// document.documentElement.classList.add("scroll-auto");
-
-		// window.addEventListener("load", windowLoadHandler);
-	}
-
-	function windowLoadHandler() {
-		//  now add the aos classes back in
-		//  nah this doesn't work
-		aosElements.forEach((aosElement: HTMLElement) => {
-			// aosElement.classList.add("aos-init", "aos-animate");
-			aosElement.classList.add("aos-init");
-			// aosElement.setAttribute("data-aos", "fade-up");
-			// console.log(`deleting: ${aosElement}`);
-			console.log(`Adding class back for: ${aosElement}`);
-		});
-	}
+	// NB!!! script to fix the stuttery fade-up of page content heading and div is in VideoFullWidth
 </script>
 
 <style define:vars={{ textColour, bgColour }}>
@@ -150,7 +106,7 @@ const {
 
 	/* nah that hasn't made any difference!! */
 
-	/* .custom-fade-up-hide {
+	.custom-fade-up-hide {
 		opacity: 0;
 		transform: translateY(200px);
 		transition: opacity 0.3s ease, transform 0.3s ease;
@@ -159,7 +115,7 @@ const {
 	.custom-fade-up {
 		opacity: 1;
 		transform: translateY(0);
-	} */
+	}
 
 	.section-pagecontent {
 		/* to make the section stretch to fit main (if there's no other sections) */
