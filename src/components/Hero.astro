@@ -297,7 +297,8 @@ const currentPath = Astro.url.pathname;
 		/* checked on build preview 05/09/2023 */
 		/* seems ok, but can't reproduce the problem on test site either */
 		/* so will need checking again, maybe after restart */
-		transition: opacity 0.3s ease, transform 0.3s ease;
+		/* aos default duration is 400, so use that for this custom transition */
+		transition: opacity 400ms ease, transform 400ms ease;
 		/* transition: all 0.3s ease; */
 	}
 
