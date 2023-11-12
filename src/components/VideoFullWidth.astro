@@ -12,7 +12,9 @@ const videoSourcePart = `/video/${videoBase}`;
 // let's try the 20px blurred image thing
 // just so there's not a big blank space while the video loads
 // doesn't need to be an imageset, just a single image
-const backgroundImage = `url(/images/${videoBase}-20x11.jpg)`;
+const backgroundImageTiny = `url(/images/${videoBase}-20x11.jpg)`;
+// the LQIP, currently 1440 x 810
+const backgroundImageLQIP = `url(/images/${videoBase}-lqip-blur.jpg)`;
 ---
 
 <!-- 
@@ -186,6 +188,9 @@ const backgroundImage = `url(/images/${videoBase}-20x11.jpg)`;
 
 		// this was window.onload but we're using the window load event quite a lot
 		// so addEventListener is safer
+		// addAutoplay() is only in case of videos that aren't on the home page
+		// and have the data-autoplay attribute set to false
+		// (homepage video currently has autoplay set true, through the prop videoAutoplay)
 		window.addEventListener("load", () => {
 			// setSource();
 			addAutoplay();
@@ -193,7 +198,7 @@ const backgroundImage = `url(/images/${videoBase}-20x11.jpg)`;
 	} // end if
 </script>
 
-<style define:vars={{ backgroundImage }}>
+<style define:vars={{ backgroundImageTiny, backgroundImageLQIP }}>
 	/*
 	.video-status {
 		color: white;
@@ -222,8 +227,8 @@ const backgroundImage = `url(/images/${videoBase}-20x11.jpg)`;
 		/* background-image: -webkit-image-set(var(--backgroundImageSet)); */
 		/* background-image: image-set(var(--backgroundImageSet)); */
 
-		/* commented temporarily --------------------------------------------------------------- */
-		background-image: var(--backgroundImage);
+		background-image: var(--backgroundImageTiny);
+		background-image: var(--backgroundImageLQIP);
 		/* background-color: #f0f; */
 		/* background-color: hsl(var(--offwhite)); */
 		background-position: top center;
@@ -254,16 +259,24 @@ const backgroundImage = `url(/images/${videoBase}-20x11.jpg)`;
 		height: 100%;
 
 		/* The <video> element is a replaced element — its display value is inline */
-		display: block;
+		/* new reset should cover this now (uses vertical align instead of display: block) */
+		/* display: block; */
 		object-fit: cover;
 
+		/* ------------------------------ if the video position goes awry ------------------------------- */
+
 		/* to keep the video horizontally centered but starting from the top */
+		/* not sure why these rules were here, seems fine without them */
+		/* and the video now lines up with the background image better */
+		/* but keep an eye on things, it must have served some purpose */
+		/*
 		position: absolute;
-		/* position: relative; */
 		top: 0;
 		left: 50%;
-		/* left: 520px; */
 		transform: translateX(-50%);
+		*/
+
+		/* --------------------------------------------------------------------------------------------- */
 
 		/* bg has to go on element, not container */
 
@@ -271,7 +284,9 @@ const backgroundImage = `url(/images/${videoBase}-20x11.jpg)`;
 		/* background-color: hotpink; */
 
 		opacity: 0;
-		transition: opacity 250ms ease-in;
+		/* transition-duration was 250ms - way too short */
+		/* needs to be long otherwise it looks like a janky shift */
+		transition: opacity 2000ms ease-in;
 
 		/* will-change: opacity; */
 

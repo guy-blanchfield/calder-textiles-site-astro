@@ -1,3 +1,8 @@
+// currently the initialise function is called by the script section of Preloader.astro
+// in two places:
+// either in the function handleTransitionEnd()
+// or the globally added DOMContentLoaded listener
+
 function initialise() {
 	// get refs ----------------------------------------------
 
@@ -33,7 +38,9 @@ function initialise() {
 		// so we'll use a setTimeout with a half second delay
 
 		// it needs a delay because the image or video have a 0.5s fade in time
-		setTimeout(handleHeroTextTransition, 500);
+		// video now has a 2sec fade in so maybe we need some kind of conditional here?
+		const heroTextTransitionDuration = heroVideo ? 2000 : 500;
+		setTimeout(handleHeroTextTransition, heroTextTransitionDuration);
 		// }
 	}
 

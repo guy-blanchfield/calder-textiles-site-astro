@@ -68,8 +68,11 @@ const fallbackSrc = `/images/${imageBase}-960x540.jpg`;
 // const backgroundImageSet = `url(/images/${imageBase}-20x11.webp) type("image/webp"), url(/images/${imageBase}-20x11.jpg) type("image/jpeg")`;
 // const backgroundImageSet = `url(/images/${imageBase}-20x11.jpg) type("image/jpeg")`;
 
-// in which case there's no need for imageset, just a single background-image will do
-const backgroundImage = `url(/images/${imageBase}-20x11.jpg)`;
+// in which case there's no need for imageset, just use background-image to stack/layer
+// two images, one 20px (tiny, really blurred), one the LQIP
+// the tiny one will load first, the lqip will replace it (layer over the top of it) as soon as it's loaded
+const backgroundImageTiny = `url(/images/${imageBase}-20x11.jpg)`;
+const backgroundImageLQIP = `url(/images/${imageBase}-lqip.jpg)`;
 ---
 
 <picture class:list={pictureClasses}>
@@ -157,7 +160,14 @@ const backgroundImage = `url(/images/${imageBase}-20x11.jpg)`;
 
 		// check if the image is loaded first
 		// otherwise add a load event listener
-		if (pictureImg?.complete) {
+
+		// NB! if the all the srcSet images fail (e.g. 404s)
+		// pictureImg.complete will return true
+		// so we need to test whether the scr image exists
+		// maybe try getting the height / width of the image?
+		// if the image has loaded these will be positive values otherwsie they'll be 0
+
+		if (pictureImg?.complete && pictureImg.naturalWidth) {
 			// we want a different process here
 			// from when the load event fires
 			// bc if the image is already loaded
@@ -182,7 +192,7 @@ const backgroundImage = `url(/images/${imageBase}-20x11.jpg)`;
 	});
 </script>
 
-<style define:vars={{ backgroundImage }}>
+<style define:vars={{ backgroundImageTiny, backgroundImageLQIP }}>
 	/* firstly, lets have 100% width and height, and display block for the picture elements */
 	/* definitely need the width and height to make the picture */
 	/* (and hence the image) fill its container (section-picture or hero) */
@@ -196,7 +206,8 @@ const backgroundImage = `url(/images/${imageBase}-20x11.jpg)`;
 	.section-picture__picture {
 		width: 100%;
 		height: 100%;
-		display: block;
+		/* display:block replaced by vertical-align in the reset (added 12-11-2023) */
+		/* display: block; */
 
 		/* tried doing this as flex-grow: 1 (like the video container div), problematic, leave as is */
 	}
@@ -222,7 +233,8 @@ const backgroundImage = `url(/images/${imageBase}-20x11.jpg)`;
 	.section-picture__image {
 		/* no pointer events because it's a background */
 		pointer-events: none;
-		max-width: initial;
+		/* max-width should be taken care of by the reset (added 12-11-2023) */
+		/* max-width: initial; */
 		width: 100%;
 		height: 100%;
 		/* https://developer.mozilla.org/en-US/docs/Web/CSS/object-fit */
@@ -271,7 +283,18 @@ const backgroundImage = `url(/images/${imageBase}-20x11.jpg)`;
 	.picture--blur-loading {
 		/* background-image: -webkit-image-set(var(--backgroundImageSet)); */
 		/* background-image: image-set(var(--backgroundImageSet)); */
-		background-image: var(--backgroundImage);
+
+		/* use background-image to stack/layer two images, 
+		/* one 20px (tiny, really blurred),  */
+		/* one the LQIP */
+		/* the tiny one will load first, the lqip will replace it (layer over the top of it) as soon as it's loaded */
+		/* the image you want to be on top should go first */
+
+		/* hard code this for testing */
+		/* background-image: url("/images/pink-yarn-1440x810-lqip.jpg"), url("/images/pink-yarn-20x11.jpg"); */
+
+		background-image: var(--backgroundImageTiny), var(--backgroundImageLQIP);
+		/* background-image: var(--backgroundImageLowRes), var(--backgroundImageMediumRes); */
 
 		background-size: cover;
 		/* hero__picture already has position: absolute because of the overlay stuff to put text over the image */
