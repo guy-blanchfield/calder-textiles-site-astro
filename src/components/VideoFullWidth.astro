@@ -3,9 +3,15 @@ export interface Props {
 	videoBase: string;
 	videoAutoplay?: string;
 	pictureClasses?: string; // e.g. hero__picture
+	// might as well have a prop for the fade transition time
+	// that will go into a data-attribute
+	// it will be used in the css to set duration of the fade in when the image or video is ready to display
+	// and also to set the timeout duration of handleHeroTextTransition() (in initialise.ts)
+	// i.e. the hero text fade-up has to wait for the image or video fade-in to finish
+	transitionDuration?: string; // properties of dataset are strings
 }
 
-const { videoBase, videoAutoplay = "true", pictureClasses = "" } = Astro.props;
+const { videoBase, videoAutoplay = "true", pictureClasses = "", transitionDuration = "2000ms" } = Astro.props;
 
 const videoSourcePart = `/video/${videoBase}`;
 
@@ -25,7 +31,15 @@ const backgroundImageLQIP = `url(/images/${videoBase}-lqip-blur.jpg)`;
 
 -->
 <div class="video-container">
-	<video class="video-element" data-source={videoSourcePart} data-autoplay={videoAutoplay} muted loop playsinline>
+	<video
+		class="video-element"
+		data-source={videoSourcePart}
+		data-autoplay={videoAutoplay}
+		data-transition-duration={transitionDuration}
+		muted
+		loop
+		playsinline
+	>
 		<p>Your browser doesn't support HTML video.</p>
 	</video>
 </div>
@@ -198,7 +212,7 @@ const backgroundImageLQIP = `url(/images/${videoBase}-lqip-blur.jpg)`;
 	} // end if
 </script>
 
-<style define:vars={{ backgroundImageTiny, backgroundImageLQIP }}>
+<style define:vars={{ backgroundImageTiny, backgroundImageLQIP, transitionDuration }}>
 	/*
 	.video-status {
 		color: white;
@@ -287,6 +301,8 @@ const backgroundImageLQIP = `url(/images/${videoBase}-lqip-blur.jpg)`;
 		/* transition-duration was 250ms - way too short */
 		/* needs to be long otherwise it looks like a janky shift */
 		transition: opacity 2000ms ease-in;
+		transition-duration: var(--transitionDuration);
+		/* transition: opacity var(--transitionDuration) ease-in; */
 
 		/* will-change: opacity; */
 

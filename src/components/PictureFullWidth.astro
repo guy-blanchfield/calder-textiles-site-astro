@@ -23,11 +23,24 @@ export interface Props {
 	imageClasses: string; // e.g. hero__image
 	// includePortrait?: boolean;
 	lazyLoad?: boolean;
+	// might as well have a prop for the fade transition time
+	// that will go into a data-attribute
+	// it will be used in the css to set duration of the fade in when the image or video is ready to display
+	// and also to set the timeout duration of handleHeroTextTransition() (in initialise.ts)
+	// i.e. the hero text fade-up has to wait for the image or video fade-in to finish
+	transitionDuration?: string; // properties of dataset are strings
 }
 
 // think lazyLoad should be true as default, only the hero picture needs to eager load
 
-const { imageBase, imageAlt = "", pictureClasses, imageClasses, lazyLoad = true } = Astro.props;
+const {
+	imageBase,
+	imageAlt = "",
+	pictureClasses,
+	imageClasses,
+	lazyLoad = true,
+	transitionDuration = "250ms",
+} = Astro.props;
 
 // just create the whole string for each srcset
 // it'll be way tidier than creating objects and arrays to generate the the string dynamically
@@ -143,6 +156,7 @@ const backgroundImageLQIP = `url(/images/${imageBase}-lqip.jpg)`;
 		alt={imageAlt}
 		class:list={imageClasses}
 		loading={lazyLoad ? "lazy" : "eager"}
+		data-transition-duration={transitionDuration}
 		width="960"
 		height="540"
 	/>
@@ -192,7 +206,7 @@ const backgroundImageLQIP = `url(/images/${imageBase}-lqip.jpg)`;
 	});
 </script>
 
-<style define:vars={{ backgroundImageTiny, backgroundImageLQIP }}>
+<style define:vars={{ backgroundImageTiny, backgroundImageLQIP, transitionDuration }}>
 	/* firstly, lets have 100% width and height, and display block for the picture elements */
 	/* definitely need the width and height to make the picture */
 	/* (and hence the image) fill its container (section-picture or hero) */
@@ -346,7 +360,8 @@ const backgroundImageLQIP = `url(/images/${imageBase}-lqip.jpg)`;
 		/* if we want the image to always fade in, put the transition delaration here */
 		/* (and take it off blur-loading img - below) */
 		/* think it's probably a bit nicer here - there's a little flash anyway so at least this looks a bit smoother */
-		transition: opacity 250ms ease-in;
+		/* transition: opacity 250ms ease-in; */
+		transition: opacity var(--transitionDuration) ease-in;
 	}
 
 	.picture--blur-loading img {

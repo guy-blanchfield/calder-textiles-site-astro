@@ -39,8 +39,20 @@ function initialise() {
 
 		// it needs a delay because the image or video have a 0.5s fade in time
 		// video now has a 2sec fade in so maybe we need some kind of conditional here?
-		const heroTextTransitionDuration = heroVideo ? 2000 : 500;
-		setTimeout(handleHeroTextTransition, heroTextTransitionDuration);
+
+		// try using a data-attribute in the html element (heroVideo or heroImage)
+		// and read that here to set the transition-duration
+		// const heroTextTransitionDuration = heroVideo ? 2000 : 500;
+
+		// MDN says: (note that dashes are converted to camel case).
+		const heroTextTransitionDuration = heroImage
+			? heroImage.dataset.transitionDuration
+			: heroVideo.dataset.transitionDuration;
+		// Number() won't work to extract 2000 from "2000ms", use parseInt()
+		// consider adding a bit to this to give the transition a bit of room
+		console.log("herotextTransitionDuration: ", heroTextTransitionDuration);
+		console.log("Number(herotextTransitionDuration): ", parseInt(heroTextTransitionDuration));
+		setTimeout(handleHeroTextTransition, parseInt(heroTextTransitionDuration));
 		// }
 	}
 
