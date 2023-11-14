@@ -11,7 +11,7 @@ export interface Props {
 	transitionDuration?: string; // properties of dataset are strings
 }
 
-const { videoBase, videoAutoplay = "true", pictureClasses = "", transitionDuration = "2000ms" } = Astro.props;
+const { videoBase, videoAutoplay = "true", pictureClasses = "", transitionDuration = "1000ms" } = Astro.props;
 
 const videoSourcePart = `/video/${videoBase}`;
 
@@ -241,11 +241,13 @@ const backgroundImageLQIP = `url(/images/${videoBase}-lqip-blur.jpg)`;
 		/* background-image: -webkit-image-set(var(--backgroundImageSet)); */
 		/* background-image: image-set(var(--backgroundImageSet)); */
 
-		background-image: var(--backgroundImageTiny);
+		/* background-image: var(--backgroundImageLQIP), var(--backgroundImageTiny); */
 		background-image: var(--backgroundImageLQIP);
 		/* background-color: #f0f; */
 		/* background-color: hsl(var(--offwhite)); */
-		background-position: top center;
+		/* position was top center but it's not lining up with the image, */
+		/* try center center (just center should do it) - yeah that's it*/
+		background-position: center;
 		background-size: cover;
 
 		/* from PictureFullWidth hero__picture */
@@ -260,9 +262,17 @@ const backgroundImageLQIP = `url(/images/${videoBase}-lqip-blur.jpg)`;
 		/* keep as position absolute, even though section-picture__picture is position: relative - trust me */
 		/* position: absolute; */
 		/* z-index: 0; */
+
+		/* border: 1px solid #f00; */
+	}
+
+	/* apply the background-images in a separate class, so we have the option to not use them if the video is already loaded */
+	/* not sure this is useful, if the video is in cache then so will the background-images */
+	.video-container--background-images {
 	}
 
 	.video-element {
+		/* border: 1px solid #00f; */
 		/* width and height are very important here! */
 		/* without them the video won't scale to fit the container */
 		/* so object-fit won't work as intended */
@@ -278,6 +288,9 @@ const backgroundImageLQIP = `url(/images/${videoBase}-lqip-blur.jpg)`;
 		object-fit: cover;
 
 		/* ------------------------------ if the video position goes awry ------------------------------- */
+		/* ok, think we've fixed this now, it was because the video-element was using min-height not height */
+		/* so the aspect ratio of the video was forcing video-element to be higher than the vh minus navheight */
+		/* so hopefuly we won't need any of this position: absolute rigmarole */
 
 		/* to keep the video horizontally centered but starting from the top */
 		/* not sure why these rules were here, seems fine without them */

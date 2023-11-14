@@ -37,12 +37,10 @@ function initialise() {
 
 		// so we'll use a setTimeout with a half second delay
 
-		// it needs a delay because the image or video have a 0.5s fade in time
-		// video now has a 2sec fade in so maybe we need some kind of conditional here?
+		// it needs a delay because the image or video have a fade-in time (currently 250ms for image, 2s for video)
 
 		// try using a data-attribute in the html element (heroVideo or heroImage)
 		// and read that here to set the transition-duration
-		// const heroTextTransitionDuration = heroVideo ? 2000 : 500;
 
 		// MDN says: (note that dashes are converted to camel case).
 		const heroTextTransitionDuration = heroImage

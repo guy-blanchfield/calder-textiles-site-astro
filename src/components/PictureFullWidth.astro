@@ -84,8 +84,24 @@ const fallbackSrc = `/images/${imageBase}-960x540.jpg`;
 // in which case there's no need for imageset, just use background-image to stack/layer
 // two images, one 20px (tiny, really blurred), one the LQIP
 // the tiny one will load first, the lqip will replace it (layer over the top of it) as soon as it's loaded
-const backgroundImageTiny = `url(/images/${imageBase}-20x11.jpg)`;
-const backgroundImageLQIP = `url(/images/${imageBase}-lqip.jpg)`;
+
+//  if we want to set background image conditionally, e.g different bg images for Hero and pictureSection
+// we should be able to use the pictureClasses prop
+// in the Hero component pictureClasses will contain 'hero__picture'
+// in the pictureSection component pictureClasses will contain 'section-picture__picture'
+
+/*
+const backgroundImage = pictureClasses.includes("hero")
+	? `url(/images/${imageBase}-lqip-blur.jpg)`
+	: `url(/images/${imageBase}-20x11.jpg)`;
+*/
+
+// think we're just going to use the blur for both hero and pictureSection, at least for now
+
+const backgroundImage = `url(/images/${imageBase}-lqip-blur.jpg)`;
+
+// const backgroundImageTiny = `url(/images/${imageBase}-20x11.jpg)`;
+// const backgroundImageLQIP = `url(/images/${imageBase}-lqip-blur.jpg)`;
 ---
 
 <picture class:list={pictureClasses}>
@@ -206,7 +222,7 @@ const backgroundImageLQIP = `url(/images/${imageBase}-lqip.jpg)`;
 	});
 </script>
 
-<style define:vars={{ backgroundImageTiny, backgroundImageLQIP, transitionDuration }}>
+<style define:vars={{ backgroundImage, transitionDuration }}>
 	/* firstly, lets have 100% width and height, and display block for the picture elements */
 	/* definitely need the width and height to make the picture */
 	/* (and hence the image) fill its container (section-picture or hero) */
@@ -302,15 +318,24 @@ const backgroundImageLQIP = `url(/images/${imageBase}-lqip.jpg)`;
 		/* one 20px (tiny, really blurred),  */
 		/* one the LQIP */
 		/* the tiny one will load first, the lqip will replace it (layer over the top of it) as soon as it's loaded */
-		/* the image you want to be on top should go first */
+		/* NB!!!!! the image you want to be on top should go first */
 
 		/* hard code this for testing */
 		/* background-image: url("/images/pink-yarn-1440x810-lqip.jpg"), url("/images/pink-yarn-20x11.jpg"); */
-
-		background-image: var(--backgroundImageTiny), var(--backgroundImageLQIP);
+		/* not sure about having two blurred images, one following the other */
+		/* looks a bit odd, try without the tiny image, have to keep the lqip bc it's the lcp (tiny image doesn't qualify) */
+		/* thing is, lcp is only a concern for hero images but this component handles the section images as well... */
+		/* do we need some conditional? */
+		/* background-image: var(--backgroundImageLQIP), var(--backgroundImageTiny); */
+		/* only one backgroundImage now, which is set condtionally in the frontmatter */
+		/* depending on whether the component is Hero or pictureSection */
+		background-image: var(--backgroundImage);
 		/* background-image: var(--backgroundImageLowRes), var(--backgroundImageMediumRes); */
 
 		background-size: cover;
+		/* probably need background-position so the background-image aligns with the img when it fades in */
+		background-position: center center;
+
 		/* hero__picture already has position: absolute because of the overlay stuff to put text over the image */
 		/* position: relative won't work for hero__picture, it won't contain the img for a start */
 		/* so we'll have to apply position: relative specifically to section-picture__picture */

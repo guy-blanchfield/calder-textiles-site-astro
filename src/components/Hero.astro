@@ -197,8 +197,9 @@ const currentPath = Astro.url.pathname;
 		/* it's equivalent to 100vh - var(--header-height-calc)) */
 
 		/* first set height with both units (best supported one first) */
-		min-height: 100vh;
-		min-height: 100svh;
+		/* why are these min-height not height? the dimesnions of the video are casuing to overflow without position absolute */
+		height: 100vh;
+		height: 100svh;
 		/* negative margin of the amount we want to subtract */
 		margin-top: calc(var(--header-height-calc) * -1);
 		/* padding of the amount we want to subtract */
@@ -248,28 +249,28 @@ const currentPath = Astro.url.pathname;
 		/* remember to adjust if py value on navbar changes */
 		/* think this is redundant now, just let it center (or go to the top on mobile) */
 		/* padding-top: 6rem; */
-
-		/* border: 1px solid green; */
-
-		/* NB! background now being applied with adjacent sibling selector with :global selector below */
-		/* it needs to be global, because the two siblings are in different components, so have different scope */
 	}
 
-	/* only apply the opacity gradient background if the hero picture has loaded and is showing */
-	/* i.e. has class 'picture--show' */
+	/* only apply the opacity gradient background if the hero is picture not video */
+	/* i.e. has class 'hero__picture' */
 	/* using adjacent sibling selector */
+	/* this was originally selecting hero__overlay + picture--show */
+	/* and was to stop the plain blue background having an gradient overlay on it */
+	/* cos it looked a bit weird */
+	/* but we do actually need the gradient overlay to show over the background images */
+	/* just not over the video */
+	/* this is a matter of taste so it might change but for now, let's not have gradient overlay for the video */
 
 	/* the adjacent sibling selector has to be :global */
 	/* because the two siblings are in different components, so have different scope */
-	:global(.picture--show + .hero__overlay) {
+
+	:global(.hero__picture + .hero__overlay) {
 		/* https://developer.mozilla.org/en-US/docs/Web/CSS/gradient/linear-gradient#values */
 		background: linear-gradient(60deg, hsl(0 0% 0% / 0.8), 33%, hsl(0 0% 0% / 0));
 		/* background: linear-gradient(to right, hsl(0 0% 0% / 0.5), hsl(0 0% 0% / 0)); */
 	}
 
-	/* think we might need the :global here as well because specificity */
-
-	:global(.picture--show + .hero__overlay--none) {
+	:global(.hero__picture + .hero__overlay--none) {
 		background: none;
 	}
 
