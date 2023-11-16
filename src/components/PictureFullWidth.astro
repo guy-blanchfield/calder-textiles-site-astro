@@ -39,7 +39,7 @@ const {
 	pictureClasses,
 	imageClasses,
 	lazyLoad = true,
-	transitionDuration = "250ms",
+	transitionDuration = "500ms",
 } = Astro.props;
 
 // just create the whole string for each srcset
@@ -178,6 +178,7 @@ const backgroundImage = `url(/images/${imageBase}-lqip-blur.jpg)`;
 	/>
 </picture>
 
+<!-- <script define:vars={{ fallbackSrc }}> -->
 <script>
 	// wait for the image to load, then transition the opacity
 	// think this script will only run once, not once for each instance of the component
@@ -185,7 +186,8 @@ const backgroundImage = `url(/images/${imageBase}-lqip-blur.jpg)`;
 
 	const pictureElements = document.querySelectorAll(".picture--blur-load");
 
-	pictureElements.forEach((pictureEl) => {
+	// pictureElements.forEach((pictureEl) => {
+	for (const pictureEl of pictureElements) {
 		const pictureImg = pictureEl.querySelector("img");
 
 		// check if the image is loaded first
@@ -197,7 +199,20 @@ const backgroundImage = `url(/images/${imageBase}-lqip-blur.jpg)`;
 		// maybe try getting the height / width of the image?
 		// if the image has loaded these will be positive values otherwsie they'll be 0
 
-		if (pictureImg?.complete && pictureImg.naturalWidth) {
+		// done plenty of testing and fairly sure .complete and .naturalWidth can be relied on
+		// to refer to the image chosen by the browser from srcset
+		// NOT the fallback path that's in src to start off with
+		// the value for naturalWidth IS related to the vw i.e. the way the browser renders the image
+		// but we only need to know that it's NOT zero
+
+		// it's probably firefox's throttling / caching that can't be trusted
+		// that's what's causing the script to go straight to picture--show
+		// even when throttled (hence not showing the blur lqip, but still waiting for the hq image to download)
+		// hopefully in a live environment this won't happen...?!
+
+		console.log(`complete: ${pictureImg.complete}, naturalWidth: ${pictureImg.naturalWidth}`);
+
+		if (pictureImg?.complete && pictureImg?.naturalWidth) {
 			// we want a different process here
 			// from when the load event fires
 			// bc if the image is already loaded
@@ -206,6 +221,7 @@ const backgroundImage = `url(/images/${imageBase}-lqip-blur.jpg)`;
 			// add 'blur-loading' NOT 'blur-load' (which is the class that identifies which images want a blur-load)
 			// imgLoaded(pictureEl);
 			// maybe we don't need anything to happen here?
+
 			console.log(`${pictureImg.src} is complete so adding picture--show`);
 			pictureEl.classList.add("picture--show");
 		} else {
@@ -219,7 +235,10 @@ const backgroundImage = `url(/images/${imageBase}-lqip-blur.jpg)`;
 				pictureEl.classList.add("picture--show");
 			});
 		}
-	});
+
+		// set src now
+		// pictureImg.src = fallbackSrc;
+	}
 </script>
 
 <style define:vars={{ backgroundImage, transitionDuration }}>
@@ -381,8 +400,15 @@ const backgroundImage = `url(/images/${imageBase}-lqip-blur.jpg)`;
 
 	.picture--blur-load img {
 		/* just hides the image but doesn't set up a transition */
-		opacity: 0;
-		/* if we want the image to always fade in, put the transition delaration here */
+
+		/* opacity: 0 causes an LCP issue */
+		/* see: https://www.debugbear.com/blog/opacity-animation-poor-lcp */
+		/* opacity: 0; */
+		opacity: 0.01;
+		/* ok, 0.1 fixes the LCP thing but now we see the image loading in vertically and then fade in */
+		/* 0.01 seems to work ok and is pretty much invisible - 0.01 seems to be the lowest safe value for opacity (that isn't 0) */
+
+		/* if we want the image to always fade in, put the transition declaration here */
 		/* (and take it off blur-loading img - below) */
 		/* think it's probably a bit nicer here - there's a little flash anyway so at least this looks a bit smoother */
 		/* transition: opacity 250ms ease-in; */

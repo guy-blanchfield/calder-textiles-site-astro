@@ -313,7 +313,8 @@ const backgroundImageLQIP = `url(/images/${videoBase}-lqip-blur.jpg)`;
 		opacity: 0;
 		/* transition-duration was 250ms - way too short */
 		/* needs to be long otherwise it looks like a janky shift */
-		transition: opacity 2000ms ease-in;
+		transition: opacity ease-in;
+		/* transition-duration needs setting separately because it's using a custom property */
 		transition-duration: var(--transitionDuration);
 		/* transition: opacity var(--transitionDuration) ease-in; */
 

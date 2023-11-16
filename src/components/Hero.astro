@@ -280,13 +280,17 @@ const currentPath = Astro.url.pathname;
 
 		/* let's try hiding this until the page has loaded so it comes up after the image / video shows */
 
+		/* 14-11-2023 */
+		/* https://www.debugbear.com/blog/opacity-animation-poor-lcp */
+		/* try setting this to 0.1 to stop the animation affecting the lcp - nope */
+		/* it's the image fade-ins that are affecting the LCP, not the text fade-ups */
 		opacity: 0;
 
 		/* for the fade up */
 		transform: translateY(200px);
 
 		/* transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out; */
-		/*  aos default is animation-timing-function: ease; */
+		/* aos default is animation-timing-function: ease; */
 		/* delay of 0.5s */
 
 		/* it's the delay that is causing bs body colour text to show before the transition */
@@ -299,6 +303,7 @@ const currentPath = Astro.url.pathname;
 		/* seems ok, but can't reproduce the problem on test site either */
 		/* so will need checking again, maybe after restart */
 		/* aos default duration is 400, so use that for this custom transition */
+
 		transition: opacity 400ms ease, transform 400ms ease;
 		/* transition: all 0.3s ease; */
 	}

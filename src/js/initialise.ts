@@ -66,9 +66,9 @@ function initialise() {
 
 	async function heroImageReady() {
 		console.log(`heroImageReady function called`);
-
-		let ready = await heroImage.decode();
-		console.log(`heroImage.decode(): ${ready}`);
+		// console.log("heroImage: ", heroImage);
+		await heroImage.decode();
+		// when the decode promise resolves run showHeroText()
 		showHeroText();
 	}
 

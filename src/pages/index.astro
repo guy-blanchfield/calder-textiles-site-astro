@@ -7,8 +7,9 @@ import ContactSection from "../components/ContactSection.astro";
 import EmptySection from "../components/EmptySection.astro";
 ---
 
-<Layout title="Calder Textiles : Home">
+<Layout title="Calder Textiles : Home" heroImageBase="sheep-walking-mountain">
 	<Hero imageBase="sheep-walking-mountain" imageAlt="Sheep walking on the mountain" anchorLink="#aboutus">
+		<!-- <Hero imageBase="pink-yarn" imageAlt="Sheep walking on the mountain" anchorLink="#aboutus"> -->
 		<!-- using Fragment here, span also works, but fragment produces tidier markup -->
 		<Fragment slot="hero-heading">Welcome to <br />Calder Textiles</Fragment>
 		<Fragment slot="hero-para">

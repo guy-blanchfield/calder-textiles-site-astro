@@ -6,7 +6,7 @@ import PictureSection from "../components/PictureSection.astro";
 import ContactSection from "../components/ContactSection.astro";
 ---
 
-<Layout title="Products : Calder Textiles">
+<Layout title="Products : Calder Textiles" heroImageBase="cream-yarn">
 	<main>
 		<Hero imageBase="cream-yarn" imageAlt="Cream coloured yarn">
 			<!-- using Fragment here, span also works, but fragment produces tidier markup -->
@@ -20,15 +20,15 @@ import ContactSection from "../components/ContactSection.astro";
 			<Fragment slot="page-content">
 				<p>Yarns made on the Woollen Spinning System</p>
 				<!-- fs-6 is 1rem, to match <p> -->
-				<h4 class="fs-6 fw-bold mb-0">Uses</h4>
+				<h3 class="fs-6 fw-bold mb-0">Uses</h3>
 				<p class="mb-4">Axminster, Wilton, Tufted, Colortec, Graphics, Flat weave, pass machine and rug manufacture.</p>
 
-				<h4 class="fs-6 fw-bold mb-0">Raw materials</h4>
+				<h3 class="fs-6 fw-bold mb-0">Raw materials</h3>
 				<p class="mb-4">
 					All Wool, 80/20 Wool/Polyamide, 80/10/10<br />
 					Wool/Polyamide/Polyester Melty and Wool blends.
 				</p>
-				<h4 class="fs-6 fw-bold mb-0">Count Ranges</h4>
+				<h3 class="fs-6 fw-bold mb-0">Count Ranges</h3>
 				<p>42 yards/oz. - 146 yards/oz. Dewsbury (N.M 1.35 to N.M 4.7).</p>
 			</Fragment>
 
@@ -46,7 +46,7 @@ import ContactSection from "../components/ContactSection.astro";
 
 		<PictureSection imageBase="pom-colour-samples" />
 
-		<ContactSection />
+		<!-- <ContactSection /> -->
 	</main>
 </Layout>
 

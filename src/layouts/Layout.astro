@@ -16,8 +16,8 @@ import "../styles/global.css";
 export interface Props {
 	title: string;
 	bodyClass?: string;
-	heroImageBase?: string;
-	sectionImageBase?: string;
+	heroImageBase?: string; // so we can preload the lqip for the hero
+	sectionImageBase?: string; // so we can preload the lqip for the pictureSection (probably won't tbh)
 	// bodyBgColour?: string;
 }
 
@@ -36,11 +36,11 @@ const { title, bodyClass = "", heroImageBase = "", sectionImageBase = "" } = Ast
 let heroImagePreloadPath: string;
 let sectionImagePreloadPath: string;
 if (heroImageBase) {
-	heroImagePreloadPath = `images/${heroImageBase}-lqip.jpg`;
+	heroImagePreloadPath = `images/${heroImageBase}-lqip-blur.jpg`;
 }
 
 if (sectionImageBase) {
-	sectionImagePreloadPath = `images/${sectionImageBase}-lqip.jpg`;
+	sectionImagePreloadPath = `images/${sectionImageBase}-lqip-blur.jpg`;
 }
 ---
 
@@ -156,7 +156,7 @@ if (sectionImageBase) {
 <!-- seems a bit hacky but this is the only way it seems to work in astro -->
 <!-- see https://github.com/michalsnik/aos/issues/815#issuecomment-1500056742 -->
 <!-- don't worry about lighthouse performance in the dev version build version takes care of it -->
-<script src="../js/setup-aos.js"></script>
+<!-- <script src="../js/setup-aos.js"></script> -->
 
 <!-- <style define:vars={{bodyBgColour}}> -->
 <style>
