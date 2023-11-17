@@ -16,6 +16,9 @@
 <!-- it needs to have executed before the external google script calls initMap -->
 
 <script is:inline>
+	// NB "Uncaught (in promise) ReferenceError: google is not defined" probably means we've lost .env
+	// i.e. we cloned the repo but didn't add the .env, which is gitignored
+	// maybe we need some kind of error handling for this?
 	const apiKey = import.meta.env.MAPS_API_KEY;
 
 	// prettier-ignore

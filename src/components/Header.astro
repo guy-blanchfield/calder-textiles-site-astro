@@ -252,7 +252,9 @@ const currentPath = Astro.url.pathname;
 		background-color: var(--accent);
 	}
 
-	.navbar-caldertextiles {
+	/* we need higher specificity here other bootstrap overrides some rules / properties */
+	/* hence nav.classname */
+	nav.navbar-caldertextiles {
 		/* min-height is no good, the flex centering causes things to shift when the nav expands / collapses */
 		/* try setting vars for the logo height and the nav bar vertical padding */
 		/* and use these to calculate the hero height */
