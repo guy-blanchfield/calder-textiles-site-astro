@@ -211,9 +211,47 @@ const currentPath = Astro.url.pathname;
 		const ariaCurrentValue = location.href.includes("aboutus") ? "page" : "false";
 		document.querySelector("#nav-link__aboutus").setAttribute("aria-current", ariaCurrentValue);
 	}
+
+	// quick dirty replacement for bootstrap navmenu js
+	const navbarToggler: HTMLButtonElement = document.querySelector(".navbar-toggler");
+	const toggleTarget = navbarToggler.dataset.bsTarget;
+	const navMenu: HTMLDivElement = document.querySelector(toggleTarget);
+
+	const toggleNavbar = (e: Event) => {
+		// console.log(e.target);
+		console.log("toggle!");
+		navMenu.classList.toggle("show");
+		// also toggle aria-expanded
+		navbarToggler.setAttribute(
+			"aria-expanded",
+			navbarToggler.getAttribute("aria-expanded") === "true" ? "false" : "true"
+		);
+	};
+
+	navbarToggler.addEventListener("click", toggleNavbar);
 </script>
 
 <style>
+	/* this is a bootstrap class */
+	/* but let's try adding to it anyway */
+	/* when we come to do the proper version, see kp's height transition trick */
+	/* https://www.youtube.com/watch?v=B_n4YONte5A */
+
+	/* max-height is dubious, we have to set an arbitrary value */
+	/*  
+	.navbar-collapse {
+		
+		max-height: 1000px;
+		overflow: hidden;
+		transition: max-height 400ms ease-in-out;
+	}
+
+	.navbar-collapse:not(.show) {
+		max-height: 0;
+	}
+
+	*/
+
 	header {
 	}
 
