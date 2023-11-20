@@ -86,6 +86,7 @@ const currentPath = Astro.url.pathname;
 				type="button"
 				aria-expanded="false"
 				aria-label="Toggle Mobile Navigation Menu"
+				aria-controls="navmenu"
 				data-bs-toggle="collapse"
 				data-bs-target="#navmenu"
 			>
@@ -116,17 +117,23 @@ const currentPath = Astro.url.pathname;
 				<Icon
 					name="ic:baseline-menu"
 					class="navbar-caldertextiles__toggler-icon navbar-caldertextiles__toggler-icon--menu"
+					aria-hidden="true"
 				/>
 				<Icon
 					name="ic:baseline-close"
 					class="navbar-caldertextiles__toggler-icon navbar-caldertextiles__toggler-icon--close"
+					aria-hidden="true"
 				/>
+				<!--non-icon button content for screen-readers -->
+				<span class="visually-hidden">Menu</span>
 			</button>
 			<!-- NB! id="navmenu" not #navmenu! -->
-			<div class="collapse navbar-collapse" id="navmenu">
+			<div class="collapse navbar-collapse" id="navmenu" aria-hidden="true">
 				<!-- ul with a class of navbar-nav bc it's the navbar navigation -->
 				<!-- and ms-auto (margin-start auto) pushes it right with the magic of margin auto -->
-				<ul class="navbar-nav ms-auto me-2">
+				<!-- add a lg to the margin-auto, we don't need it for the mobile nav -->
+				<!-- and it's messing with the grid that we need for the transition -->
+				<ul class="navbar-nav ms-lg-auto me-2">
 					<!-- and each li needs a class of nav-item -->
 
 					<!-- see here for aria-current info: -->
@@ -139,7 +146,7 @@ const currentPath = Astro.url.pathname;
 					<li class="nav-item" id="nav-item__aboutus">
 						<!-- and each link needs a class of nav-link -->
 						<!-- NB dev pathname has no trailing slash, build pathname DOES have trailing slash -->
-						<!-- that's why we're using includes not equality operator  -->
+						<!-- that's why we're using includes() instead of equality operator  -->
 						<!-- <a href="/aboutus" class="nav-link" aria-current={currentPath === "/aboutus" ? "page" : false}>About Us</a> -->
 						<a
 							href="/#aboutus"
@@ -220,37 +227,78 @@ const currentPath = Astro.url.pathname;
 	const toggleNavbar = (e: Event) => {
 		// console.log(e.target);
 		console.log("toggle!");
+
+		// NB any display: none is going to break the transition
+		// whether it's doen in css or in js
+		// we need an alternative
+
+		// console.log("display: ", navMenu.style.display);
+		// navMenu.style.display = navMenu.style.display !== "block" ? "block" : "none";
 		navMenu.classList.toggle("show");
-		// also toggle aria-expanded
-		navbarToggler.setAttribute(
-			"aria-expanded",
-			navbarToggler.getAttribute("aria-expanded") === "true" ? "false" : "true"
-		);
+		// also toggle aria-expanded and aria-hidden
+		if (navbarToggler.getAttribute("aria-expanded") === "false") {
+			navbarToggler.setAttribute("aria-expanded", "true");
+			navMenu.setAttribute("aria-hidden", "false");
+		} else {
+			navbarToggler.setAttribute("aria-expanded", "false");
+			navMenu.setAttribute("aria-hidden", "true");
+		}
 	};
 
 	navbarToggler.addEventListener("click", toggleNavbar);
 </script>
 
 <style>
-	/* this is a bootstrap class */
-	/* but let's try adding to it anyway */
-	/* when we come to do the proper version, see kp's height transition trick */
+	/* using #id selector for higher specificity to override bootstrap */
+
+	/* kp's grid-template-rows height transition trick */
 	/* https://www.youtube.com/watch?v=B_n4YONte5A */
 
-	/* max-height is dubious, we have to set an arbitrary value */
-	/*  
-	.navbar-collapse {
-		
-		max-height: 1000px;
+	#navmenu {
+		/* transition duration var */
+		--transitionDuration: 400ms;
+
+		display: grid;
+		grid-template-rows: 1fr;
 		overflow: hidden;
-		transition: max-height 400ms ease-in-out;
+		transition: grid-template-rows var(--transitionDuration) ease-in-out;
+
+		/* overrule bootstrap's vertical align (align-items: center) */
+		/* put it back for lg with media query below */
+		align-items: start;
 	}
 
-	.navbar-collapse:not(.show) {
-		max-height: 0;
+	#navmenu:not(.show) {
+		/* this display rule to overrule bootstrap's display: none */
+		/* was display: block, now using display: grid */
+		/* we're going to use aria-hidden instead */
+		display: grid;
+		grid-template-rows: 0fr;
 	}
 
-	*/
+	#navmenu > ul {
+		/* needs margin-top: 0 to overrule the 0.5rem from bootstrap */
+		margin: 0;
+
+		/* min-height or overflow: hidden, doesn't seem to matter which */
+		/* min-height: 0; */
+		overflow: hidden;
+
+		/* @oxuhs-gy4xm says: */
+		/* Make sure to add "grid-row: 1 / span 2;" on the child element. */
+		/* Otherwise the child will animate at a different speed than the parent. */
+		/* see web/learn/the-simple-trick... for explanation */
+
+		/* it also ensures chrome will behave like firefox, (firefox will keep the parent and child at same speed) */
+		grid-row: 1 / span 2;
+	}
+
+	@media (min-width: 992px) {
+		#navmenu {
+			/* bootstrap original value for align-items */
+			align-items: center;
+		}
+	}
 
 	header {
 	}
