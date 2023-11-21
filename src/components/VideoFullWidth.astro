@@ -20,7 +20,7 @@ const videoSourcePart = `/video/${videoBase}`;
 // doesn't need to be an imageset, just a single image
 const backgroundImageTiny = `url(/images/${videoBase}-20x11.jpg)`;
 // the LQIP, currently 1440 x 810
-const backgroundImageLQIP = `url(/images/${videoBase}-lqip-blur.jpg)`;
+const backgroundImageLQIP = `url(/images/${videoBase}-lqip.jpg)`;
 ---
 
 <!-- 
@@ -158,6 +158,18 @@ const backgroundImageLQIP = `url(/images/${videoBase}-lqip-blur.jpg)`;
 			let transitionEndFallback: number;
 
 			if (location.hash === "#aboutus") {
+				// think we can delete this whole condition
+				// just run the doSetSource()
+				// no idea what it's doing (why did the video need to wait for pageHeadingTransition????)
+				// leave it for now but revisit
+				// comment it out and put a doSetSource in instead, see what happens...
+
+				// right, think it's a hangover from when we trying to stop the video playing until
+				// all the aos animations had finished bc we thought they might be making the video jittery
+				// but i can't see anything else left of that code, whatever it was, so i reckon this whole
+				// #aboutus pageheading transitionend handler stuff can go
+
+				/*
 				console.log("setting transitionend listener");
 				pageContentHeading.addEventListener("transitionend", pageContentTransitionEndHandler);
 				// pageContentHeading.setAttribute("data-event-transitioneend", "true");
@@ -171,6 +183,10 @@ const backgroundImageLQIP = `url(/images/${videoBase}-lqip-blur.jpg)`;
 				// the timeout will need to be cancelled by the transition end
 				// it's initialised above - typescript doesn't like it being declared inside an if
 				transitionEndFallback = setTimeout(pageContentTransitionEndHandler, 500);
+				*/
+
+				// testing...
+				doSetSource();
 			} else {
 				doSetSource();
 			}
@@ -191,12 +207,19 @@ const backgroundImageLQIP = `url(/images/${videoBase}-lqip-blur.jpg)`;
 
 			// the actual set source procedure
 			function doSetSource() {
-				// probaly don't need any conditional now (was if (!videoElement.src)),
+				// probably don't need any conditional now (was if (!videoElement.src)),
 				// set source should only be called once (from one place)
-				console.log("setting video source");
+				console.log("setting video source (and adding --show class)");
 				videoElement.src = videoSource;
 				// fade-in the video
-				videoElement.classList.add("video-element--show");
+				// now we're using filter: blur, the video doesn't fade in, the blur fades out
+				// so the modifier class goes on the container, not the element
+				// videoElement.classList.add("video-element--show");
+				// are we sure we want the --show class to be added here?
+				// why not when the video is ready?
+
+				// yeah it needs to be when video is ready, which is handled by the initialise script (initialise.ts)
+				// videoElement.parentElement?.classList.add("video-container--show");
 			}
 		}
 
@@ -250,6 +273,10 @@ const backgroundImageLQIP = `url(/images/${videoBase}-lqip-blur.jpg)`;
 		background-position: center;
 		background-size: cover;
 
+		/* trying filter: blur instead of the opacity fade-in */
+		/* so we can get the placeholder bg image compressed more without it looking acky */
+		filter: blur(1rem);
+
 		/* from PictureFullWidth hero__picture */
 
 		/* video doesn't like any of these - probably bc its a flex item */
@@ -264,6 +291,17 @@ const backgroundImageLQIP = `url(/images/${videoBase}-lqip-blur.jpg)`;
 		/* z-index: 0; */
 
 		/* border: 1px solid #f00; */
+	}
+
+	/* the --show modifier needs to go on the container now, bc that's where the filter blur is */
+	/* so that's what needs to transition */
+
+	.video-container--show {
+		/* trying filter: blur instead of the opacity fade-in */
+		/* so we can get the placeholder bg image compressed more without it looking acky */
+		transition: filter var(--transitionDuration);
+		/* transition: filter 5s; */
+		filter: blur(0rem);
 	}
 
 	/* apply the background-images in a separate class, so we have the option to not use them if the video is already loaded */
@@ -310,12 +348,15 @@ const backgroundImageLQIP = `url(/images/${videoBase}-lqip-blur.jpg)`;
 		/* border: 1px solid fuchsia; */
 		/* background-color: hotpink; */
 
-		opacity: 0;
+		/* hopefully won't need this opacity transition, now we're using filter blur */
+		/* opacity: 0; */
+
 		/* transition-duration was 250ms - way too short */
 		/* needs to be long otherwise it looks like a janky shift */
-		transition: opacity ease-in;
-		/* transition-duration needs setting separately because it's using a custom property */
-		transition-duration: var(--transitionDuration);
+
+		/* transition: opacity ease-in; */
+		/* transition-duration needs setting separately because it's using a custom property? are you sure? */
+		/* transition-duration: var(--transitionDuration); */
 		/* transition: opacity var(--transitionDuration) ease-in; */
 
 		/* will-change: opacity; */
@@ -328,6 +369,7 @@ const backgroundImageLQIP = `url(/images/${videoBase}-lqip-blur.jpg)`;
 
 	/* this class is applied by setSource() (see above) */
 	.video-element--show {
-		opacity: 1;
+		/* hopefully won't need this opacity transition, now we're using filter blur */
+		/* opacity: 1; */
 	}
 </style>

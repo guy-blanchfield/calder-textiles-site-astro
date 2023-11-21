@@ -64,6 +64,10 @@ const { imageBase, imageAlt = "", sectionFixedHeight = false } = Astro.props;
 		flex: 1;
 
 		display: flex;
+
+		/* z-index because the filter: blur bleeds over the previous section */
+		position: relative;
+		z-index: -1;
 	}
 
 	/* we only want the min-height thing on larger screens */
@@ -83,7 +87,8 @@ const { imageBase, imageAlt = "", sectionFixedHeight = false } = Astro.props;
 			/* padding of the amount we want to subtract */
 			padding-top: var(--header-height-calc);
 
-			position: relative;
+			/* position relative is now being done outside the media query bc z-index */
+			/* position: relative; */
 			overflow: hidden;
 		}
 	}

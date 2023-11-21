@@ -47,7 +47,7 @@ const { title, bodyClass = "", heroImageBase = "", sectionImageBase = "" } = Ast
 let heroImagePreloadPath: string;
 let sectionImagePreloadPath: string;
 if (heroImageBase) {
-	heroImagePreloadPath = `images/${heroImageBase}-lqip-blur.jpg`;
+	heroImagePreloadPath = `images/${heroImageBase}-lqip.jpg`;
 }
 
 if (sectionImageBase) {
@@ -179,7 +179,7 @@ if (sectionImageBase) {
 <!-- seems a bit hacky but this is the only way it seems to work in astro -->
 <!-- see https://github.com/michalsnik/aos/issues/815#issuecomment-1500056742 -->
 <!-- don't worry about lighthouse performance in the dev version build version takes care of it -->
-<!-- <script src="../js/setup-aos.js"></script> -->
+<script src="../js/setup-aos.js"></script>
 
 <!-- <style define:vars={{bodyBgColour}}> -->
 <style>

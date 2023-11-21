@@ -43,14 +43,14 @@ function initialise() {
 		// and read that here to set the transition-duration
 
 		// MDN says: (note that dashes are converted to camel case).
-		const heroTextTransitionDuration = heroImage
+		const heroTextTransitionDelay = heroImage
 			? heroImage.dataset.transitionDuration
 			: heroVideo.dataset.transitionDuration;
 		// Number() won't work to extract 2000 from "2000ms", use parseInt()
 		// consider adding a bit to this to give the transition a bit of room
-		console.log("herotextTransitionDuration: ", heroTextTransitionDuration);
-		console.log("Number(herotextTransitionDuration): ", parseInt(heroTextTransitionDuration));
-		setTimeout(handleHeroTextTransition, parseInt(heroTextTransitionDuration));
+		console.log("herotextTransitionDelay: ", heroTextTransitionDelay);
+		console.log("Number(herotextTransitionDuration): ", parseInt(heroTextTransitionDelay));
+		setTimeout(handleHeroTextTransition, parseInt(heroTextTransitionDelay));
 		// }
 	}
 
@@ -124,43 +124,9 @@ function initialise() {
 			playVideo(heroVideo);
 		}
 
-		// we only want the first canplay event
-		// (it fires after every time the video buffers)
-		// so remove this eventlistener
-		heroVideo.removeEventListener("canplay", canPlayCallback);
-		console.log("removing video event listener");
-
-		// show the hero text
-		console.log(`calling showHeroText function`);
-		showHeroText();
-	}
-
-	// callback function for the video element 'canplay' event fired by video when it's ready to play
-	// we can delete this now it's been replaced by handleVideoReady
-	function canPlayCallback() {
-		const eventTime = new Date();
-		console.log(`Can now play video: ${heroVideo.src}`);
-		console.log(
-			`canplay event fired: ${eventTime.getHours()}:${eventTime.getMinutes()}:${eventTime.getSeconds()}:${eventTime.getMilliseconds()}`
-		);
-		// const videoStatus = document.querySelector(".video-status");
-		// temp for testing
-		// videoStatus.innerHTML += `<p>Can now play video: ${heroVideo.src}</p>`;
-
-		// if video hasn't been set to autoplay by the VideoFullWidthComponent, play it now
-		if (heroVideo.dataset.autoplay == "false") {
-			console.log(`setting autoplay on ${heroVideo.src}`);
-
-			// play() follows the same rules as autoplay, and all modern browsers are cool with it
-			// so play() will do, maybe in a try catch if we want to handle the error
-			playVideo;
-		}
-
-		// we only want the first canplay event
-		// (it fires after every time the video buffers)
-		// so remove this eventlistener
-		heroVideo.removeEventListener("canplay", canPlayCallback);
-		console.log("removing video event listener");
+		// add the --show class to video container
+		// this will fade the filter blur out (transition filter blur(1rem) to filter blur(0))
+		heroVideo.parentElement?.classList.add("video-container--show");
 
 		// show the hero text
 		console.log(`calling showHeroText function`);

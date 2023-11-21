@@ -98,9 +98,9 @@ const backgroundImage = pictureClasses.includes("hero")
 
 // think we're just going to use the blur for both hero and pictureSection, at least for now
 // consider using backdrop-filter blur, then we could just use a really low quality version of the image
-// and blur it in the browser
+// and blur it in the browser, caniuse says 96.5% for backdrop-filter so give it a go
 
-const backgroundImage = `url(/images/${imageBase}-lqip-blur.jpg)`;
+const backgroundImage = `url(/images/${imageBase}-lqip.jpg)`;
 
 // const backgroundImageTiny = `url(/images/${imageBase}-20x11.jpg)`;
 // const backgroundImageLQIP = `url(/images/${imageBase}-lqip-blur.jpg)`;
@@ -361,6 +361,19 @@ const backgroundImage = `url(/images/${imageBase}-lqip-blur.jpg)`;
 		/* position: relative won't work for hero__picture, it won't contain the img for a start */
 		/* so we'll have to apply position: relative specifically to section-picture__picture */
 		/* see below */
+
+		/* filter: blur and associated transition needs to go on blur-load NOT blur-loading */
+		/* otherwise the blur will fade in when the blur-loading class is applied*/
+
+		/* try filter blur on --blur-load */
+		/* so the image always fades in fom blur */
+		/* otherwise it looks a bit acky and chrome sometimes appears to stretch it while its loading */
+		/* better to blur each time than to look sketchy */
+		/* filter: blur(1rem); */
+
+		/* transition here means that the filter will fade in - we don't want that */
+		/* we only want it to fade out, so transition should go on picture--show */
+		/* transition: filter var(--transitionDuration) ease-in; */
 	}
 
 	/* try this as blur-loading for now, see what happens */
@@ -384,6 +397,14 @@ const backgroundImage = `url(/images/${imageBase}-lqip-blur.jpg)`;
 		/* border: 1px solid fuchsia; */
 		/* background-color: hsl(var(--white) / 0.5); */
 		animation: pulsing-bg 2s ease-in-out infinite;
+
+		/* backdrop-filter: blur to blur the image so we can get away with lower quality?! */
+		/* maybe we should just use filter blur on the element?? */
+		/* backdrop-filter: blur(1rem) opacity(1); */
+
+		/* transition for the filter: blur */
+		/* needs to match the transition on the picture--blur-load img ruleset below */
+		/* transition: backdrop-filter var(--transitionDuration) ease-in; */
 	}
 
 	@keyframes pulsing-bg {
@@ -400,6 +421,16 @@ const backgroundImage = `url(/images/${imageBase}-lqip-blur.jpg)`;
 
 	/* the show/hide class has to go on the containing element (picture) not img */
 
+	.picture--blur-load {
+		/* filter: blur(1rem); */
+		/* transition: filter var(--transitionDuration) ease-in; */
+
+		/* try filter blur on --blur-load */
+		/* so the image always fades in fom blur */
+		/* otherwise it looks a bit acky and chrome sometimes appears to stretch it while its loading */
+		filter: blur(1rem);
+	}
+
 	.picture--blur-load img {
 		/* just hides the image but doesn't set up a transition */
 
@@ -415,6 +446,11 @@ const backgroundImage = `url(/images/${imageBase}-lqip-blur.jpg)`;
 		/* think it's probably a bit nicer here - there's a little flash anyway so at least this looks a bit smoother */
 		/* transition: opacity 250ms ease-in; */
 		transition: opacity var(--transitionDuration) ease-in;
+
+		/* hopefully won't need the img opacity transtion now we're using filer blur */
+		/* delete those rules above, when this is all done */
+		opacity: 1;
+		tansition: none;
 	}
 
 	.picture--blur-loading img {
@@ -423,18 +459,23 @@ const backgroundImage = `url(/images/${imageBase}-lqip-blur.jpg)`;
 		/* transition: opacity 250ms ease-in; */
 	}
 
+	.picture--show {
+		/* transition goes here, so it fades out but doesn't fade in */
+		transition: filter var(--transitionDuration) ease-in;
+		filter: blur(0rem);
+	}
+
 	.picture--show img {
-		opacity: 1;
+		/* hopefully won't need the img opacity transtion now we're using filer blur */
+		/* opacity: 1; */
 	}
 
 	/* something to remove the pulsing ::before */
 	.picture--show::before {
-		content: none;
-	}
-
-	.picture--show {
-		/* remove the background if you want */
-		/* background-image: none; */
+		/* content: none; */
+		animation: none;
+		/* backdrop-filter: blur stays the same but we transition the opacity */
+		/* backdrop-filter: blur(1rem) opacity(0); */
 	}
 
 	/* the height of section-picture needs to be set to 0 in PictureSection using the same media query */
