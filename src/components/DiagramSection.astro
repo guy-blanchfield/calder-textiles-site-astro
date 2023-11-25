@@ -4,6 +4,8 @@ import PageDownArrow from "./PageDownArrow.astro";
 export interface Props {
 	diagramBase: string;
 	diagramAlt?: Array<string>;
+	diagramWidth?: number;
+	diagramHeight?: number;
 	diagramStackSeparator?: string;
 	// diagramStackSeparator is a background image on an ::after
 	// for any linking or dividing image that goes between the diagram images
@@ -20,6 +22,8 @@ export interface Props {
 const {
 	diagramBase,
 	diagramAlt = [],
+	diagramWidth = 200,
+	diagramHeight = 200,
 	diagramStackSeparator = "",
 	bgColour = "var(--pageContentBgColour-1)",
 	colModifier = "",
@@ -47,6 +51,14 @@ const diagramFallback3 = `/images/${diagramBase}-3.png`;
 
 const diagramMediaMax = "(max-width: 576px)";
 const diagramMediaMin = "(min-width: 577px)";
+
+// actual sizes of the pngs
+// sustainability 820x1014
+// development 941x1014
+
+// see: https://www.smashingmagazine.com/2020/03/setting-height-width-images-important-again/
+// to prevent the slight shift, these need to match the aspect ratio, so either pass the image dimensions as props
+//  or consider redoing the diagrams so they're all the same aspect ratio
 ---
 
 <div class="wrapper" class:list={[{ sectionFixedHeight }]}>
@@ -68,7 +80,14 @@ const diagramMediaMin = "(min-width: 577px)";
 						<source media={diagramMediaMax} srcset={diagramSrcsetMob1} />
 						<source media={diagramMediaMin} srcset={diagramSrcset1} />
 
-						<img src={diagramFallback1} alt={diagramAlt[0]} class="section-diagram__img" />
+						<img
+							src={diagramFallback1}
+							alt={diagramAlt[0]}
+							class="section-diagram__img"
+							width={diagramWidth}
+							height={diagramHeight}
+							loading="lazy"
+						/>
 					</picture>
 				</div>
 
@@ -82,7 +101,14 @@ const diagramMediaMin = "(min-width: 577px)";
 						<source media={diagramMediaMax} srcset={diagramSrcsetMob2} />
 						<source media={diagramMediaMin} srcset={diagramSrcset2} />
 
-						<img src={diagramFallback2} alt={diagramAlt[1]} class="section-diagram__img" />
+						<img
+							src={diagramFallback2}
+							alt={diagramAlt[1]}
+							class="section-diagram__img"
+							width={diagramWidth}
+							height={diagramHeight}
+							loading="lazy"
+						/>
 					</picture>
 				</div>
 
@@ -92,7 +118,14 @@ const diagramMediaMin = "(min-width: 577px)";
 						<source media={diagramMediaMax} srcset={diagramSrcsetMob3} />
 						<source media={diagramMediaMin} srcset={diagramSrcset3} />
 
-						<img src={diagramFallback3} alt={diagramAlt[2]} class="section-diagram__img" />
+						<img
+							src={diagramFallback3}
+							alt={diagramAlt[2]}
+							class="section-diagram__img"
+							width={diagramWidth}
+							height={diagramHeight}
+							loading="lazy"
+						/>
 					</picture>
 				</div>
 			</div>

@@ -35,22 +35,26 @@ function initialise() {
 		// but chrome didn't like it, it kept showing the div at the end of its transition
 		// for the duration of the delay, then starting the transition
 
-		// so we'll use a setTimeout with a half second delay
+		// so we'll use a setTimeout with a delay
 
 		// it needs a delay because the image or video have a fade-in time (currently 250ms for image, 2s for video)
 
 		// try using a data-attribute in the html element (heroVideo or heroImage)
 		// and read that here to set the transition-duration
 
+		// so we're now setting a data property for duration and delay
+		// the delay is for the img opacity transition and the duration is for the filter blur transition that follows it
+
 		// MDN says: (note that dashes are converted to camel case).
-		const heroTextTransitionDelay = heroImage
-			? heroImage.dataset.transitionDuration
-			: heroVideo.dataset.transitionDuration;
+		// heroTextTransitionDelay is equal to the time it takes the image to fade in (delay) plus the filter blur to disappear (duration)
+		const heroTextTransitionDelay: number = heroImage
+			? parseInt(heroImage.dataset.transitionDuration) + parseInt(heroImage.dataset.transitionDelay)
+			: parseInt(heroVideo.dataset.transitionDuration) + parseInt(heroVideo.dataset.transitionDelay);
 		// Number() won't work to extract 2000 from "2000ms", use parseInt()
 		// consider adding a bit to this to give the transition a bit of room
 		console.log("herotextTransitionDelay: ", heroTextTransitionDelay);
-		console.log("Number(herotextTransitionDuration): ", parseInt(heroTextTransitionDelay));
-		setTimeout(handleHeroTextTransition, parseInt(heroTextTransitionDelay));
+		console.log("Number(herotextTransitionDuration): ", heroTextTransitionDelay);
+		setTimeout(handleHeroTextTransition, heroTextTransitionDelay);
 		// }
 	}
 
@@ -67,9 +71,14 @@ function initialise() {
 	async function heroImageReady() {
 		console.log(`heroImageReady function called`);
 		// console.log("heroImage: ", heroImage);
-		await heroImage.decode();
-		// when the decode promise resolves run showHeroText()
-		showHeroText();
+		try {
+			await heroImage.decode();
+			// when the decode promise resolves run showHeroText()
+			console.log(`image decode successful so running showHeroText()`);
+			showHeroText();
+		} catch (err) {
+			console.log(`there was an error decoding the image: ${err}`);
+		}
 	}
 
 	function heroVideoReady() {

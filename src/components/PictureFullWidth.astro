@@ -29,6 +29,7 @@ export interface Props {
 	// and also to set the timeout duration of handleHeroTextTransition() (in initialise.ts)
 	// i.e. the hero text fade-up has to wait for the image or video fade-in to finish
 	transitionDuration?: string; // properties of dataset are strings
+	transitionDelay?: string;
 }
 
 // think lazyLoad should be true as default, only the hero picture needs to eager load
@@ -39,7 +40,8 @@ const {
 	pictureClasses,
 	imageClasses,
 	lazyLoad = true,
-	transitionDuration = "500ms",
+	transitionDuration = "300ms",
+	transitionDelay = "100ms",
 } = Astro.props;
 
 // just create the whole string for each srcset
@@ -57,7 +59,10 @@ const landscapeSrcset = `/images/${imageBase}-960x540.jpg 960w, /images/${imageB
 // largest 2560x1440
 // const landscapeSrcset = `/images/${imageBase}-960x540.jpg 960w, /images/${imageBase}-1440x810.jpg 1440w, /images/${imageBase}-1920x1080.jpg 1920w, /images/${imageBase}-2560x1440.jpg 2560w`; // 16:9
 // largest 2360x1330
-const landscapeSrcsetWebp = `/images/${imageBase}-960x540.webp 960w, /images/${imageBase}-1440x810.webp 1440w, /images/${imageBase}-1920x1080.webp 1920w, /images/${imageBase}-2360x1330.webp 2560w`; // 16:9
+// try leaving the the highest resolution webp out, just for better lighthouse performance score
+// 1920 is good enough resolution on a 3840x2400 screen, and performance score is 97, so keep like this for the time being
+// const landscapeSrcsetWebp = `/images/${imageBase}-960x540.webp 960w, /images/${imageBase}-1440x810.webp 1440w, /images/${imageBase}-1920x1080.webp 1920w, /images/${imageBase}-2360x1330.webp 2560w`; // 16:9
+const landscapeSrcsetWebp = `/images/${imageBase}-960x540.webp 960w, /images/${imageBase}-1440x810.webp 1440w, /images/${imageBase}-1920x1080.webp 1920w`; // 16:9
 // largest 2560x1440
 // const landscapeSrcsetWebp = `/images/${imageBase}-960x540.webp 960w, /images/${imageBase}-1440x810.webp 1440w, /images/${imageBase}-1920x1080.webp 1920w, /images/${imageBase}-2560x1440.webp 2560w`; // 16:9
 
@@ -175,6 +180,7 @@ const backgroundImage = `url(/images/${imageBase}-lqip.jpg)`;
 		class:list={imageClasses}
 		loading={lazyLoad ? "lazy" : "eager"}
 		data-transition-duration={transitionDuration}
+		data-transition-delay={transitionDelay}
 		width="960"
 		height="540"
 	/>
@@ -197,7 +203,7 @@ const backgroundImage = `url(/images/${imageBase}-lqip.jpg)`;
 
 		// NB! if the all the srcSet images fail (e.g. 404s)
 		// pictureImg.complete will return true
-		// so we need to test whether the scr image exists
+		// so we need to test whether the src image exists
 		// maybe try getting the height / width of the image?
 		// if the image has loaded these will be positive values otherwsie they'll be 0
 
@@ -213,6 +219,8 @@ const backgroundImage = `url(/images/${imageBase}-lqip.jpg)`;
 		// hopefully in a live environment this won't happen...?!
 
 		console.log(`complete: ${pictureImg.complete}, naturalWidth: ${pictureImg.naturalWidth}`);
+		// temp for testing
+		// const alwaysFalse: boolean = false;
 
 		if (pictureImg?.complete && pictureImg?.naturalWidth) {
 			// we want a different process here
@@ -224,8 +232,44 @@ const backgroundImage = `url(/images/${imageBase}-lqip.jpg)`;
 			// imgLoaded(pictureEl);
 			// maybe we don't need anything to happen here?
 
+			// add blur-loading here just to test how it affects lighthouse
+			// console.log("and also adding picture--blur-loading to test");
+			// pictureEl.classList.add("picture--blur-loading");
+
 			console.log(`${pictureImg.src} is complete so adding picture--show`);
 			pictureEl.classList.add("picture--show");
+
+			// add blur-loading here just to test how it affects lighthouse
+			// console.log("and also adding picture--blur-loading to test");
+			// pictureEl.classList.add("picture--blur-loading");
+			// tests inconclusive: performance score ranges from 88-92 on all inside pages
+
+			// right, just noting this here, performance score is related to the window size
+			// so if the browser chooses a smaller image from srcset, performance score will be better
+			// note that the lqip doesn't change (there are no smaller versions of the lqip)
+			// so it must be about the size of the hq image
+			// (we tried it without sectionPicture and scores were no different so it's the hero image that's the issue)
+
+			// deleting / renaming the webp image (so it fails to load) improves performance score signingicantly - 99!)
+			// so when lighthouse uses the lqip as lcp performance score is improved
+			// can we conclude that lighthouse isn't using the lqip as lcp? try making a full resolution lqip 2360x1330?
+			// no, bc lcp element is identified thus:
+
+			// webp renamed: picture.hero__picture.picture--blur-load.astro-H4CVHZ34.picture--blur-loading (score 98)
+			// or with picture--show forced:
+			// picture.hero__picture.picture--blur-load.astro-H4CVHZ34.picture--blur-loading.picture--show (score 99)
+			// webp normal and picture--show forced:
+			// picture.hero__picture.picture--blur-load.astro-H4CVHZ34.picture--blur-loading.picture--show (score 89)
+
+			// or sometimes it's img.hero__image.astro-H4CVHZ34 (score 90)
+
+			// right, tested it with forced filter and opacity transitions AND the showHeroText transition
+			// score is still higher without the big image, so it's probably not the transitions
+			// probably safe to assume that when the lqip is lcp, score is high, when hq image is lcp, score is lower
+
+			// is it possible that this is related to simulated throttling and what is actually happening is lighthouse
+			// gets the hq image first and goes straight to --show instead of --blur-loading
+			// nope - tested in devtools throttling mode and performance was better with the big image renamed
 		} else {
 			// add the class that sets a transition
 			// so that picture--show will cause a fade when the load event fires
@@ -237,13 +281,10 @@ const backgroundImage = `url(/images/${imageBase}-lqip.jpg)`;
 				pictureEl.classList.add("picture--show");
 			});
 		}
-
-		// set src now
-		// pictureImg.src = fallbackSrc;
 	}
 </script>
 
-<style define:vars={{ backgroundImage, transitionDuration }}>
+<style define:vars={{ backgroundImage, transitionDuration, transitionDelay }}>
 	/* firstly, lets have 100% width and height, and display block for the picture elements */
 	/* definitely need the width and height to make the picture */
 	/* (and hence the image) fill its container (section-picture or hero) */
@@ -429,6 +470,9 @@ const backgroundImage = `url(/images/${imageBase}-lqip.jpg)`;
 		/* so the image always fades in fom blur */
 		/* otherwise it looks a bit acky and chrome sometimes appears to stretch it while its loading */
 		filter: blur(1rem);
+
+		/* clip-path because the filter: blur bleeds over the previous section */
+		clip-path: inset(0);
 	}
 
 	.picture--blur-load img {
@@ -437,7 +481,8 @@ const backgroundImage = `url(/images/${imageBase}-lqip.jpg)`;
 		/* opacity: 0 causes an LCP issue */
 		/* see: https://www.debugbear.com/blog/opacity-animation-poor-lcp */
 		/* opacity: 0; */
-		opacity: 0.01;
+
+		/* opacity: 0.01; */
 		/* ok, 0.1 fixes the LCP thing but now we see the image loading in vertically and then fade in */
 		/* 0.01 seems to work ok and is pretty much invisible - 0.01 seems to be the lowest safe value for opacity (that isn't 0) */
 
@@ -445,12 +490,17 @@ const backgroundImage = `url(/images/${imageBase}-lqip.jpg)`;
 		/* (and take it off blur-loading img - below) */
 		/* think it's probably a bit nicer here - there's a little flash anyway so at least this looks a bit smoother */
 		/* transition: opacity 250ms ease-in; */
-		transition: opacity var(--transitionDuration) ease-in;
+
+		/* transition: opacity var(--transitionDuration) ease-in; */
 
 		/* hopefully won't need the img opacity transtion now we're using filer blur */
 		/* delete those rules above, when this is all done */
-		opacity: 1;
-		tansition: none;
+
+		/*  try hiding the image until its loaded so we don't see it loading in vertically */
+		opacity: 0;
+		/* opacity transition as well as filter blur transition seems like a bad idea cpu wise */
+		/* ok, delay the filter transition, while we do the opcaity transition */
+		transition: opacity var(--transitionDelay);
 	}
 
 	.picture--blur-loading img {
@@ -461,13 +511,18 @@ const backgroundImage = `url(/images/${imageBase}-lqip.jpg)`;
 
 	.picture--show {
 		/* transition goes here, so it fades out but doesn't fade in */
-		transition: filter var(--transitionDuration) ease-in;
+		/* let's try a delay on this transition (transitionDelay) */
+
+		/* from MDN: */
+		/* The first value that can be parsed as a time is assigned to the transition-duration, 
+		and the second value that can be parsed as a time is assigned to transition-delay */
+		transition: filter var(--transitionDuration) var(--transitionDelay);
 		filter: blur(0rem);
 	}
 
 	.picture--show img {
 		/* hopefully won't need the img opacity transtion now we're using filer blur */
-		/* opacity: 1; */
+		opacity: 1;
 	}
 
 	/* something to remove the pulsing ::before */

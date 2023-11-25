@@ -9,9 +9,16 @@ export interface Props {
 	// and also to set the timeout duration of handleHeroTextTransition() (in initialise.ts)
 	// i.e. the hero text fade-up has to wait for the image or video fade-in to finish
 	transitionDuration?: string; // properties of dataset are strings
+	transitionDelay?: string;
 }
 
-const { videoBase, videoAutoplay = "true", pictureClasses = "", transitionDuration = "1000ms" } = Astro.props;
+const {
+	videoBase,
+	videoAutoplay = "true",
+	pictureClasses = "",
+	transitionDuration = "300ms",
+	transitionDelay = "100ms",
+} = Astro.props;
 
 const videoSourcePart = `/video/${videoBase}`;
 
@@ -36,6 +43,7 @@ const backgroundImageLQIP = `url(/images/${videoBase}-lqip.jpg)`;
 		data-source={videoSourcePart}
 		data-autoplay={videoAutoplay}
 		data-transition-duration={transitionDuration}
+		data-transition-delay={transitionDelay}
 		muted
 		loop
 		playsinline
@@ -235,7 +243,7 @@ const backgroundImageLQIP = `url(/images/${videoBase}-lqip.jpg)`;
 	} // end if
 </script>
 
-<style define:vars={{ backgroundImageTiny, backgroundImageLQIP, transitionDuration }}>
+<style define:vars={{ backgroundImageTiny, backgroundImageLQIP, transitionDuration, transitionDelay }}>
 	/*
 	.video-status {
 		color: white;
@@ -299,9 +307,14 @@ const backgroundImageLQIP = `url(/images/${videoBase}-lqip.jpg)`;
 	.video-container--show {
 		/* trying filter: blur instead of the opacity fade-in */
 		/* so we can get the placeholder bg image compressed more without it looking acky */
-		transition: filter var(--transitionDuration);
+		transition: filter var(--transitionDuration) var(--transitionDelay);
 		/* transition: filter 5s; */
 		filter: blur(0rem);
+	}
+
+	.video-container--show .video-element {
+		/* for the opacity transition */
+		opacity: 1;
 	}
 
 	/* apply the background-images in a separate class, so we have the option to not use them if the video is already loaded */
@@ -343,33 +356,14 @@ const backgroundImageLQIP = `url(/images/${videoBase}-lqip.jpg)`;
 
 		/* --------------------------------------------------------------------------------------------- */
 
-		/* bg has to go on element, not container */
-
-		/* border: 1px solid fuchsia; */
-		/* background-color: hotpink; */
-
-		/* hopefully won't need this opacity transition, now we're using filter blur */
-		/* opacity: 0; */
-
-		/* transition-duration was 250ms - way too short */
-		/* needs to be long otherwise it looks like a janky shift */
-
-		/* transition: opacity ease-in; */
-		/* transition-duration needs setting separately because it's using a custom property? are you sure? */
-		/* transition-duration: var(--transitionDuration); */
-		/* transition: opacity var(--transitionDuration) ease-in; */
+		/* just a bit of an opacity transition before the filter: blur transition */
+		/* with a delay on the filter blur transition (on the container class) */
+		opacity: 0;
+		transition: opacity var(--transitionDelay);
 
 		/* will-change: opacity; */
 
 		/* from pictureFullWidth hero__image */
 		max-width: initial; /* keep this in for now, can't remember what it's doing! */
-		/* width: 100%; */
-		/* height: 100%; */
-	}
-
-	/* this class is applied by setSource() (see above) */
-	.video-element--show {
-		/* hopefully won't need this opacity transition, now we're using filter blur */
-		/* opacity: 1; */
 	}
 </style>

@@ -53,7 +53,7 @@ const { imageBase, imageAlt = "", sectionFixedHeight = false } = Astro.props;
 	/* sectionFixedHeight is false by default in pictureSection */
 
 	/* using the same negative margin fiddle as sectionFixedHeight */
-	/*  but applying it to the section not the wrapper div */
+	/* but applying it to the section not the wrapper div */
 	/* this is all so the image will object-fit (essentially crop to the centre) */
 	/* if the min-height is shorter than the image's height in relation to the aspect */
 
@@ -62,12 +62,7 @@ const { imageBase, imageAlt = "", sectionFixedHeight = false } = Astro.props;
 
 	.section-picture {
 		flex: 1;
-
 		display: flex;
-
-		/* z-index because the filter: blur bleeds over the previous section */
-		position: relative;
-		z-index: -1;
 	}
 
 	/* we only want the min-height thing on larger screens */
@@ -87,8 +82,7 @@ const { imageBase, imageAlt = "", sectionFixedHeight = false } = Astro.props;
 			/* padding of the amount we want to subtract */
 			padding-top: var(--header-height-calc);
 
-			/* position relative is now being done outside the media query bc z-index */
-			/* position: relative; */
+			position: relative;
 			overflow: hidden;
 		}
 	}
