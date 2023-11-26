@@ -41,7 +41,7 @@ const {
 	imageClasses,
 	lazyLoad = true,
 	transitionDuration = "200ms",
-	transitionDelay = "200ms",
+	transitionDelay = "2000ms",
 } = Astro.props;
 
 // just create the whole string for each srcset
@@ -189,98 +189,71 @@ const backgroundImage = `url(/images/${imageBase}-lqip.jpg)`;
 
 <!-- <script define:vars={{ fallbackSrc }}> -->
 <script>
+	const doBlurLoad = () => {
+		// console.log("doing the blur load thing");
+		// console.log(`${pictureImg.src} is NOT complete so adding picture--blur-loading`);
+		// pictureEl.classList.add("picture--blur-loading");
+	};
+
+	const doShowPicture = (e: Event) => {
+		console.log("doing the show picture thing for: ", e.target);
+		// clear the timeout
+		// clearTimeout(imgLoadTimer);
+	};
 	// wait for the image to load, then transition the opacity
 	// think this script will only run once, not once for each instance of the component
 	// so grabs the img inside all pictures with class picture--blur-load
 
+	// for when you want to do the fancy promises version
+	// https://stackoverflow.com/questions/62603102/determine-if-an-image-is-cached-in-browser-either-memory-or-disk-cache-before
+
 	const pictureElements = document.querySelectorAll(".picture--blur-load");
+
+	// right, think we need to cover the following possibilities:
+	// - image is in memory cache and so image.complete will be true when we check (get --show)
+	// - image is in disk cache so in image.complete will be false but the image will load in a moment (get ---show)
+	// - image is downloading so we will need the blur-loading class (get --blur-loading)
+
+	// so the structure of the condition is something like:
+	// if image.complete is false,
+	// set a timeout that gets --blur-loading within 25ms
+	// if image load event hasn't fired
+	// if it has, clear the timeout and get --show
 
 	// pictureElements.forEach((pictureEl) => {
 	for (const pictureEl of pictureElements) {
+		// for typesript typing...
+		// MDN: The returned timeoutID is a positive integer value which identifies the timer created by the call to setTimeout().
+		let imgLoadTimer: number;
 		const pictureImg = pictureEl.querySelector("img");
 
-		// check if the image is loaded first
-		// otherwise add a load event listener
+		// can't rely on .complete and naturalWidth because they might return false
+		// even if image is in cache
+		// (chrome seems to return false unless the image is in memory cache as opposed to disk cache)
 
-		// NB! if the all the srcSet images fail (e.g. 404s)
-		// pictureImg.complete will return true
-		// so we need to test whether the src image exists
-		// maybe try getting the height / width of the image?
-		// if the image has loaded these will be positive values otherwsie they'll be 0
+		//  so we need to give the browser a few milliseconds to load the image, before we go to the blur-loading
 
-		// done plenty of testing and fairly sure .complete and .naturalWidth can be relied on
-		// to refer to the image chosen by the browser from srcset
-		// NOT the fallback path that's in src to start off with
-		// the value for naturalWidth IS related to the vw i.e. the way the browser renders the image
-		// but we only need to know that it's NOT zero
+		//  check complete first
+		if (!pictureImg?.complete) {
+			// set timeout that will do the blurloading thing (if the load event hasn't fired within 25ms)
+			imgLoadTimer = setTimeout(() => {
+				console.log("timeout! so doing the blur load thing");
+				console.log(`${pictureImg.src} is NOT complete so adding picture--blur-loading`);
+				pictureEl.classList.add("picture--blur-loading");
+			}, 25);
 
-		// it's probably firefox's throttling / caching that can't be trusted
-		// that's what's causing the script to go straight to picture--show
-		// even when throttled (hence not showing the blur lqip, but still waiting for the hq image to download)
-		// hopefully in a live environment this won't happen...?!
-
-		console.log(`complete: ${pictureImg.complete}, naturalWidth: ${pictureImg.naturalWidth}`);
-		// temp for testing
-		// const alwaysFalse: boolean = false;
-
-		if (pictureImg?.complete && pictureImg?.naturalWidth) {
-			// we want a different process here
-			// from when the load event fires
-			// bc if the image is already loaded
-			// it doesn't really need the blur fade transition
-			// (it's probably already been downloaded previously)
-			// add 'blur-loading' NOT 'blur-load' (which is the class that identifies which images want a blur-load)
-			// imgLoaded(pictureEl);
-			// maybe we don't need anything to happen here?
-
-			// add blur-loading here just to test how it affects lighthouse
-			// console.log("and also adding picture--blur-loading to test");
-			// pictureEl.classList.add("picture--blur-loading");
-
-			console.log(`${pictureImg.src} is complete so adding picture--show`);
-			pictureEl.classList.add("picture--show");
-
-			// add blur-loading here just to test how it affects lighthouse
-			// console.log("and also adding picture--blur-loading to test");
-			// pictureEl.classList.add("picture--blur-loading");
-			// tests inconclusive: performance score ranges from 88-92 on all inside pages
-
-			// right, just noting this here, performance score is related to the window size
-			// so if the browser chooses a smaller image from srcset, performance score will be better
-			// note that the lqip doesn't change (there are no smaller versions of the lqip)
-			// so it must be about the size of the hq image
-			// (we tried it without sectionPicture and scores were no different so it's the hero image that's the issue)
-
-			// deleting / renaming the webp image (so it fails to load) improves performance score signingicantly - 99!)
-			// so when lighthouse uses the lqip as lcp performance score is improved
-			// can we conclude that lighthouse isn't using the lqip as lcp? try making a full resolution lqip 2360x1330?
-			// no, bc lcp element is identified thus:
-
-			// webp renamed: picture.hero__picture.picture--blur-load.astro-H4CVHZ34.picture--blur-loading (score 98)
-			// or with picture--show forced:
-			// picture.hero__picture.picture--blur-load.astro-H4CVHZ34.picture--blur-loading.picture--show (score 99)
-			// webp normal and picture--show forced:
-			// picture.hero__picture.picture--blur-load.astro-H4CVHZ34.picture--blur-loading.picture--show (score 89)
-
-			// or sometimes it's img.hero__image.astro-H4CVHZ34 (score 90)
-
-			// right, tested it with forced filter and opacity transitions AND the showHeroText transition
-			// score is still higher without the big image, so it's probably not the transitions
-			// probably safe to assume that when the lqip is lcp, score is high, when hq image is lcp, score is lower
-
-			// is it possible that this is related to simulated throttling and what is actually happening is lighthouse
-			// gets the hq image first and goes straight to --show instead of --blur-loading
-			// nope - tested in devtools throttling mode and performance was better with the big image renamed
-		} else {
-			// add the class that sets a transition
-			// so that picture--show will cause a fade when the load event fires
-
-			console.log(`${pictureImg.src} is NOT complete so adding picture--blur-loading`);
-			pictureEl.classList.add("picture--blur-loading");
+			// add listener for the load event
 			pictureImg.addEventListener("load", () => {
-				console.log(`img load event fired so adding picture--show`);
+				console.log("load event fired so doing the show picture thing for: ", pictureImg);
+				// console.log(`img load event fired so adding picture--show`);
 				pictureEl.classList.add("picture--show");
+				// clear the timeout
+				// console.log("clearing the timeout");
+				// clearTimeout(imgLoadTimer);
 			});
+		} else {
+			console.log("image is already complete so adding --show");
+			pictureEl.classList.add("picture--show");
 		}
 	}
 </script>
@@ -416,6 +389,17 @@ const backgroundImage = `url(/images/${imageBase}-lqip.jpg)`;
 		/* transition here means that the filter will fade in - we don't want that */
 		/* we only want it to fade out, so transition should go on picture--show */
 		/* transition: filter var(--transitionDuration) ease-in; */
+
+		/* try filter here (--blur-loading) */
+		/* with transition on --show, so the blur shouldn't happen or transition unless it gets to --blur-loading */
+		/* essentially if image is already loaded, we skip the blur stage completely */
+		/* and just have the opacity transition */
+		/* (we only need the blur to cover up the lqip) */
+
+		filter: blur(0.5rem);
+
+		/* clip-path because the filter: blur bleeds over the previous section */
+		clip-path: inset(0);
 	}
 
 	/* try this as blur-loading for now, see what happens */
@@ -470,10 +454,10 @@ const backgroundImage = `url(/images/${imageBase}-lqip.jpg)`;
 		/* try filter blur on --blur-load */
 		/* so the image always fades in fom blur */
 		/* otherwise it looks a bit acky and chrome sometimes appears to stretch it while its loading */
-		filter: blur(0.5rem);
+		/* filter: blur(0.5rem);
 
 		/* clip-path because the filter: blur bleeds over the previous section */
-		clip-path: inset(0);
+		/* clip-path: inset(0); */
 	}
 
 	.picture--blur-load img {
