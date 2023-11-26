@@ -213,12 +213,20 @@ const backgroundImage = `url(/images/${imageBase}-lqip.jpg)`;
 	// - image is in memory cache and so image.complete will be true when we check (get --show)
 	// - image is in disk cache so in image.complete will be false but the image will load in a moment (get ---show)
 	// - image is downloading so we will need the blur-loading class (get --blur-loading)
+	// -- NB the --blur-loading path will have to set another eventListener for load
 
 	// so the structure of the condition is something like:
 	// if image.complete is false,
 	// set a timeout that gets --blur-loading within 25ms
 	// if image load event hasn't fired
 	// if it has, clear the timeout and get --show
+
+	// so in theory when cache is on, throttling off
+	// it will always be 'image already complete, --show'
+	// or 'load event happened within 25ms --show'
+
+	// and with cache off, throttling on it will always be
+	// 'image not complete, --blur-loading'
 
 	// pictureElements.forEach((pictureEl) => {
 	for (const pictureEl of pictureElements) {
@@ -240,10 +248,12 @@ const backgroundImage = `url(/images/${imageBase}-lqip.jpg)`;
 				console.log("timeout! so doing the blur load thing");
 				console.log(`${pictureImg.src} is NOT complete so adding picture--blur-loading`);
 				pictureEl.classList.add("picture--blur-loading");
+				// add another eventlistener for load here, which adds --show when it fires
 			}, 25);
 
 			// add listener for the load event
 			pictureImg.addEventListener("load", () => {
+				// should probably have a function for adding --show
 				console.log("load event fired so doing the show picture thing for: ", pictureImg);
 				// console.log(`img load event fired so adding picture--show`);
 				pictureEl.classList.add("picture--show");
