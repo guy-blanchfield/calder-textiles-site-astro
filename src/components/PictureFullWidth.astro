@@ -40,8 +40,8 @@ const {
 	pictureClasses,
 	imageClasses,
 	lazyLoad = true,
-	transitionDuration = "200ms",
-	transitionDelay = "2000ms",
+	transitionDuration = "1000ms",
+	transitionDelay = "500ms",
 } = Astro.props;
 
 // just create the whole string for each srcset
@@ -68,6 +68,7 @@ const landscapeSrcsetWebp = `/images/${imageBase}-960x540.webp 960w, /images/${i
 // const landscapeSrcsetWebp = `/images/${imageBase}-960x540.webp 960w, /images/${imageBase}-1440x810.webp 1440w, /images/${imageBase}-1920x1080.webp 1920w, /images/${imageBase}-2560x1440.webp 2560w`; // 16:9
 
 const fallbackSrc = `/images/${imageBase}-960x540.jpg`;
+// const fallbackSrc = `/images/${imageBase}-1920x1080.jpg`;
 
 // need to create image path variable to pass into style
 // using define:vars
@@ -103,15 +104,18 @@ const backgroundImage = pictureClasses.includes("hero")
 */
 
 // think we're just going to use the blur for both hero and pictureSection, at least for now
-// consider using backdrop-filter blur, then we could just use a really low quality version of the image
-// and blur it in the browser, caniuse says 96.5% for backdrop-filter so give it a go
+// consider using filter blur, then we could just use a really low quality version of the image
+// and blur it in the browser, caniuse says 97.7% for filter blur so give it a go
 
 const backgroundImage = `url(/images/${imageBase}-lqip.jpg)`;
 
 // const backgroundImageTiny = `url(/images/${imageBase}-20x11.jpg)`;
 // const backgroundImageLQIP = `url(/images/${imageBase}-lqip-blur.jpg)`;
+
+// import testHeroImage from "../images/test-cream-yarn-2360x1330.webp";
 ---
 
+<!-- <img src={testHeroImage} alt="Testing the hero image" width="2360" height="1330" class="test-hero-image" /> -->
 <picture class:list={pictureClasses}>
 	<!-- just use media min-width for now -->
 	<!-- add something for orientation (e.g. media="(orientation: portrait)") eventually -->
@@ -148,9 +152,16 @@ const backgroundImage = `url(/images/${imageBase}-lqip.jpg)`;
 	<!-- using portrait images on viewports between 576 and 768 looks weird and wrong -->
 	<!-- so use an 'and' here to specify a min-width condition -->
 	<!-- viewports that are portrait and between 576 and 768 will get the fallback image -->
+	<!-- edit: 29-11-2023 -->
+	<!-- not sure what all that min-width was supposed to be doing -->
+	<!-- (it was only min-width 768 anyway, no sign of the 576?!) -->
+	<!-- (for info, the media attribute was (orientation: portrait) and (min-width: 768px)) -->
+	<!-- anyway, let's just leave it at orientation: portrait for now, see how it goes -->
 
-	<source media="(orientation: portrait) and (min-width: 768px)" srcset={portraitSrcsetWebp} type="image/webp" />
-	<source media="(orientation: portrait) and (min-width: 768px)" srcset={portraitSrcset} type="image/jpeg" />
+	<!-- if you change the media queries here, remember to update the querySelectors in the script -->
+
+	<source media="(orientation: portrait)" data-srcset={portraitSrcsetWebp} type="image/webp" />
+	<source media="(orientation: portrait)" data-srcset={portraitSrcset} type="image/jpeg" />
 
 	<!-- because this is picture so there's no 'sizes', browser will assume the image to be 100vw (correctly in this case!) -->
 	<!-- so we probably don't need any other media query, just let the browser select the best image based on the device pixel density -->
@@ -158,8 +169,16 @@ const backgroundImage = `url(/images/${imageBase}-lqip.jpg)`;
 	<!-- query here was originally min-width: 768px, but that meant that at landscape orientations less than 768 -->
 	<!-- no image at all was shown (why the fallback image didn't apply, who knows? duh the jpgs hadn't been created! should work now) -->
 	<!-- either way, try orientation: landscape instead -->
-	<source media="(orientation: landscape)" srcset={landscapeSrcsetWebp} type="image/webp" />
-	<source media="(orientation: landscape)" srcset={landscapeSrcset} type="image/jpeg" />
+
+	<!-- right, think we're gonna try setting the srcset attribute with the script -->
+	<!-- so we can gain more control over the image loading -->
+	<!-- (firefox kept waiting for the image to load before running the script!) -->
+
+	<!-- <source media="(orientation: landscape)" srcset={landscapeSrcsetWebp} type="image/webp" /> -->
+	<!-- <source media="(orientation: landscape)" srcset={landscapeSrcset} type="image/jpeg" /> -->
+	<source media="(orientation: landscape)" type="image/webp" data-srcset={landscapeSrcsetWebp} />
+	<source media="(orientation: landscape)" type="image/jpeg" data-srcset={landscapeSrcset} />
+
 	<!-- <source srcset="./assets/images/${heroImage}-1440x960.jpg 2880w, ./assets/images/${heroImage}-2000x1333.jpg 1440w" media="(min-width: 100px)"> -->
 	<!-- <source srcset="./assets/images/${heroImage}-1440x960.jpg" media="(min-width: 1200px)"> -->
 
@@ -174,32 +193,32 @@ const backgroundImage = `url(/images/${imageBase}-lqip.jpg)`;
 
 	<!-- width and height settings to aid lazy loading -->
 	<!-- fallbacksrc is 960x540 so try that -->
+	<!-- think we'll have to set fallback in script otherwise browsers will try to download it -->
+	<!-- bc the source srcset doesn't get set until the script runs -->
+	<!-- we'll have to include that as a data attribute as well -->
+
+	<!-- if we don't go to the blur-loading stage the transitionDuration attribute has to get set to 0 somehow -->
 
 	<img
-		src={fallbackSrc}
 		alt={imageAlt}
 		class:list={imageClasses}
 		loading={lazyLoad ? "lazy" : "eager"}
 		data-transition-duration={transitionDuration}
 		data-transition-delay={transitionDelay}
+		data-src={fallbackSrc}
 		width="960"
 		height="540"
 	/>
 </picture>
 
 <!-- <script define:vars={{ fallbackSrc }}> -->
+<!-- <script define:vars={{landscapeSrcsetWebp, landscapeSrcset}}> -->
+<!-- nope, define:vars makes scripts inline, pass the vars as data-attributes instead -->
 <script>
-	const doBlurLoad = () => {
-		// console.log("doing the blur load thing");
-		// console.log(`${pictureImg.src} is NOT complete so adding picture--blur-loading`);
-		// pictureEl.classList.add("picture--blur-loading");
-	};
+	// console.log("PFW Script running!");
 
-	const doShowPicture = (e: Event) => {
-		console.log("doing the show picture thing for: ", e.target);
-		// clear the timeout
-		// clearTimeout(imgLoadTimer);
-	};
+	// import { Image } from "astro:assets";
+
 	// wait for the image to load, then transition the opacity
 	// think this script will only run once, not once for each instance of the component
 	// so grabs the img inside all pictures with class picture--blur-load
@@ -216,7 +235,7 @@ const backgroundImage = `url(/images/${imageBase}-lqip.jpg)`;
 	// -- NB the --blur-loading path will have to set another eventListener for load
 
 	// so the structure of the condition is something like:
-	// if image.complete is false,
+	// if image.complete (or image.naturalWidth) is false,
 	// set a timeout that gets --blur-loading within 25ms
 	// if image load event hasn't fired
 	// if it has, clear the timeout and get --show
@@ -228,12 +247,63 @@ const backgroundImage = `url(/images/${imageBase}-lqip.jpg)`;
 	// and with cache off, throttling on it will always be
 	// 'image not complete, --blur-loading'
 
+	// NB! This is the case for chrome and edge, but NOT for firefox...
+	// because in the current setup (scripts here in pictureFullWidth)
+	// firefox wants to download the whole image before it runs the script
+	// so image.complete is always true
+
+	// so, either move the script (e.g. to layout)
+	// or ensure a reliable fallback/ failsafe
+
 	// pictureElements.forEach((pictureEl) => {
 	for (const pictureEl of pictureElements) {
+		// select picture source by media and by type
+
+		const sourcePortraitWebp: HTMLSourceElement = pictureEl.querySelector(
+			'[media="(orientation: portrait)"][type="image/webp"]'
+		);
+		const sourcePortraitJpeg: HTMLSourceElement = pictureEl.querySelector(
+			'[media="(orientation: portrait)"][type="image/jpeg"]'
+		);
+		const sourceLandscapeWebp: HTMLSourceElement = pictureEl.querySelector(
+			'[media="(orientation: landscape)"][type="image/webp"]'
+		);
+		const sourceLandscapeJpeg: HTMLSourceElement = pictureEl.querySelector(
+			'[media="(orientation: landscape)"][type="image/jpeg"]'
+		);
+
+		// get srcset from data attribute
+		sourcePortraitWebp.srcset = sourcePortraitWebp.dataset.srcset;
+		sourcePortraitJpeg.srcset = sourcePortraitJpeg.dataset.srcset;
+		sourceLandscapeWebp.srcset = sourceLandscapeWebp.dataset.srcset;
+		sourceLandscapeJpeg.srcset = sourceLandscapeJpeg.dataset.srcset;
+
+		// now see what we get
+		console.log(`sourcePortraitWebp srcset: ${sourcePortraitWebp.dataset.srcset}`);
+		console.log(`sourcePortraitJpeg srcset: ${sourcePortraitJpeg.dataset.srcset}`);
+		console.log(`sourceLandscapeWebp srcset: ${sourceLandscapeWebp.dataset.srcset}`);
+		console.log(`sourceLandscapeJpeg srcset: ${sourceLandscapeJpeg.dataset.srcset}`);
+
 		// for typesript typing...
 		// MDN: The returned timeoutID is a positive integer value which identifies the timer created by the call to setTimeout().
 		let imgLoadTimer: number;
+		// how long to wait before initiating the blur-load process
+		const imgLoadTimerDuration: number = 25;
 		const pictureImg = pictureEl.querySelector("img");
+
+		// first of all, grab the data duration attribute then set it to 0
+		// if we go to the blur-loading stage we'll set it back to its original value
+		const transitionDuration = pictureImg.dataset.transitionDuration;
+		// "0" will do it but go with "0ms" just for consistency
+		pictureImg.dataset.transitionDuration = "0ms";
+		console.log(`data-transition-duration: ${pictureImg.dataset.transitionDuration}`);
+
+		// once the source srcset is set, it's probably safe to set the src.. yep!
+		pictureImg.src = pictureImg.dataset.src;
+
+		console.log(`pictureImg.complete: ${pictureImg.complete}`);
+		console.log(`pictureImg.naturalWidth: ${pictureImg.naturalWidth}`);
+		console.log(`pictureImg.src: ${pictureImg.src}`);
 
 		// can't rely on .complete and naturalWidth because they might return false
 		// even if image is in cache
@@ -241,27 +311,39 @@ const backgroundImage = `url(/images/${imageBase}-lqip.jpg)`;
 
 		//  so we need to give the browser a few milliseconds to load the image, before we go to the blur-loading
 
-		//  check complete first
-		if (!pictureImg?.complete) {
+		//  check complete and naturalWidth first
+		//  if either .complete or naturalWidth is false, assume the image is not yet loaded
+		if (!(pictureImg?.complete && pictureImg.naturalWidth)) {
 			// set timeout that will do the blurloading thing (if the load event hasn't fired within 25ms)
 			imgLoadTimer = setTimeout(() => {
 				console.log("timeout! so doing the blur load thing");
 				console.log(`${pictureImg.src} is NOT complete so adding picture--blur-loading`);
+				// if we're going through the blur-loading process we need to set the duration data attribute to its original
+				// value, so that the heroTextTransition can calculate the right duration for its transition
+				pictureImg.dataset.transitionDuration = transitionDuration;
+				console.log(`data-transition-duration: ${pictureImg.dataset.transitionDuration}`);
 				pictureEl.classList.add("picture--blur-loading");
-				// add another eventlistener for load here, which adds --show when it fires
-			}, 25);
+				// now that blur-loading has been added, we can allow the event listener to continue waiting for load
+				// it will add --show when the image loads
+			}, imgLoadTimerDuration);
 
 			// add listener for the load event
+			// if this fires before the timeout, we're assuming the image was cached and its cool to show it
+			// without going through the blur-loading process (i.e. no background image lqip and no filter blur)
 			pictureImg.addEventListener("load", () => {
 				// should probably have a function for adding --show
 				console.log("load event fired so doing the show picture thing for: ", pictureImg);
 				// console.log(`img load event fired so adding picture--show`);
 				pictureEl.classList.add("picture--show");
 				// clear the timeout
-				// console.log("clearing the timeout");
-				// clearTimeout(imgLoadTimer);
+				console.log("clearing the timeout");
+				clearTimeout(imgLoadTimer);
 			});
+
+			// otherwise we can assume the image has already loaded
 		} else {
+			console.log(`pictureImg.complete: ${pictureImg.complete}`);
+			console.log(`pictureImg.naturalWidth: ${pictureImg.naturalWidth}`);
 			console.log("image is already complete so adding --show");
 			pictureEl.classList.add("picture--show");
 		}
@@ -340,8 +422,8 @@ const backgroundImage = `url(/images/${imageBase}-lqip.jpg)`;
 
 	/* another class called 'picture--blur-loading' is added by js once we've checked that the image isn't already loaded */
 	/* this adds: */
-	/*  - blurred bg image  */
-	/*  - the transition property */
+	/*  - lqip as bg image  */
+	/*  - filter blur */
 	/*  - the pulsing overlay (using ::before) */
 
 	/* bc we don't want the blurred bg or transition or the pulsing overlay if the image is already loaded */
@@ -492,7 +574,7 @@ const backgroundImage = `url(/images/${imageBase}-lqip.jpg)`;
 		/* delete those rules above, when this is all done */
 
 		/*  try hiding the image until its loaded so we don't see it loading in vertically */
-		opacity: 0;
+		opacity: 0.01;
 		/* opacity transition as well as filter blur transition seems like a bad idea cpu wise */
 		/* ok, delay the filter transition, while we do the opcaity transition */
 		transition: opacity var(--transitionDelay);

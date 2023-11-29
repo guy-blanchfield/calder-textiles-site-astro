@@ -47,6 +47,14 @@ function initialise() {
 
 		// MDN says: (note that dashes are converted to camel case).
 		// heroTextTransitionDelay is equal to the time it takes the image to fade in (delay) plus the filter blur to disappear (duration)
+
+		// NB! Problem here is that is if blur-loading phase is skipped (i.e image is already loaded / cached)
+		// the heroText transition is still going to have the extra delay
+		// so we'll have to update the data-transition-duration or delay (which is which?) (set it to zero) attribute when skipping blur-loading
+
+		// currently the video always gets the filter blur so it should use both delay and duration
+		// but the image only needs duration if it's gone to blur-loading
+		// (filter transition is duration, opacity transition is delay!)
 		const heroTextTransitionDelay: number = heroImage
 			? parseInt(heroImage.dataset.transitionDuration) + parseInt(heroImage.dataset.transitionDelay)
 			: parseInt(heroVideo.dataset.transitionDuration) + parseInt(heroVideo.dataset.transitionDelay);
