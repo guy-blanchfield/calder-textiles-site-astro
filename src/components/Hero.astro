@@ -78,7 +78,11 @@ const currentPath = Astro.url.pathname;
 
 	{
 		currentPath === "/" ? (
-			<VideoFullWidth videoBase={imageBase} videoAutoplay="false" />
+			<VideoFullWidth
+				videoBase={imageBase}
+				videoAutoplay="false"
+				videoDescription="Video showing sheep walking on a mountain."
+			/>
 		) : (
 			<PictureFullWidth
 				imageBase={imageBase}

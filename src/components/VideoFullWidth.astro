@@ -2,6 +2,7 @@
 export interface Props {
 	videoBase: string;
 	videoAutoplay?: string;
+	videoDescription: string;
 	pictureClasses?: string; // e.g. hero__picture
 	// might as well have a prop for the fade transition time
 	// that will go into a data-attribute
@@ -15,6 +16,7 @@ export interface Props {
 const {
 	videoBase,
 	videoAutoplay = "true",
+	videoDescription,
 	pictureClasses = "",
 	transitionDuration = "300ms",
 	transitionDelay = "100ms",
@@ -48,6 +50,7 @@ const backgroundImageLQIP = `url(/images/${videoBase}-lqip.jpg)`;
 		loop
 		playsinline
 	>
+		<p>{videoDescription}</p>
 		<p>Your browser doesn't support HTML video.</p>
 	</video>
 </div>
@@ -165,70 +168,9 @@ const backgroundImageLQIP = `url(/images/${videoBase}-lqip.jpg)`;
 			// think the returned value from a setTimeout is an integer id
 			let transitionEndFallback: number;
 
-			if (location.hash === "#aboutus") {
-				// think we can delete this whole condition
-				// just run the doSetSource()
-				// no idea what it's doing (why did the video need to wait for pageHeadingTransition????)
-				// leave it for now but revisit
-				// comment it out and put a doSetSource in instead, see what happens...
-
-				// right, think it's a hangover from when we trying to stop the video playing until
-				// all the aos animations had finished bc we thought they might be making the video jittery
-				// but i can't see anything else left of that code, whatever it was, so i reckon this whole
-				// #aboutus pageheading transitionend handler stuff can go
-
-				/*
-				console.log("setting transitionend listener");
-				pageContentHeading.addEventListener("transitionend", pageContentTransitionEndHandler);
-				// pageContentHeading.setAttribute("data-event-transitioneend", "true");
-
-				// in the case of a page reload when url is #aboutus and user has scrolled back to the top
-				// i.e. the video is showing and playing, the reload will not set video source
-				// because it's waiting for the page content transitionend, but that won't come until the
-				// page content is in view (or close enough to the view port for the intersection observer to do its thing)
-				// so we need a fallback
-				// probably a settimeout, say half a second
-				// the timeout will need to be cancelled by the transition end
-				// it's initialised above - typescript doesn't like it being declared inside an if
-				transitionEndFallback = setTimeout(pageContentTransitionEndHandler, 500);
-				*/
-
-				// testing...
-				doSetSource();
-			} else {
-				doSetSource();
-			}
-
-			// following 2 functions are only required by setSource
-			// so they're nested inside setSource
-
-			// named function for the event listener
-			// so it can be removed once it has run
-			function pageContentTransitionEndHandler() {
-				console.log("page content transitionend!");
-				doSetSource();
-				pageContentHeading.removeEventListener("transitionend", pageContentTransitionEndHandler);
-				// cancel the fallback timeout
-				clearTimeout(transitionEndFallback);
-				console.log("clear the fallback timeout");
-			}
-
-			// the actual set source procedure
-			function doSetSource() {
-				// probably don't need any conditional now (was if (!videoElement.src)),
-				// set source should only be called once (from one place)
-				console.log("setting video source (and adding --show class)");
-				videoElement.src = videoSource;
-				// fade-in the video
-				// now we're using filter: blur, the video doesn't fade in, the blur fades out
-				// so the modifier class goes on the container, not the element
-				// videoElement.classList.add("video-element--show");
-				// are we sure we want the --show class to be added here?
-				// why not when the video is ready?
-
-				// yeah it needs to be when video is ready, which is handled by the initialise script (initialise.ts)
-				// videoElement.parentElement?.classList.add("video-container--show");
-			}
+			// doSetSource();
+			console.log("setting video source (and adding --show class)");
+			videoElement.src = videoSource;
 		}
 
 		// this was window.onload but we're using the window load event quite a lot
