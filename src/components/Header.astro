@@ -152,7 +152,7 @@ const currentPath = Astro.url.pathname;
 							href="/#aboutus"
 							class="nav-link"
 							id="nav-link__aboutus"
-							aria-current={currentPath.includes("/#content") ? "page" : false}>About Us</a
+							aria-current={currentPath.includes("/#aboutus") ? "page" : false}>About Us</a
 						>
 					</li>
 
@@ -206,12 +206,27 @@ const currentPath = Astro.url.pathname;
 	// consider putting this stuff in initialise
 	// but maybe it makes more sense to keep it in header with the navmenu
 
+	// define vars, get refs
+	const navbarToggler: HTMLButtonElement = document.querySelector(".navbar-toggler");
+	const toggleTarget = navbarToggler.dataset.bsTarget;
+	const navMenu: HTMLDivElement = document.querySelector(toggleTarget);
+
 	// detect hash change
-	window.addEventListener("hashchange", handleURLChange);
+	window.addEventListener("hashchange", () => {
+		// console.log("hashchange!");
+		handleURLChange();
+		// clicking #aboutus link from home page stays on same page,
+		// so we need to close the mobile nav menu manually
+		// but toggle it conditional on the menu already being open
+		if (navMenu.getAttribute("aria-hidden") === "false") {
+			toggleMobileNavMenu();
+		}
+	});
 	// detect page load
 	window.addEventListener("DOMContentLoaded", handleURLChange);
 
 	function handleURLChange() {
+		// console.log("handleURLChange!");
 		// check if we're viewing the about us section (probably /#aboutus)
 		// if true, set the about us nav-link aria-current attribute to page
 		// else set it to false
@@ -220,20 +235,11 @@ const currentPath = Astro.url.pathname;
 	}
 
 	// quick dirty replacement for bootstrap navmenu js
-	const navbarToggler: HTMLButtonElement = document.querySelector(".navbar-toggler");
-	const toggleTarget = navbarToggler.dataset.bsTarget;
-	const navMenu: HTMLDivElement = document.querySelector(toggleTarget);
 
-	const toggleNavbar = (e: Event) => {
+	const toggleMobileNavMenu = (e: Event = null) => {
 		// console.log(e.target);
 		console.log("toggle!");
 
-		// NB any display: none is going to break the transition
-		// whether it's doen in css or in js
-		// we need an alternative
-
-		// console.log("display: ", navMenu.style.display);
-		// navMenu.style.display = navMenu.style.display !== "block" ? "block" : "none";
 		navMenu.classList.toggle("show");
 		// also toggle aria-expanded and aria-hidden
 		if (navbarToggler.getAttribute("aria-expanded") === "false") {
@@ -245,7 +251,7 @@ const currentPath = Astro.url.pathname;
 		}
 	};
 
-	navbarToggler.addEventListener("click", toggleNavbar);
+	navbarToggler.addEventListener("click", toggleMobileNavMenu);
 </script>
 
 <style>

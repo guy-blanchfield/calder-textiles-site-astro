@@ -146,28 +146,6 @@ const backgroundImageLQIP = `url(/images/${videoBase}-lqip.jpg)`;
 		// or in the window.onload callback (below)
 		// but now it's just called once after the vars are set
 		function setSource() {
-			// ------------------- to fix the stuttery page content fade-up ----------------------------
-
-			// The stuttery fade-up in firefox is caused the presence of the video.
-			// It doesn't matter if the video's playing or not, just that it's there
-			// the only time the transition is smooth is when the the video src isn't set
-
-			// (also tried it with different power settings, still stuttery)
-
-			// so if url has #aboutus on load, delay setting the video src until the
-			// pageContent fade-up transition has completed
-
-			// NB tested this and it almost certainly makes a difference
-			// it's possible that some of the problem is hardware acceleration in firefox
-			// tried that off, but it was generally better on
-
-			// get a reference to one of the transitioning page content elements
-			const pageContentHeading = document.querySelector(".section-pagecontent__heading");
-
-			// the following let is a ref id for the setTimeout that we create below
-			// think the returned value from a setTimeout is an integer id
-			let transitionEndFallback: number;
-
 			// doSetSource();
 			console.log("setting video source (and adding --show class)");
 			videoElement.src = videoSource;

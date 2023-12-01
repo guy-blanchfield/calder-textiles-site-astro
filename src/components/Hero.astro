@@ -75,7 +75,9 @@ const currentPath = Astro.url.pathname;
 <!-- not using min-vh-100 now, using calc and header has sticky-top -->
 <div class="hero">
 	<!-- if current page is home page, show the video, otherwise show the appropriate picture -->
-
+	<!-- maybe we should pass a prop to hero to define whether it's a video hero or picture hero -->
+	<!-- the currentpath is a bit limiting, clunky -->
+	<!-- prop would have to come from the page into hero though... hmmm -->
 	{
 		currentPath === "/" ? (
 			<VideoFullWidth
