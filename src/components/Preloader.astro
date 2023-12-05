@@ -1,8 +1,21 @@
 ---
+import { Icon } from "astro-icon";
 ---
 
 <!-- see: https://www.youtube.com/watch?v=-HS9IIuT_Mo&t=418s --><!-- or, if you want something fancier https://www.youtube.com/watch?v=Gx35fMhDPWs --><!-- might need to do something to disable scroll while preloader is showing --><!-- yeah really need to do this! --><!-- lets create this div with the script, so we can be sure it's ready in time --><!-- the script here isn't deferred --><!-- tried that, didn't take for some reason -->
-<div class="loader loader--blank"></div>
+<div class="loader loader--blank">
+	<!-- another div here to position the icon and the spinning circle absolutely -->
+	<div class="loader__inner">
+		<div class="spinning-circle"></div>
+		<Icon
+			name="caldertextiles-c-icon"
+			width={50}
+			class="caldertextiles-c-icon-svg"
+			aria-hidden="true"
+			alt="Calder Textiles"
+		/>
+	</div>
+</div>
 
 <script>
 	import initialise from "../js/initialise";
@@ -102,7 +115,11 @@
 
 		// add eventlistener for the window load event, fires when everything is loaded (except lazy loaded images)
 		// the callback / handler will hide the loader, show the content and set the sessionstorage item
-		window.addEventListener("load", () => handleWindowLoad(preLoader));
+
+		// --------------------------------------------------------------------------------
+		// disable this to test!!!!!!!!
+		// also, isn't load event unnecessarily late? would dcl work instead?
+		// window.addEventListener("load", () => handleWindowLoad(preLoader));
 		console.log(`load event listener added`);
 	} else {
 		// this is what happens if there's no preloader
@@ -169,15 +186,43 @@
 		/* will-change: opacity; */
 	}
 
-	.loader--loading::after {
+	/* .loader--loading::after {
 		content: "";
 		display: flex;
 		width: 70px;
 		height: 70px;
 		border: 5px solid var(--accent-2);
+		border-top-color: hsl(var(--white));
+		border-radius: 50%;
+
+		animation: loading 0.75s linear infinite;
+	} */
+
+	.loader__inner {
+		position: relative;
+		/* maybe it'll need a size */
+		min-width: 70px;
+		min-height: 70px;
+		/* border: 1px solid #ff0; */
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.spinning-circle {
+		position: absolute;
+		inset: 0;
+		/* was ::after (see above) but now we need it as a real element */
+		/* so the the little c iscon can go inside it, and it still be centered */
+		display: flex;
+		width: 70px;
+		height: 70px;
+		border: 2px solid var(--accent-2);
 		/* border-top-color so a quarter of the circle is a different colour */
 		border-top-color: hsl(var(--white));
 		border-radius: 50%;
+
+		/* transform: translateX(-2.1rem); */
 
 		animation: loading 0.75s linear infinite;
 	}
@@ -202,5 +247,36 @@
 		/* so add this class with an event listener for transition end */
 		/* also add it if preloadComplete is true */
 		visibility: hidden;
+	}
+
+	.caldertextiles-c-icon-svg {
+		/* position: absolute; */
+		/* inset: 0; */
+		/* color: var(--accent-2); */
+		color: var(--white);
+		/* transform: translateX(60px); */
+		/* border: 1px solid #f0f; */
+		width: 35px;
+		height: 35px;
+		/* z-index: 2000000; */
+		animation: pulsing 1.5s linear infinite;
+	}
+
+	@keyframes pulsing {
+		0% {
+			/* transform: scale(1); */
+			/* transform: scaleX(-1); */
+			opacity: 0.25;
+		}
+		50% {
+			/* transform: scale(0.9); */
+			/* transform: scaleX(1); */
+			opacity: 1;
+		}
+		100% {
+			/* transform: scale(1); */
+			/* transform: scaleX(-1); */
+			opacity: 0.25;
+		}
 	}
 </style>

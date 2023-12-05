@@ -40,8 +40,8 @@ const {
 	pictureClasses,
 	imageClasses,
 	lazyLoad = true,
-	transitionDuration = "1000ms",
-	transitionDelay = "500ms",
+	transitionDuration = "300ms", // these don't affect lightouse score
+	transitionDelay = "100ms", // so set them to whatever looks best
 } = Astro.props;
 
 // just create the whole string for each srcset
@@ -575,6 +575,7 @@ const backgroundImage = `url(/images/${imageBase}-lqip.jpg)`;
 
 		/*  try hiding the image until its loaded so we don't see it loading in vertically */
 		opacity: 0.01;
+		/* temp try 1 for lighthouse - nah that didn't work */
 		/* opacity transition as well as filter blur transition seems like a bad idea cpu wise */
 		/* ok, delay the filter transition, while we do the opcaity transition */
 		transition: opacity var(--transitionDelay);

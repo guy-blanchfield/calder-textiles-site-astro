@@ -1,0 +1,66 @@
+---
+import "../styles/global.css";
+
+// import cIcon from "../icons/calder-textiles-c-icon.svg";
+import cIcon from "../icons/calder-textiles-favicon-figma.svg";
+---
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta
+			name="description"
+			content="Calder Textiles is one of the UK's foremost woollen yarn spinners with a world-wide reputation for excellence."
+		/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="generator" content={Astro.generator} />
+
+		<!-- development site only!!!!!! -->
+		<meta name="robots" content="noindex" />
+
+		<title>Test C Icon</title>
+	</head>
+
+	<body>
+		<div class="img-container">
+			<!-- <img src={cIcon} alt="Calder Textiles C Icon" width="100" height="100" class="caldertextiles-c-icon" /> -->
+			<svg src={cIcon} alt="Calder Textiles C Icon" width="100" height="100" class="caldertextiles-c-icon"></svg>
+		</div>
+
+		<noscript
+			>JavaScript is currently disabled. This site requires JavaScript to function correctly. Please enable JavaScript
+			in your browser.</noscript
+		>
+	</body>
+</html>
+
+<style>
+	body {
+		background-color: var(--pageContentBgColour-3);
+	}
+
+	.img-container {
+		/* margin-inline: auto; */
+		border: 1px solid #f00;
+	}
+
+	img {
+		display: block;
+		max-width: 100%;
+		height: auto;
+		margin-inline: auto;
+		border: 1px solid #00f;
+	}
+
+	svg {
+		color: #fff;
+	}
+
+	.caldertextiles-c-icon {
+		fill: #fff;
+		color: #fff;
+		/* background-color: #fff; */
+	}
+</style>
