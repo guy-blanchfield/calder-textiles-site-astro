@@ -3,10 +3,12 @@ import { Icon } from "astro-icon";
 ---
 
 <!-- see: https://www.youtube.com/watch?v=-HS9IIuT_Mo&t=418s --><!-- or, if you want something fancier https://www.youtube.com/watch?v=Gx35fMhDPWs --><!-- might need to do something to disable scroll while preloader is showing --><!-- yeah really need to do this! --><!-- lets create this div with the script, so we can be sure it's ready in time --><!-- the script here isn't deferred --><!-- tried that, didn't take for some reason -->
-<div class="loader loader--blank">
+<div class="loader">
+	<!-- <div class="loader loader--blank"> -->
+
 	<!-- another div here to position the icon and the spinning circle absolutely -->
 	<div class="loader__inner">
-		<div class="spinning-circle"></div>
+		<!-- <div class="spinning-circle"></div> -->
 		<Icon
 			name="caldertextiles-c-icon"
 			width={50}
@@ -61,15 +63,27 @@ import { Icon } from "astro-icon";
 		// hide the loader
 		loader.classList.add("loader--transparent");
 		// set loader visibility to hidden so it doesn't interfere with links and buttons
-		loader.classList.add("loader--hidden");
+		// nah - this needs doing on transitionend or it breaks the transition
+		// it actually doesn't matter because the only time we use hideLoader is to hide it if it's not required
+		// NOT if it's finished doing it's thing and we're fading it out
+		// but at the moment we're using .remove() instead to take the preloader out of the dom completely
+		// (see handleTranstionEnd() below)
+		//  so we can do that here, without waiting for any transition
+		loader.remove();
+		// console.log("loader removed!");
+		// loader.classList.add("loader--hidden");
 
 		console.log(`loader not showing, preloadComplete: ${sessionStorage.getItem("preloadComplete")}`);
 	}
 
 	function handleTransitionEnd() {
 		// set preloader visibility to hidden
-		this.classList.add("loader--hidden");
-		console.log("transitionend event fired - preloader visibility hidden");
+		// this.classList.add("loader--hidden");
+		// try removing the loader instead of setting visibility to hidden
+		// (value of 'this' is set bc this function is a callback from an eventlistener
+		this.remove();
+		console.log("element removed", this);
+		// console.log("transitionend event fired - preloader visibility hidden");
 		// remove the body class that was disabling scrolling
 		document.body.classList.remove("loader-showing");
 		console.log("remove body class loader-showing");
@@ -82,7 +96,8 @@ import { Icon } from "astro-icon";
 
 	function handleWindowLoad(loader: HTMLElement) {
 		console.log(`load event fired!`);
-		preLoader.classList.add("loader--transparent");
+		// set the loader to transparent, initiating the transition (the end of which triggers handleTransitionEnd())
+		loader.classList.add("loader--transparent");
 
 		// set the session storage item to log that preload has been completed
 		sessionStorage.setItem("preloadComplete", "true");
@@ -117,16 +132,22 @@ import { Icon } from "astro-icon";
 		// the callback / handler will hide the loader, show the content and set the sessionstorage item
 
 		// --------------------------------------------------------------------------------
-		// disable this to test!!!!!!!!
+		// disable this eventlistener line to test loading animation!!!!!!!!
 		// also, isn't load event unnecessarily late? would dcl work instead?
-		// window.addEventListener("load", () => handleWindowLoad(preLoader));
+		// no bc we want to make sure the fonts are loaded
+		window.addEventListener("load", () => handleWindowLoad(preLoader));
 		console.log(`load event listener added`);
 	} else {
+		console.log("no loader condition");
 		// this is what happens if there's no preloader
 		// i.e. the session storage item 'preloadcomplete' has already been set
 
 		// hide the preloader
+		// this is currently the only time we call hideLoader
 		hideLoader(preLoader);
+		// there's a problem here, in that until this script runs, the loader will still be stopping the links working
+		// it doesn't show, bc the background is only applied by loader--loading but it's still there
+		// any ideas?
 
 		// this is the second place we need to call the initialise function
 		// i.e. if preloadComplete is already set and we're skipping the loader
@@ -186,43 +207,21 @@ import { Icon } from "astro-icon";
 		/* will-change: opacity; */
 	}
 
-	/* .loader--loading::after {
+	/* the spinning circle is being done with an ::after bc historical reasons */
+	/* (it used to be the only element in the loader) */
+	/* it could just as well be done with a div inside loader__inner (as a sibling of the icon) */
+
+	/* .loader--loading::after { */
+	.loader--loading .loader__inner::after {
 		content: "";
 		display: flex;
-		width: 70px;
-		height: 70px;
-		border: 5px solid var(--accent-2);
-		border-top-color: hsl(var(--white));
-		border-radius: 50%;
-
-		animation: loading 0.75s linear infinite;
-	} */
-
-	.loader__inner {
-		position: relative;
-		/* maybe it'll need a size */
-		min-width: 70px;
-		min-height: 70px;
-		/* border: 1px solid #ff0; */
-		display: flex;
-		align-items: center;
-		justify-content: center;
-	}
-
-	.spinning-circle {
 		position: absolute;
 		inset: 0;
-		/* was ::after (see above) but now we need it as a real element */
-		/* so the the little c iscon can go inside it, and it still be centered */
-		display: flex;
 		width: 70px;
 		height: 70px;
-		border: 2px solid var(--accent-2);
-		/* border-top-color so a quarter of the circle is a different colour */
+		border: 3px solid var(--accent-2);
 		border-top-color: hsl(var(--white));
 		border-radius: 50%;
-
-		/* transform: translateX(-2.1rem); */
 
 		animation: loading 0.75s linear infinite;
 	}
@@ -246,10 +245,30 @@ import { Icon } from "astro-icon";
 		/* but we definitely need it hidden otherwise no links or buttons work! */
 		/* so add this class with an event listener for transition end */
 		/* also add it if preloadComplete is true */
+
+		/* why not just remove preloader from the dom? try that (in handleTransitionEnd function above) */
 		visibility: hidden;
 	}
 
-	.caldertextiles-c-icon-svg {
+	.loader__inner {
+		position: relative;
+		/* maybe it'll need a size */
+		min-width: 70px;
+		min-height: 70px;
+		/* border: 1px solid #ff0; */
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	/* hide the c-icon until loader is set to --loading */
+	.loader .caldertextiles-c-icon-svg {
+		display: none;
+	}
+
+	.loader--loading .caldertextiles-c-icon-svg {
+		/* unhide icon for loader--loading */
+		display: initial;
 		/* position: absolute; */
 		/* inset: 0; */
 		/* color: var(--accent-2); */
