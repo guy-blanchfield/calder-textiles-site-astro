@@ -146,6 +146,7 @@ if (sectionImageBase) {
 
 		<!-- preloader has to be outside the content-wrapper duh! -->
 		<Preloader />
+		<!-- try inlining the visibility rule here - nope -->
 		<div class="content-wrapper">
 			<Header />
 			<!-- put any css to control min-height and flex-grow of body, main, header and footer in global.css -->
@@ -182,6 +183,14 @@ if (sectionImageBase) {
 <script src="../js/setup-aos.js"></script>
 
 <!-- <style define:vars={{bodyBgColour}}> -->
+
+<!-- inline style here to hide the content-wrapper until the rest of the css is loaded  -->
+<!-- remember, for this to work the rule to to override it needs an !important -->
+<style is:inline>
+	.content-wrapper {
+		visibility: hidden;
+	}
+</style>
 <style>
 	/* so the layout component can receive a prop for background-color */
 	/* it'll default to white */
@@ -206,6 +215,10 @@ if (sectionImageBase) {
 	}
 
 	.content-wrapper {
+		/* set visibility to visible once this css has loaded */
+		/* !important here is necessary */
+		visibility: visible !important;
+
 		/* replaces stuff on body to get the content to stretch to fill the window */
 
 		/* vh fallback for browsers that don't support svh */

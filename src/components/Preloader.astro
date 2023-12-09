@@ -147,7 +147,11 @@ import { Icon } from "astro-icon";
 		hideLoader(preLoader);
 		// there's a problem here, in that until this script runs, the loader will still be stopping the links working
 		// it doesn't show, bc the background is only applied by loader--loading but it's still there
-		// any ideas?
+		// given that the background colour is only added by the --loading class
+		// why not make loader visibility hidden as default, then set it visible in --loading? yeah that works
+		// mmm not sure it's doing it's original job of covering the unstyled content...
+		// nah tested thoroughly and that's not the cause of the fouc in firefox
+		// fixed the fouc with an inline visibility: hidden rule for .content-wrapper
 
 		// this is the second place we need to call the initialise function
 		// i.e. if preloadComplete is already set and we're skipping the loader
@@ -193,7 +197,13 @@ import { Icon } from "astro-icon";
 		justify-content: center;
 		display: flex;
 
-		/* visibility: hidden; */
+		/* set it hidden as default so it doesn't interfere with links / buttons while the script is loading */
+		/* let --loading set it to visible, --loading adds the background anyway... */
+
+		visibility: hidden;
+
+		/* definitively this (visibility: hidden) is NOT the cause of the fouc in firefox */
+		/* (fixed the fouc with an inline visibility: hidden rule for .content-wrapper) */
 	}
 
 	.loader--loading {
@@ -203,6 +213,8 @@ import { Icon } from "astro-icon";
 		/* transition: opacity 0.5s, visibility 0.5s; */
 		/* background-color: var(--accent); */
 		transition: opacity 0.5s ease-in;
+
+		visibility: visible;
 
 		/* will-change: opacity; */
 	}
