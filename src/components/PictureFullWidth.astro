@@ -109,6 +109,12 @@ const backgroundImage = pictureClasses.includes("hero")
 
 const backgroundImage = `url(/images/${imageBase}-lqip.jpg)`;
 
+// don't we need a different lqip for portrait though?
+// otherwise when the hq image fades in it'll be a mismatch
+// - tested this and yes, we do need a portrait lqip!
+
+const backgroundImagePortrait = `url(/images/${imageBase}-portrait-lqip.jpg)`;
+
 // const backgroundImageTiny = `url(/images/${imageBase}-20x11.jpg)`;
 // const backgroundImageLQIP = `url(/images/${imageBase}-lqip-blur.jpg)`;
 
@@ -350,7 +356,7 @@ const backgroundImage = `url(/images/${imageBase}-lqip.jpg)`;
 	}
 </script>
 
-<style define:vars={{ backgroundImage, transitionDuration, transitionDelay }}>
+<style define:vars={{ backgroundImage, backgroundImagePortrait, transitionDuration, transitionDelay }}>
 	/* firstly, lets have 100% width and height, and display block for the picture elements */
 	/* definitely need the width and height to make the picture */
 	/* (and hence the image) fill its container (section-picture or hero) */
@@ -450,14 +456,18 @@ const backgroundImage = `url(/images/${imageBase}-lqip.jpg)`;
 
 		/* hard code this for testing */
 		/* background-image: url("/images/pink-yarn-1440x810-lqip.jpg"), url("/images/pink-yarn-20x11.jpg"); */
+
 		/* not sure about having two blurred images, one following the other */
 		/* looks a bit odd, try without the tiny image, have to keep the lqip bc it's the lcp (tiny image doesn't qualify) */
 		/* thing is, lcp is only a concern for hero images but this component handles the section images as well... */
 		/* do we need some conditional? */
+
 		/* background-image: var(--backgroundImageLQIP), var(--backgroundImageTiny); */
 		/* only one backgroundImage now, which is set condtionally in the frontmatter */
 		/* depending on whether the component is Hero or pictureSection */
 		background-image: var(--backgroundImage);
+		/* media query for portrait orientation */
+
 		/* background-image: var(--backgroundImageLowRes), var(--backgroundImageMediumRes); */
 
 		background-size: cover;
@@ -492,6 +502,12 @@ const backgroundImage = `url(/images/${imageBase}-lqip.jpg)`;
 
 		/* clip-path because the filter: blur bleeds over the previous section */
 		clip-path: inset(0);
+	}
+
+	@media (orientation: portrait) {
+		.picture--blur-loading {
+			background-image: var(--backgroundImagePortrait);
+		}
 	}
 
 	/* try this as blur-loading for now, see what happens */
