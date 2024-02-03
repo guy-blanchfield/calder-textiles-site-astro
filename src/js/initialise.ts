@@ -50,7 +50,7 @@ function initialise() {
 
 		// NB! Problem here is that is if blur-loading phase is skipped (i.e image is already loaded / cached)
 		// the heroText transition is still going to have the extra delay
-		// so we'll have to update the data-transition-duration or delay (which is which?) (set it to zero) attribute when skipping blur-loading
+		// so we'll have to update the data-transition-duration attribute when skipping blur-loading
 
 		// currently the video always gets the filter blur so it should use both delay and duration
 		// but the image only needs duration if it's gone to blur-loading
@@ -145,12 +145,18 @@ function initialise() {
 		// this will fade the filter blur out (transition filter blur(1rem) to filter blur(0))
 		heroVideo.parentElement?.classList.add("video-container--show");
 
+		// we should hide the background image when the video is ready
+		// otherwise it has a nasty habit of showing when we leave the page
+		// i.e. on leaving the page, the video disappears first, leaving the ugly background image showing underneath
+		// think we can do this by putting a backgound-image: none on .video-container--show
+
 		// show the hero text
 		console.log(`calling showHeroText function`);
 		showHeroText();
 	}
 
-	// check if fonts are ready then check either image is ready or video is ready
+	// check if fonts are ready then
+	// check either image is ready or video is ready
 	// heroImageReady calls showHeroText
 	// heroVideoReady sets an eventlistener ('canplay') with a callback (canplayCallback)
 	// and the callback calls showHeroText

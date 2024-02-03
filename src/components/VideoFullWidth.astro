@@ -116,7 +116,12 @@ const backgroundImageLQIP = `url(/images/${videoBase}-lqip.jpg)`;
 		//  seems like we don't!
 
 		// if (sessionStorage.getItem("preloadComplete")) {
+		// check that url isn't #aboutus before we set the video src
+		// (if it is we can set src later, once we get the page loaded, somehow)
+		// (maybe a more general check for any hash might be more useful)
+
 		setSource();
+
 		// }
 
 		// temporarily log all this to the screen for testing iOS
@@ -230,6 +235,11 @@ const backgroundImageLQIP = `url(/images/${videoBase}-lqip.jpg)`;
 		transition: filter var(--transitionDuration) var(--transitionDelay);
 		/* transition: filter 5s; */
 		filter: blur(0rem);
+
+		/* we should hide the background image when the video is ready
+		otherwise it has a nasty habit of showing when we leave the page
+		i.e. on leaving the page, the video disappears first, leaving the ugly background image showing underneath */
+		background-image: none;
 	}
 
 	.video-container--show .video-element {

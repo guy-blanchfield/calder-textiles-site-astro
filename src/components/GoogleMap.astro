@@ -27,6 +27,10 @@
         ({key: apiKey, v: "weekly"});
 </script>
 
+<!-- this defines a new insertBefore method to prevent google maps from downloading fonts -->
+<!-- see: https://stackoverflow.com/questions/25523806/google-maps-v3-prevent-api-from-loading-roboto-font/25902239#25902239 -->
+<script is:inline type="module" src="/scripts/prevent-maps-font-download.js"></script>
+
 <!-- tested this to confirm that type=module does cause it to defer, without it, it runs first -->
 <script is:inline type="module" src="/scripts/google-map.js"></script>
 

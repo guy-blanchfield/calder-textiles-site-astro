@@ -1,0 +1,34 @@
+/* Tex Gyre Heros */
+/* normal, italic, bold, bold-italic */
+@font-face {
+	font-family: "tex_gyre_heros";
+	src: url("/fonts/texgyreheros-regular-webfont.woff2") format("woff2"),
+		url("/fonts/texgyreheros-regular-webfont.woff") format("woff");
+	font-weight: normal;
+	font-style: normal;
+	font-display: swap;
+}
+@font-face {
+	font-family: "tex_gyre_heros";
+	src: url("/fonts/texgyreheros-italic-webfont.woff2") format("woff2"),
+		url("/fonts/texgyreheros-italic-webfont.woff") format("woff");
+	font-weight: normal;
+	font-style: italic;
+	font-display: swap;
+}
+@font-face {
+	font-family: "tex_gyre_heros";
+	src: url("/fonts/texgyreheros-bold-webfont.woff2") format("woff2"),
+		url("/fonts/texgyreheros-bold-webfont.woff") format("woff");
+	font-weight: bold;
+	font-style: normal;
+	font-display: swap;
+}
+@font-face {
+	font-family: "tex_gyre_heros";
+	src: url("/fonts/texgyreheros-bolditalic-webfont.woff2") format("woff2"),
+		url("/fonts/texgyreheros-bolditalic-webfont.woff") format("woff");
+	font-weight: bold;
+	font-style: italic;
+	font-display: swap;
+}

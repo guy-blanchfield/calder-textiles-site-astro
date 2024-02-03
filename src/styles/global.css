@@ -8,14 +8,15 @@ html {
 /* ---------------- @fontface stuff ------------------- */
 
 /* this is the true baskerville */
-@font-face {
+/* not currently being used */
+
+/* @font-face {
 	font-family: "Baskerville Normal";
-	/* src: local('Baskerville'), url('/fonts/baskerville-normal.woff') format('woff'); */
 	src: local("Baskerville"), url("/fonts/baskerville-normal.woff") format("woff");
 	font-weight: normal;
 	font-style: normal;
 	font-display: swap;
-}
+} */
 
 @font-face {
 	font-family: "Libre Baskerville";
@@ -36,41 +37,6 @@ html {
 
 	/* maybe font-display: block might be the lesser of two evils */
 
-	font-display: swap;
-}
-
-/* Tex Gyre Heros */
-/* normal, italic, bold, bold-italic */
-@font-face {
-	font-family: "tex_gyre_heros";
-	src: url("/fonts/texgyreheros-regular-webfont.woff2") format("woff2"),
-		url("/fonts/texgyreheros-regular-webfont.woff") format("woff");
-	font-weight: normal;
-	font-style: normal;
-	font-display: swap;
-}
-@font-face {
-	font-family: "tex_gyre_heros";
-	src: url("/fonts/texgyreheros-italic-webfont.woff2") format("woff2"),
-		url("/fonts/texgyreheros-italic-webfont.woff") format("woff");
-	font-weight: normal;
-	font-style: italic;
-	font-display: swap;
-}
-@font-face {
-	font-family: "tex_gyre_heros";
-	src: url("/fonts/texgyreheros-bold-webfont.woff2") format("woff2"),
-		url("/fonts/texgyreheros-bold-webfont.woff") format("woff");
-	font-weight: bold;
-	font-style: normal;
-	font-display: swap;
-}
-@font-face {
-	font-family: "tex_gyre_heros";
-	src: url("/fonts/texgyreheros-bolditalic-webfont.woff2") format("woff2"),
-		url("/fonts/texgyreheros-bolditalic-webfont.woff") format("woff");
-	font-weight: bold;
-	font-style: italic;
 	font-display: swap;
 }
 
@@ -216,7 +182,19 @@ body {
 
 	/* this is what's making the text shake slightly on reload! */
 	/* think we can ignore this - it's only on dev, not build */
-	font-family: "tex_gyre_heros", Arial, Helvetica, sans-serif;
+	/* font-family: "tex_gyre_heros", Arial, Helvetica, sans-serif; */
+	/* see if we can use a modern font stack for this... tex gyre is around 100k with the bold and italic etc */
+	/* yeah, think it looks slightly better as well, if anything */
+	/* remember the @font-face rules and preload for tex gyre heros */
+	/* also, see dev tools > computed > rendered fonts to see what the browser's using */
+	/* font-family: Inter, Roboto, "Helvetica Neue", "Arial Nova", "Nimbus Sans", Arial, sans-serif; */
+
+	/* there's a problem here - google maps downloads roboto and then roboto gets used for body */
+	/* which presumably causes a shift from arial when roboto downloads..? */
+	/* there's also the gdpr issue! */
+	/* solutions: 1. self host roboto and load it as default */
+	/* 2.  */
+	font-family: Inter, Roboto, "Helvetica Neue", "Arial Nova", "Nimbus Sans", Arial, sans-serif;
 }
 
 /* If browser supports font-size-adjust, use this */
