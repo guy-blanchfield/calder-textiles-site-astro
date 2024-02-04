@@ -2,6 +2,7 @@
 import Layout from "../layouts/Layout.astro";
 import Hero from "../components/Hero.astro";
 import PageContentSection from "../components/PageContentSection.astro";
+import DiagramSection from "../components/DiagramSection.astro";
 import PictureSection from "../components/PictureSection.astro";
 import ContactSection from "../components/ContactSection.astro";
 ---
@@ -16,7 +17,7 @@ import ContactSection from "../components/ContactSection.astro";
 			<!-- <Fragment slot="hero-para">Not One of the UK's foremost woollen yarn spinners with a world-wide reputation for excellence.</Fragment> -->
 		</Hero>
 
-		<PageContentSection heading="Products" bgColour="var(--pageContentBgColour-2)">
+		<PageContentSection heading="Products" bgColour="var(--pageContentBgColour-2)" pageDownAnchorLink="#diagram" ,>
 			<Fragment slot="page-content">
 				<p>Yarns made on the Woollen Spinning System</p>
 				<!-- fs-6 is 1rem, to match <p> -->
@@ -31,18 +32,23 @@ import ContactSection from "../components/ContactSection.astro";
 				<h3 class="fs-6 fw-bold mb-0">Count Ranges</h3>
 				<p>42 yards/oz. - 146 yards/oz. Dewsbury (N.M 1.35 to N.M 4.7).</p>
 			</Fragment>
-
-			<Fragment slot="page-content-2">
-				<h3 class="fs-5 fw-bold mb-0">Ply</h3>
-				<p class="fs-5 mb-4">Single, two, three, four and six.</p>
-				<h3 class="fs-5 fw-bold mb-0">Dyeing</h3>
-				<p class="fs-5 mb-4">Fibre (stock), hank (skein).</p>
-				<h3 class="fs-5 fw-bold mb-0">Finishing</h3>
-				<p class="fs-5 mb-4">Scoured (washed), Chemset and Autoclave.</p>
-				<h3 class="fs-5 fw-bold mb-0">Packages</h3>
-				<p class="fs-5 mb-4">Hanks (skeins), Cones, Parallel tubes (cylinders) and cheeses (pencil tubes).</p>
-			</Fragment>
 		</PageContentSection>
+
+		<DiagramSection
+			diagramBase="products-diagram"
+			diagramStackSeparator="url('/images/products-diagram-dotted-line.png')"
+			diagramAlt={[
+				"Ply. Single, two, three, four and six",
+				"Dyeing. Fibre (stock), hank (skein)",
+				"Finishing. Scoured (washed), Chemset and Autoclave",
+				"Hanks (skeins), Cones, Parallel tubes (cylinders) and Cheeses (pencil tubes)",
+			]}
+			diagramWidth={631}
+			diagramHeight={562}
+			diagramAmount={4}
+			bgColour="var(--pageContentBgColour-4)"
+			pageDownArrowFillColour="var(--darkgrey)"
+		/>
 
 		<PictureSection imageBase="pom-colour-samples" />
 

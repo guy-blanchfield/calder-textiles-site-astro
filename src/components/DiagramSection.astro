@@ -7,6 +7,7 @@ export interface Props {
 	diagramWidth?: number;
 	diagramHeight?: number;
 	diagramStackSeparator?: string;
+	diagramAmount?: number;
 	// diagramStackSeparator is a background image on an ::after
 	// for any linking or dividing image that goes between the diagram images
 	// when they're stacked (i.e. on mobile)
@@ -25,6 +26,7 @@ const {
 	diagramWidth = 200,
 	diagramHeight = 200,
 	diagramStackSeparator = "",
+	diagramAmount = 3,
 	bgColour = "var(--pageContentBgColour-1)",
 	colModifier = "",
 	sectionFixedHeight = true,
@@ -34,17 +36,43 @@ const {
 // tried this with img srcset sizes, no good, use picture instead
 // picture is the obvious choice, just wanted to try and figure out how sizes works
 
+const diagramSrcsetMob: Array<string> = [
+	`/images/${diagramBase}-portrait-1.png`,
+	`/images/${diagramBase}-portrait-2.png`,
+	`/images/${diagramBase}-portrait-3.png`,
+	`/images/${diagramBase}-portrait-4.png`,
+];
+
+const diagramSrcset: Array<string> = [
+	`/images/${diagramBase}-1.png`,
+	`/images/${diagramBase}-2.png`,
+	`/images/${diagramBase}-3.png`,
+	`/images/${diagramBase}-4.png`,
+];
+
+const diagramFallback: Array<string> = [
+	`/images/${diagramBase}-1.png`,
+	`/images/${diagramBase}-2.png`,
+	`/images/${diagramBase}-3.png`,
+	`/images/${diagramBase}-4.png`,
+];
+
+/*
 const diagramSrcsetMob1 = `/images/${diagramBase}-portrait-1.png`;
 const diagramSrcsetMob2 = `/images/${diagramBase}-portrait-2.png`;
 const diagramSrcsetMob3 = `/images/${diagramBase}-portrait-3.png`;
+const diagramSrcsetMob4 = `/images/${diagramBase}-portrait-4.png`;
 
 const diagramSrcset1 = `/images/${diagramBase}-1.png`;
 const diagramSrcset2 = `/images/${diagramBase}-2.png`;
 const diagramSrcset3 = `/images/${diagramBase}-3.png`;
+const diagramSrcset4 = `/images/${diagramBase}-4.png`;
 
 const diagramFallback1 = `/images/${diagramBase}-1.png`;
 const diagramFallback2 = `/images/${diagramBase}-2.png`;
 const diagramFallback3 = `/images/${diagramBase}-3.png`;
+const diagramFallback4 = `/images/${diagramBase}-4.png`;
+*/
 
 // max-width here should match max-width in the css media query (see below in the style section)
 // (where the ::after is added)
@@ -59,6 +87,10 @@ const diagramMediaMin = "(min-width: 577px)";
 // see: https://www.smashingmagazine.com/2020/03/setting-height-width-images-important-again/
 // to prevent the slight shift, these need to match the aspect ratio, so either pass the image dimensions as props
 //  or consider redoing the diagrams so they're all the same aspect ratio
+
+// for now just create an array from diagramAmount to map the output for each diagram
+// we could use the diagramAlt array, but don't really want to rely on it
+// so we can do it with Array.from()
 ---
 
 <div class="wrapper" class:list={[{ sectionFixedHeight }]}>
@@ -70,64 +102,30 @@ const diagramMediaMin = "(min-width: 577px)";
 			<div class="row no-gutters justify-content-center p-5">
 				<!-- 1 column at xs (default) 3 columns at sm to lg, 3 quarter width columns at xl and above -->
 				<!-- so the diagrams don't get too big at larger screen sizes -->
-				<div
-					class={`col-sm-4 col-xl-3 px-0 align-self-center section-diagram__col ${
-						colModifier && "section-diagram__col" + colModifier + "-1"
-					}`}
-				>
-					<!-- <div class="col-sm-4 px-0 align-self-center section-diagram__col"> -->
-					<picture>
-						<source media={diagramMediaMax} srcset={diagramSrcsetMob1} />
-						<source media={diagramMediaMin} srcset={diagramSrcset1} />
 
-						<img
-							src={diagramFallback1}
-							alt={diagramAlt[0]}
-							class="section-diagram__img"
-							width={diagramWidth}
-							height={diagramHeight}
-							loading="lazy"
-						/>
-					</picture>
-				</div>
+				{
+					Array.from({ length: diagramAmount }).map((n, i) => (
+						<div
+							class={`col-sm-${12 / diagramAmount} col-xl-3 px-0 align-self-center section-diagram__col ${
+								colModifier && "section-diagram__col" + colModifier + "-1"
+							}`}
+						>
+							<picture>
+								<source media={diagramMediaMax} srcset={diagramSrcsetMob[i]} />
+								<source media={diagramMediaMin} srcset={diagramSrcset[i]} />
 
-				<div
-					class={`col-sm-4 col-xl-3 px-0 align-self-center section-diagram__col ${
-						colModifier && "section-diagram__col" + colModifier + "-2"
-					}`}
-				>
-					<!-- <div class="col-sm-4 px-0 align-self-center section-diagram__col"> -->
-					<picture>
-						<source media={diagramMediaMax} srcset={diagramSrcsetMob2} />
-						<source media={diagramMediaMin} srcset={diagramSrcset2} />
-
-						<img
-							src={diagramFallback2}
-							alt={diagramAlt[1]}
-							class="section-diagram__img"
-							width={diagramWidth}
-							height={diagramHeight}
-							loading="lazy"
-						/>
-					</picture>
-				</div>
-
-				<div class="col-sm-4 col-xl-3 px-0 align-self-center section-diagram__col">
-					<!-- <div class="col-sm-4 px-0 align-self-center section-diagram__col"> -->
-					<picture>
-						<source media={diagramMediaMax} srcset={diagramSrcsetMob3} />
-						<source media={diagramMediaMin} srcset={diagramSrcset3} />
-
-						<img
-							src={diagramFallback3}
-							alt={diagramAlt[2]}
-							class="section-diagram__img"
-							width={diagramWidth}
-							height={diagramHeight}
-							loading="lazy"
-						/>
-					</picture>
-				</div>
+								<img
+									src={diagramFallback[i]}
+									alt={diagramAlt[i]}
+									class="section-diagram__img"
+									width={diagramWidth}
+									height={diagramHeight}
+									loading="lazy"
+								/>
+							</picture>
+						</div>
+					))
+				}
 			</div>
 		</div>
 		<PageDownArrow anchorLink="#contact" ariaLabel="Next section: Contact" fillColour={pageDownArrowFillColour} />

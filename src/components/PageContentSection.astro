@@ -83,6 +83,10 @@ const {
 						)
 					}
 				</div>
+				<!-- currently an infographic but try to make this flexible so it'll take anything -->
+				<!-- basically any auxiliary content that doesn't fit in the text row stuff -->
+				<!-- probably better (more flexible) to leave as a slot here and do all the markup in the page -->
+				{Astro.slots.has("page-extra-content") && <slot name="page-extra-content" />}
 			</div>
 		</div>
 		{pageDownArrow && <PageDownArrow anchorLink={pageDownAnchorLink} ariaLabel={pageDownAriaLabel} />}

@@ -1,0 +1,98 @@
+---
+// flexible section for any extra stuff that won't work in any of the other sections
+// it's not finished yet, just set it up whilst thinking about what to do with the
+// products infographic
+
+import PageDownArrow from "./PageDownArrow.astro";
+
+export interface Props {
+	// diagramBase: string;
+	// diagramAlt?: Array<string>;
+	// diagramWidth?: number;
+	// diagramHeight?: number;
+	// diagramStackSeparator?: string;
+	// diagramStackSeparator is a background image on an ::after
+	// for any linking or dividing image that goes between the diagram images
+	// when they're stacked (i.e. on mobile)
+	bgColour?: string;
+	// adds a modifier class so the separator bg images can be specified in the style section
+	// e.g. --sustainability-1, --sustainability-2
+	// colModifier?: string;
+	sectionFixedHeight?: boolean;
+	// also need to drill a prop down into the pageDownArrow if required (default is --white)
+	pageDownArrowFillColour?: string;
+}
+
+const {
+	// diagramBase,
+	// diagramAlt = [],
+	// diagramWidth = 200,
+	// diagramHeight = 200,
+	// diagramStackSeparator = "",
+	bgColour = "var(--pageContentBgColour-1)",
+	// colModifier = "",
+	sectionFixedHeight = true,
+	pageDownArrowFillColour = "var(--white)",
+} = Astro.props;
+
+// tried this with img srcset sizes, no good, use picture instead
+// picture is the obvious choice, just wanted to try and figure out how sizes works
+
+// const diagramSrcsetMob1 = `/images/${diagramBase}-portrait-1.png`;
+// const diagramSrcsetMob2 = `/images/${diagramBase}-portrait-2.png`;
+// const diagramSrcsetMob3 = `/images/${diagramBase}-portrait-3.png`;
+
+// const diagramSrcset1 = `/images/${diagramBase}-1.png`;
+// const diagramSrcset2 = `/images/${diagramBase}-2.png`;
+// const diagramSrcset3 = `/images/${diagramBase}-3.png`;
+
+// const diagramFallback1 = `/images/${diagramBase}-1.png`;
+// const diagramFallback2 = `/images/${diagramBase}-2.png`;
+// const diagramFallback3 = `/images/${diagramBase}-3.png`;
+
+// max-width here should match max-width in the css media query (see below in the style section)
+// (where the ::after is added)
+
+// const diagramMediaMax = "(max-width: 576px)";
+// const diagramMediaMin = "(min-width: 577px)";
+
+// actual sizes of the pngs
+// sustainability 820x1014
+// development 941x1014
+
+// see: https://www.smashingmagazine.com/2020/03/setting-height-width-images-important-again/
+// to prevent the slight shift, these need to match the aspect ratio, so either pass the image dimensions as props
+//  or consider redoing the diagrams so they're all the same aspect ratio
+---
+
+<div class="wrapper" class:list={[{ sectionFixedHeight }]}>
+	<!-- wrapper div uses the negative margin / padding fiddle to get round using calc with svh. 
+		No other padding or margin or any other styling should be used on it
+		if fixedHeight isn't true it'll do nothing at all, just wrap -->
+	<section class="section-flexible d-flex align-items-center">
+		<div class="container"></div>
+		<PageDownArrow anchorLink="#contact" ariaLabel="Next section: Contact" fillColour={pageDownArrowFillColour} />
+	</section>
+</div>
+
+<style define:vars={{ bgColour }}>
+	.section-flexible {
+		/* background-color: hsl(240, 2%, 90%); */
+		background-color: var(--bgColour);
+
+		/* now needs to be position relative b/c of the absolute positioning of the page down arrow */
+		position: relative;
+		/* and the z-index thing so it doesn't overlap on top of the previous section */
+		/* z-index: -2; */
+		flex: 1;
+	}
+
+	@media (max-width: 576px) {
+		/* bit of extra bottom padding for mobile so the bottom diagram doesn't run into the pagedownarrow */
+		.section-flexible {
+			padding-bottom: 3rem;
+		}
+	}
+
+	/* fixedHeight now in global.css */
+</style>
