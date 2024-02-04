@@ -27,9 +27,14 @@ const videoSourcePart = `/video/${videoBase}`;
 // let's try the 20px blurred image thing
 // just so there's not a big blank space while the video loads
 // doesn't need to be an imageset, just a single image
-const backgroundImageTiny = `url(/images/${videoBase}-20x11.jpg)`;
+// not doing 20px image anymore, just lqip and portrait-lqip, to help lcp performance
+// const backgroundImageTiny = `url(/images/${videoBase}-20x11.jpg)`;
+
 // the LQIP, currently 1440 x 810
-const backgroundImageLQIP = `url(/images/${videoBase}-lqip.jpg)`;
+const backgroundImage = `url(/images/${videoBase}-lqip.jpg)`;
+
+// we don't need a portrait lqip for the video, bc there's no portrait version of the video
+// it just uses object-fit (i think!)
 ---
 
 <!-- 
@@ -168,7 +173,7 @@ const backgroundImageLQIP = `url(/images/${videoBase}-lqip.jpg)`;
 	} // end if
 </script>
 
-<style define:vars={{ backgroundImageTiny, backgroundImageLQIP, transitionDuration, transitionDelay }}>
+<style define:vars={{ backgroundImage, transitionDuration, transitionDelay }}>
 	/*
 	.video-status {
 		color: white;
@@ -198,7 +203,7 @@ const backgroundImageLQIP = `url(/images/${videoBase}-lqip.jpg)`;
 		/* background-image: image-set(var(--backgroundImageSet)); */
 
 		/* background-image: var(--backgroundImageLQIP), var(--backgroundImageTiny); */
-		background-image: var(--backgroundImageLQIP);
+		background-image: var(--backgroundImage);
 		/* background-color: #f0f; */
 		/* background-color: hsl(var(--offwhite)); */
 		/* position was top center but it's not lining up with the image, */
