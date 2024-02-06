@@ -338,10 +338,26 @@ const currentPath = Astro.url.pathname;
 		/* it's only happening firefox, so probably for now */
 		/* until we get a better idea */
 
+		/* if we're now using flex, then we might want to rethink the header-height calc */
+		/* (we probably won't need the --navbar-vertical-padding now) */
+
 		height: var(--header-height-calc);
 		overflow: visible;
 		/* border: 1px solid fuchsia; */
 		background-color: var(--accent);
+	}
+
+	/* try the header as flex for desktop so we can vertically center the logo and nav */
+
+	/* just do this with a media query for desktop for now */
+	/* we can try to apply it to mobile later, but it'll need a bit of a rethink */
+	/* bc the expanding menu needs can't be vertically centered, it has to expand downwards! */
+	@media (min-width: 992px) {
+		.header-caldertextiles {
+			display: flex;
+			align-items: center;
+			/* now we need flex-basis: 100% in .navbar-caldertextiles */
+		}
 	}
 
 	/* we need higher specificity here other bootstrap overrides some rules / properties */
@@ -359,6 +375,17 @@ const currentPath = Astro.url.pathname;
 		/* bg colour needs to be here as well as the header */
 		/* because of the expanding navmenu */
 		background-color: var(--accent);
+		flex-basis: 100%;
+	}
+
+	@media (min-width: 992px) {
+		nav.navbar-caldertextiles {
+			/* clear the padding */
+			padding: 0;
+			/* align-items: center; */
+			/* justify-content: center; */
+			/* border: 1px solid greenyellow; */
+		}
 	}
 
 	.navbar-caldertextiles__container {
@@ -389,6 +416,30 @@ const currentPath = Astro.url.pathname;
 			top: -0.1rem;
 		}
 
+		#navmenu {
+			/* min-height: 100%; */
+			/* overflow: visible; */
+		}
+
+		.navbar-nav {
+			/* min-height: 100%; */
+			/* border: 1px solid aqua; */
+			/* overflow: visible; */
+		}
+
+		.navbar-caldertextiles .nav-item {
+			/* border: 1px solid fuchsia; */
+			/* position: relative; */
+			/* background-color: aquamarine; */
+			/* min-height: 2rem; */
+			/* needs bottom margin to expand the height enough to show the ::after underline thing */
+			/* but to keep it vertically centered */
+			/* we need to match the top and bottom margins */
+			/* caniuse says -block support is just under 95% */
+			/* so let's do it oldskool */
+			margin: 5px 0;
+		}
+
 		/* try forcing the nav-link to display: inline */
 		.navbar-caldertextiles .nav-link {
 			display: inline;
@@ -397,17 +448,23 @@ const currentPath = Astro.url.pathname;
 
 			/* navlink position relative so the ::after can be positioned absolute */
 			position: relative;
+			/* don't seem to be able to do much about the height of the links */
+			/* bc they're inline, but you can bring the underline closer to the text */
+			/* by increasing the bottom value on the ::after (see below) */
+
+			/* border: 1px solid red; */
 		}
 
 		.navbar-caldertextiles .nav-link:not([aria-current="page"])::after {
 			content: "";
 			position: absolute;
 			background-color: var(--muted);
+			/* height: 1px; */
 			height: 1px;
 			width: calc(100% - 1rem);
 			/* width: 100%; */
 			border-radius: 2px;
-			bottom: 0;
+			bottom: 0px;
 			left: var(--bs-navbar-nav-link-padding-x);
 			/* var(--bs-navbar-nav-link-padding-x) is 0.5rem */
 
