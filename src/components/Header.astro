@@ -261,12 +261,18 @@ const currentPath = Astro.url.pathname;
 	/* https://www.youtube.com/watch?v=B_n4YONte5A */
 
 	#navmenu {
+		/* border: 1px solid plum; */
 		/* transition duration var */
 		--transitionDuration: 400ms;
 
 		display: grid;
 		grid-template-rows: 1fr;
+
+		/* it's these overflow hiddens that are breaking the fancy underline hover */
+		/* here and #navmenu > ul */
+		/* so there's now a media query in for #navmenu and #navmenu ul */
 		overflow: hidden;
+
 		transition: grid-template-rows var(--transitionDuration) ease-in-out;
 
 		/* overrule bootstrap's vertical align (align-items: center) */
@@ -288,6 +294,8 @@ const currentPath = Astro.url.pathname;
 
 		/* min-height or overflow: hidden, doesn't seem to matter which */
 		/* min-height: 0; */
+
+		/* this will be reset fro desktop, see below */
 		overflow: hidden;
 
 		/* @oxuhs-gy4xm says: */
@@ -303,6 +311,16 @@ const currentPath = Astro.url.pathname;
 		#navmenu {
 			/* bootstrap original value for align-items */
 			align-items: center;
+		}
+
+		#navmenu {
+			/* reset overflow for desktop menu, so the hover underline is visible */
+			overflow: initial;
+		}
+
+		#navmenu > ul {
+			/* also reset overflow for the ul in desktop, so the hover underline is visible */
+			overflow: initial;
 		}
 	}
 
@@ -432,39 +450,36 @@ const currentPath = Astro.url.pathname;
 			/* position: relative; */
 			/* background-color: aquamarine; */
 			/* min-height: 2rem; */
-			/* needs bottom margin to expand the height enough to show the ::after underline thing */
-			/* but to keep it vertically centered */
-			/* we need to match the top and bottom margins */
-			/* caniuse says -block support is just under 95% */
-			/* so let's do it oldskool */
-			margin: 5px 0;
+
+			display: flex;
+			align-items: center;
 		}
 
 		/* try forcing the nav-link to display: inline */
 		.navbar-caldertextiles .nav-link {
-			display: inline;
+			/* display: inline; */
 			/* also set colour while we're at it */
 			color: hsl(var(--offwhite));
 
 			/* navlink position relative so the ::after can be positioned absolute */
 			position: relative;
-			/* don't seem to be able to do much about the height of the links */
-			/* bc they're inline, but you can bring the underline closer to the text */
-			/* by increasing the bottom value on the ::after (see below) */
 
+			/* reset the bs link padding, doesn't make much difference if any, but easier to work with */
+			padding: 0;
 			/* border: 1px solid red; */
 		}
 
 		.navbar-caldertextiles .nav-link:not([aria-current="page"])::after {
 			content: "";
 			position: absolute;
+			/* display: inline-block; */
 			background-color: var(--muted);
-			/* height: 1px; */
 			height: 1px;
 			width: calc(100% - 1rem);
 			/* width: 100%; */
 			border-radius: 2px;
-			bottom: 0px;
+			/* bottom: 0px; */
+			bottom: -0.3rem;
 			left: var(--bs-navbar-nav-link-padding-x);
 			/* var(--bs-navbar-nav-link-padding-x) is 0.5rem */
 

@@ -1,0 +1,74 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Hero from "../components/Hero.astro";
+import PageContentSection from "../components/PageContentSection.astro";
+import DiagramSection from "../components/DiagramSection.astro";
+import PictureSection from "../components/PictureSection.astro";
+import EmptySection from "../components/EmptySection.astro";
+import ContactSection from "../components/ContactSection.astro";
+---
+
+<Layout title="Sustainability : Calder Textiles" heroImageBase="herdwick-sheep-at-wall">
+	<main>
+		<Hero imageBase="herdwick-sheep-at-wall" imageAlt="Herdwick Sheep Destroy Wall in Bid for Freedom">
+			<!-- using Fragment here, span also works, but fragment produces tidier markup -->
+			<Fragment slot="hero-heading">
+				We are ethical, <span class="nowrap">eco-responsible</span> manufacturers.
+			</Fragment>
+			<!-- <Fragment slot="hero-para">Some para text</Fragment> -->
+		</Hero>
+
+		<PageContentSection
+			heading="Sustainability"
+			bgColour="var(--pageContentBgColour-3)"
+			pageDownAnchorLink="#diagram"
+			pageDownAriaLabel="Next section: Sustainability diagram"
+		>
+			<Fragment slot="page-content">
+				<h3 class="fs-6 fw-bold mb-3">Production</h3>
+				<p>
+					Our production process is powered by the latest cogeneration combined heat and power system that harnesses and
+					uses the thermal energy in the form of efficient steam for the dyeing process. CHP is a recognised sustainable
+					way of generating electricity whilst also contributing towards reducing CO2 emissions rather than obtaining
+					electric from traditional sources.
+				</p>
+				<p>
+					We have also invested in energy efficient measures to reduce on site energy consumption such as LED lighting
+					and inverter drives and regenerative drives.
+				</p>
+				<p>We also use heat recovery post dyeing again to maximise the harnessing of thermal energy.</p>
+			</Fragment>
+
+			<Fragment slot="page-content-2">
+				<h3 class="fs-6 fw-bold mb-3">Wool</h3>
+				<p>
+					Wool is grown naturally on sheep that graze freely. Sheep grow their fleece every year making wool one of the
+					most “green” and sustainable fibres there is.
+				</p>
+				<p>
+					Sheep, like us, grow wool continuously and are normally shorn once a year. Shearing does not harm the sheep -
+					in fact it helps to stop them from overheating in summer.
+				</p>
+				<p>Wool is 100% biodegradable and renewable making it a true sustainable fibre.</p>
+			</Fragment>
+		</PageContentSection>
+
+		<!-- <EmptySection /> -->
+		<DiagramSection
+			diagramBase="sustainability-diagram"
+			diagramAlt={[
+				"Production process powered by CHP (Combined Heat and Power system",
+				"Uses thermal energy in the form of steam for the dyeing process",
+				"Generates electricity resulting in reduced CO2 emissions",
+			]}
+			diagramWidth={820}
+			diagramHeight={1014}
+			bgColour="var(--pageContentBgColour-1)"
+			colModifier="--sustainability"
+		/>
+
+		<ContactSection />
+	</main>
+</Layout>
+
+<style></style>
