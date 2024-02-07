@@ -29,6 +29,7 @@ export interface Props {
 	bodyClass?: string;
 	heroImageBase?: string; // so we can preload the lqip for the hero
 	sectionImageBase?: string; // so we can preload the lqip for the pictureSection (probably won't tbh)
+	heroVideo?: boolean; // so we can set the portrait lqip conditionally (see)
 	// bodyBgColour?: string;
 }
 
@@ -41,7 +42,12 @@ export interface Props {
 
 // probably won't use sectionImageBase bc the section image won't affect the LCP,
 // it might even get lazy loaded depending on the browser
-const { title, bodyClass = "", heroImageBase = "", sectionImageBase = "" } = Astro.props;
+
+// let's define a heroVideo prop so we've got a conditional for the portrait lqip
+// (there's no portrait version of the video, hence no protrait lqip for the video placeholder)
+// we'll only pass it if it's true, it'll default to false)
+
+const { title, bodyClass = "", heroImageBase = "", sectionImageBase = "", heroVideo = false } = Astro.props;
 
 // create the image paths for the preloads
 let heroImagePreloadPath: string;
@@ -116,14 +122,19 @@ if (sectionImageBase) {
 						href={heroImagePreloadPath}
 						fetchpriority="high"
 					/>
-					<link
-						rel="preload"
-						media="(orientation: portrait)"
-						as="image"
-						href={heroImagePortraitPreloadPath}
-						fetchpriority="high"
-					/>
 				</>
+			)
+		}
+
+		{
+			heroImageBase && !heroVideo && (
+				<link
+					rel="preload"
+					media="(orientation: portrait)"
+					as="image"
+					href={heroImagePortraitPreloadPath}
+					fetchpriority="high"
+				/>
 			)
 		}
 
