@@ -369,7 +369,7 @@ const currentPath = Astro.url.pathname;
 
 	/* just do this with a media query for desktop for now */
 	/* we can try to apply it to mobile later, but it'll need a bit of a rethink */
-	/* bc the expanding menu needs can't be vertically centered, it has to expand downwards! */
+	/* bc the expanding menu can't be vertically centered, it has to expand downwards! */
 	@media (min-width: 992px) {
 		.header-caldertextiles {
 			display: flex;
@@ -387,7 +387,13 @@ const currentPath = Astro.url.pathname;
 
 		/* the variables should probably be declared in global.css */
 		padding-top: var(--navbar-vertical-padding);
-		padding-bottom: var(--navbar-vertical-padding);
+		/* see if we can do without the bottom padding */
+		/* yeah checked plenty, seems ok */
+		/* padding-bottom: var(--navbar-vertical-padding); */
+
+		/* NB!! currently the mobile nav can't use flex and vertical centering, as we're doing for desktop */
+		/* because the expanding menu then expands up and down from the center, rather than dropping down */
+		/* fixing this will need a rethink */
 
 		/* min-height: var(--navbar-height); */
 		/* bg colour needs to be here as well as the header */
