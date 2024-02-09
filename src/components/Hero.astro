@@ -363,6 +363,9 @@ const currentPath = Astro.url.pathname;
 
 		/* this'll be a good place for text-wrap rule */
 		/* but mdn says experimental use with caution */
+		/* balance seems to be ok though so let's give it a go */
+
+		text-wrap: balance; /* not really doing much tbh, although it does allow us to lose the <br> in the home page heading */
 	}
 
 	/* make heading a bit bigger if it's not a strapline */
@@ -422,6 +425,8 @@ const currentPath = Astro.url.pathname;
 		line-height: 1.75rem;
 		/* this'll be a good place for text-wrap rule */
 		/* but mdn says experimental use with caution */
+		/* balance is no longer experimental so go for it */
+		text-wrap: balance;
 	}
 
 	/* also add these settings to the css link tag in layout head */

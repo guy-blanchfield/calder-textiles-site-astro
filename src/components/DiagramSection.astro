@@ -7,7 +7,7 @@ export interface Props {
 	diagramWidth?: number;
 	diagramHeight?: number;
 	diagramStackSeparator?: string;
-	diagramAmount?: number;
+	numberOfDiagrams?: number;
 	// diagramStackSeparator is a background image on an ::after
 	// for any linking or dividing image that goes between the diagram images
 	// when they're stacked (i.e. on mobile)
@@ -26,7 +26,7 @@ const {
 	diagramWidth = 200,
 	diagramHeight = 200,
 	diagramStackSeparator = "",
-	diagramAmount = 3,
+	numberOfDiagrams = 3,
 	bgColour = "var(--pageContentBgColour-1)",
 	colModifier = "",
 	sectionFixedHeight = true,
@@ -88,7 +88,7 @@ const diagramMediaMin = "(min-width: 577px)";
 // to prevent the slight shift, these need to match the aspect ratio, so either pass the image dimensions as props
 //  or consider redoing the diagrams so they're all the same aspect ratio
 
-// for now just create an array from diagramAmount to map the output for each diagram
+// for now just create an array from numberOfDiagrams to map the output for each diagram
 // we could use the diagramAlt array, but don't really want to rely on it
 // so we can do it with Array.from()
 ---
@@ -104,9 +104,9 @@ const diagramMediaMin = "(min-width: 577px)";
 				<!-- so the diagrams don't get too big at larger screen sizes -->
 
 				{
-					Array.from({ length: diagramAmount }).map((n, i) => (
+					Array.from({ length: numberOfDiagrams }).map((n, i) => (
 						<div
-							class={`col-sm-${12 / diagramAmount} col-xl-3 px-0 align-self-center section-diagram__col ${
+							class={`col-sm-${12 / numberOfDiagrams} col-xl-3 px-0 align-self-center section-diagram__col ${
 								colModifier && "section-diagram__col" + colModifier + "-1"
 							}`}
 						>
