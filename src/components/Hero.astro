@@ -359,7 +359,12 @@ const currentPath = Astro.url.pathname;
 		/* NB gonna try a nowrap span on the text in 'products' to stop it breaking in an odd place occasionally */
 		max-width: 18ch;
 
-		line-height: 1.4;
+		/* smaller line-height for headings */
+		/* line-height: 1.4; */
+		line-height: 1.3em;
+		/* slightly negative letter spacing for headings */
+		/* NB em not rem for letter-spacing */
+		letter-spacing: -0.01em;
 
 		/* this'll be a good place for text-wrap rule */
 		/* but mdn says experimental use with caution */
@@ -423,6 +428,7 @@ const currentPath = Astro.url.pathname;
 	.hero__para {
 		max-width: 40ch;
 		line-height: 1.75rem;
+		margin-block-start: 1.3rem;
 		/* this'll be a good place for text-wrap rule */
 		/* but mdn says experimental use with caution */
 		/* balance is no longer experimental so go for it */

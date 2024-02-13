@@ -158,7 +158,16 @@ const {
 	}
 
 	.section-pagecontent__heading {
-		margin-bottom: 2rem;
+		/* margin-bottom: 2rem; */
+		margin-bottom: 2.5rem;
+
+		/* slightly negative letter spacing for headings */
+		/* NB em not rem for letter-spacing */
+		letter-spacing: -0.01em;
+
+		/* smaller line-height for headings */
+		/* content heading probably won't ever be more than one line but hey */
+		line-height: 1.3em;
 	}
 
 	/* extra margin and paddings for the page content spacing on larger screens */

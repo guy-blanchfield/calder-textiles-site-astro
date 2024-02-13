@@ -91,6 +91,14 @@ const emailSpan = obfuscateEmail("info@caldertextiles.co.uk", "section-contact__
 		/* font-family now handled by .serif utility, see after the :root stuff */
 		/* font-family: Georgia, serif; */
 		color: var(--accent-2);
+
+		/* slightly negative letter spacing for headings */
+		/* NB em not rem for letter-spacing */
+		letter-spacing: -0.01em;
+
+		/* smaller line-height for headings */
+		/* contact heading probably won't ever be more than one line but hey */
+		line-height: 1.3em;
 	}
 
 	.section-contact__intro {
