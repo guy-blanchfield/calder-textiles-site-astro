@@ -9,7 +9,7 @@ export interface Props {
 
 const { sectionFixedHeight = true } = Astro.props;
 
-const emailSpan = obfuscateEmail("info@caldertextiles.co.uk", "section-contact__email");
+const emailSpan = obfuscateEmail("sales@caldertextiles.co.uk", "section-contact__email");
 ---
 
 <div class="wrapper" class:list={[{ sectionFixedHeight }]}>
@@ -42,7 +42,7 @@ const emailSpan = obfuscateEmail("info@caldertextiles.co.uk", "section-contact__
 							<p class="section-contact__details">
 								<span class="fw-bold">T</span>
 								<a href="tel:+441924456411" class="section-contact__phone">+44 (0)1924 456 411</a><br />
-								<span class="fw-bold">F</span> +44 (0)1924 487 387<br />
+								<!-- <span class="fw-bold">F</span> +44 (0)1924 487 387<br /> -->
 								<span class="fw-bold">E</span>
 								<span class="section-contact__email-span" set:html={emailSpan} />
 							</p>

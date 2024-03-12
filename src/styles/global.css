@@ -265,6 +265,11 @@ footer {
 /* so it'll have to go here, at least until we find a better way */
 .page-content__lead-para {
 	font-weight: bold;
+	/* added at client's request to increase legibility */
+	/* "It makes the text look a little fuzzy (not sharp)" */
+	font-size: 1.1rem;
+	/* now it needs a bit more bottom-margin */
+	margin-bottom: 1.1rem;
 }
 
 /* this is for the wrapper div around each section to give the section a min-height */
