@@ -14,7 +14,6 @@ import "../styles/bootstrap-custom.scss";
 // NB has to come after bootstrap, otherwise some things might get overwritten by bootstrap styles
 import "../styles/global.css";
 
-// arsewipe
 // bootstrap custom js
 // import bootstrap from "../js/bootstrap-custom.js";
 
@@ -23,6 +22,21 @@ import "../styles/global.css";
 
 // the AOS stuff is in js/setup-aos.js
 // and added in with a script src (see below after the html)
+
+// --------------------------------------------------------------------------
+
+/*
+
+reminder to investigate the style is:inline content-wrapper and the 
+script is:inline content-wrapper add class hidden - do we really need both?
+ (provisional answer: yes!)
+
+also see the codepen on this page: https://css-tricks.com/how-to-load-fonts-in-a-way-that-fights-fout-and-makes-lighthouse-happy/
+for a more robust use of the fonts.check method (it needs a fallback)
+
+*/
+
+// --------------------------------------------------------------------------
 
 export interface Props {
 	title: string;

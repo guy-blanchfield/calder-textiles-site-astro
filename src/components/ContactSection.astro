@@ -1,7 +1,12 @@
 ---
 import GoogleMap from "./GoogleMap.astro";
 
-import obfuscateEmail from "../js/obfuscate-email";
+// https://andrewlock.net/simple-obfuscation-of-email-addresses-using-javascript/
+
+import obfuscateEmail from "../js/obfuscateEmail";
+// don't know much about the second parameter of obfuscateEmail
+// other than it's used to generate a hex key, and in the example it's a 3 digit number
+const emailObf = obfuscateEmail("sales@caldertextiles.co.uk", 156);
 
 export interface Props {
 	sectionFixedHeight?: boolean;
@@ -9,7 +14,10 @@ export interface Props {
 
 const { sectionFixedHeight = true } = Astro.props;
 
-const emailSpan = obfuscateEmail("sales@caldertextiles.co.uk", "section-contact__email");
+// old obfuscateEmail returned the whole <a> tag
+// const emailSpan = obfuscateEmailOld("sales@caldertextiles.co.uk", "section-contact__email");
+// new one just returns the obfuscated address
+// const emailObf = obfuscateEmail("sales@caldertextiles.co.uk");
 ---
 
 <div class="wrapper" class:list={[{ sectionFixedHeight }]}>
@@ -44,7 +52,8 @@ const emailSpan = obfuscateEmail("sales@caldertextiles.co.uk", "section-contact_
 								<a href="tel:+441924456411" class="section-contact__phone">+44 (0)1924 456 411</a><br />
 								<!-- <span class="fw-bold">F</span> +44 (0)1924 487 387<br /> -->
 								<span class="fw-bold">E</span>
-								<span class="section-contact__email-span" set:html={emailSpan} />
+								<!-- <span class="section-contact__email-span" set:html={emailObf} /> -->
+								<a href={`mailto:${emailObf}`} class="section-contact__email eml-protected hidden">{emailObf}</a>
 							</p>
 						</div>
 					</div>
@@ -59,6 +68,8 @@ const emailSpan = obfuscateEmail("sales@caldertextiles.co.uk", "section-contact_
 		</div>
 	</section>
 </div>
+
+<script src="/src/js/decodeEmail.js"></script>
 
 <style>
 	.section-contact {

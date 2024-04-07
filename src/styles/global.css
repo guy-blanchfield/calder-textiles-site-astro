@@ -245,6 +245,11 @@ footer {
 	visibility: hidden;
 }
 
+/* currently only using this to obfuscate email address */
+.display-none {
+	display: none;
+}
+
 /* let's have a utility class for the serif font */
 /* otherwise we have to update every heading class */
 /* everytime we decide to change the font */

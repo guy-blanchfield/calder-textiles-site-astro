@@ -135,6 +135,8 @@ import { Icon } from "astro-icon";
 		// disable this eventlistener line to test loading animation!!!!!!!!
 		// also, isn't load event unnecessarily late? would dcl work instead?
 		// no bc we want to make sure the fonts are loaded
+
+		// if we only want to check fonts are loaded, try using document.fonts.ready instead?
 		window.addEventListener("load", () => handleWindowLoad(preLoader));
 		console.log(`load event listener added`);
 	} else {

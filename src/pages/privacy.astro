@@ -7,9 +7,9 @@ import PageContentSection from "../components/PageContentSection.astro";
 // import EmptySection from '../components/EmptySection.astro';
 
 // email obfuscation
-import obfuscateEmail from "../js/obfuscate-email";
+import obfuscateEmail from "../js/obfuscateEmail";
 
-const emailSpan = obfuscateEmail("enquiries@caldertextiles.co.uk", "section-privacy__email");
+const emailObf = obfuscateEmail("sales@caldertextiles.co.uk", 156);
 ---
 
 <Layout title="Privacy : Calder Textiles">
@@ -30,7 +30,8 @@ const emailSpan = obfuscateEmail("enquiries@caldertextiles.co.uk", "section-priv
 				<a href="tel:+441924456411" class="section-privacy__phone">+44 (0)1924 456 411</a><br />
 				<!-- <span class="fw-bold">F</span> +44 (0)1924 487 387<br /> -->
 				<span class="fw-bold">Email:</span>
-				<span class="section-page-content__email-span" set:html={emailSpan} />
+				<!-- <span class="section-page-content__email-span" set:html={emailSpan} /> -->
+				<a href={`mailto:${emailObf}`} class="eml-protected hidden section-privacy__email">{emailObf}</a>
 			</p>
 
 			<h2 class="section-privacy__h2">1. Introduction</h2>
@@ -116,10 +117,8 @@ const emailSpan = obfuscateEmail("enquiries@caldertextiles.co.uk", "section-priv
 
 			<ul class="section-privacy__ul">
 				<li>
-					request access to your information by submitting a request to <span
-						class="section-page-content__email-span"
-						set:html={emailSpan}
-					/>
+					request access to your information by submitting a request to
+					<a href={`mailto:${emailObf}`} class="eml-protected hidden section-privacy__email">{emailObf}</a>
 				</li>
 				<li>update or amend your information if it is inaccurate or incomplete;</li>
 				<li>
@@ -140,10 +139,10 @@ const emailSpan = obfuscateEmail("enquiries@caldertextiles.co.uk", "section-priv
 				<li>to lodge a complaint with the relevant data protection supervisory authority in your jurisdiction.</li>
 				<li>
 					If you have subscribed to us or agreed to be on a contact list to receive information from us, you can ask to
-					be removed at any time by using the unsubscribe link included in any e-communications or by emailing <span
-						class="section-page-content__email-span"
-						set:html={emailSpan}
-					/>
+					be removed at any time by using the unsubscribe link included in any e-communications or by emailing <a
+						href={`mailto:${emailObf}`}
+						class="eml-protected hidden section-privacy__email">{emailObf}</a
+					>
 				</li>
 			</ul>
 
@@ -181,7 +180,7 @@ const emailSpan = obfuscateEmail("enquiries@caldertextiles.co.uk", "section-priv
 
 			<ul class="section-privacy__ul">
 				<li>
-					by email: <span class="section-page-content__email-span" set:html={emailSpan} />
+					by email: <a href={`mailto:${emailObf}`} class="eml-protected hidden section-privacy__email">{emailObf}</a>
 				</li>
 				<li>by post: Calder Textiles Ltd, Dewsbury Mills, Thornhill Road, Dewsbury, WF12 9QE, United Kingdom</li>
 			</ul>
@@ -225,6 +224,8 @@ const emailSpan = obfuscateEmail("enquiries@caldertextiles.co.uk", "section-priv
 	</PageContentSection>
 	<!-- <ContactSection /> -->
 </Layout>
+
+<script src="/src/js/decodeEmail.js"></script>
 
 <style>
 	.section-privacy__h2 {
