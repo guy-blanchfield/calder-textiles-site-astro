@@ -216,7 +216,9 @@ if (sectionImageBase) {
 		<!-- so we can test for the preloadComplete session storage key -->
 
 		<!-- preloader has to be outside the content-wrapper duh! -->
-		<Preloader />
+		<!-- think we can do without the preloader -->
+		<!-- <Preloader /> -->
+
 		<!-- try inlining the visibility rule here - nope -->
 		<div class="content-wrapper">
 			<Header />
@@ -237,21 +239,27 @@ if (sectionImageBase) {
 <!-- inline script (i.e. non-deferred) to set the hidden class -->
 <!-- so we can test for the preloadComplete session storage key -->
 <script is:inline>
-	// sessionStorage preloadComplete is set in Preloader handleWindowLoad function
+	// // sessionStorage preloadComplete is set in Preloader handleWindowLoad function
 
-	if (!sessionStorage.getItem("preloadComplete")) {
-		// is:inline scripts are excluded from the esbuild console drop so comment these out
-		// console.log(`inline script from Layout.astro is adding hidden class to content-wrapper`);
-		document.querySelector(".content-wrapper").classList.add("hidden");
-	} // else {
-	// console.log(`inline script from Layout.astro is NOT adding hidden class to content-wrapper`);
-	// }
+	// if (!sessionStorage.getItem("preloadComplete")) {
+	// 	// is:inline scripts are excluded from the esbuild console drop so comment these out
+	// 	// console.log(`inline script from Layout.astro is adding hidden class to content-wrapper`);
+	// 	document.querySelector(".content-wrapper").classList.add("hidden");
+	// } // else {
+	// // console.log(`inline script from Layout.astro is NOT adding hidden class to content-wrapper`);
+	// // }
 </script>
 
 <!-- seems a bit hacky but this is the only way it seems to work in astro -->
 <!-- see https://github.com/michalsnik/aos/issues/815#issuecomment-1500056742 -->
 <!-- don't worry about lighthouse performance in the dev version build version takes care of it -->
 <script src="../js/setup-aos.js"></script>
+
+<script>
+	import initialise from "../js/initialise";
+
+	window.addEventListener("DOMContentLoaded", initialise);
+</script>
 
 <!-- <style define:vars={{bodyBgColour}}> -->
 

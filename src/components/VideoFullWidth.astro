@@ -35,6 +35,14 @@ const backgroundImage = `url(/images/${videoBase}-lqip.jpg)`;
 
 // we don't need a portrait lqip for the video, bc there's no portrait version of the video
 // it just uses object-fit (i think!)
+
+// 07-04-2024
+
+// filter blur disappears too quickly
+// fix it, or lose the lqip, or blur the lqip
+
+// also check whether this has always happened
+// maybe there was something in preloader that was making it work properly?
 ---
 
 <!-- 
@@ -157,7 +165,8 @@ const backgroundImage = `url(/images/${videoBase}-lqip.jpg)`;
 		// but now it's just called once after the vars are set
 		function setSource() {
 			// doSetSource();
-			console.log("setting video source (and adding --show class)");
+			// console.log("setting video source (and adding --show class)");
+			console.log("setting video source");
 			videoElement.src = videoSource;
 		}
 
@@ -244,7 +253,8 @@ const backgroundImage = `url(/images/${videoBase}-lqip.jpg)`;
 		/* we should hide the background image when the video is ready
 		otherwise it has a nasty habit of showing when we leave the page
 		i.e. on leaving the page, the video disappears first, leaving the ugly background image showing underneath */
-		background-image: none;
+
+		/* background-image: none; */
 	}
 
 	.video-container--show .video-element {
