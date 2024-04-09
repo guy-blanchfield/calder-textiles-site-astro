@@ -215,29 +215,15 @@ const backgroundImage = `url(/images/${videoBase}-lqip.jpg)`;
 		background-image: var(--backgroundImage);
 		/* background-color: #f0f; */
 		/* background-color: hsl(var(--offwhite)); */
-		/* position was top center but it's not lining up with the image, */
+		/* position was top center but it's not lining up with the background-image, */
 		/* try center center (just center should do it) - yeah that's it*/
 		background-position: center;
 		background-size: cover;
 
 		/* trying filter: blur instead of the opacity fade-in */
 		/* so we can get the placeholder bg image compressed more without it looking acky */
+		transition: filter var(--transitionDuration) var(--transitionDelay) ease;
 		filter: blur(1rem);
-
-		/* from PictureFullWidth hero__picture */
-
-		/* video doesn't like any of these - probably bc its a flex item */
-		/* (it has a container div which is a flex item, unlike the image which has picture) */
-
-		/* width: 100%; */
-		/* height: 100%; */
-		/* display: block; */
-
-		/* keep as position absolute, even though section-picture__picture is position: relative - trust me */
-		/* position: absolute; */
-		/* z-index: 0; */
-
-		/* border: 1px solid #f00; */
 	}
 
 	/* the --show modifier needs to go on the container now, bc that's where the filter blur is */
@@ -246,15 +232,30 @@ const backgroundImage = `url(/images/${videoBase}-lqip.jpg)`;
 	.video-container--show {
 		/* trying filter: blur instead of the opacity fade-in */
 		/* so we can get the placeholder bg image compressed more without it looking acky */
-		transition: filter var(--transitionDuration) var(--transitionDelay);
+		/* transition: filter var(--transitionDuration) var(--transitionDelay); */
 		/* transition: filter 5s; */
 		filter: blur(0rem);
+	}
 
+	/* remove the bg image in a separate class so it can be added by a transitionend callback */
+	/* if we remove it with --show, there's sometimes a brief flash of navy bg before the video shows */
+	.video-container--remove-bg {
 		/* we should hide the background image when the video is ready
 		otherwise it has a nasty habit of showing when we leave the page
 		i.e. on leaving the page, the video disappears first, leaving the ugly background image showing underneath */
 
-		/* background-image: none; */
+		/* ---------------------------------------------------------------------------------------------------------- */
+		/* fairly sure this is the cause of the brief flash of navy bg */
+		/* in testing, it never does it with when the bg-image none rule is commented out  */
+		/* yep, pretty confident it's this */
+		/* ---------------------------------------------------------------------------------------------------------- */
+		background-image: none;
+		/* border: 5px solid fuchsia; */
+
+		/* ok so this class is definitely not being applied at the right time i.e. after the blur transition */
+		/* the transitionend event fires twice */
+		/* once correctly at the end of the blur transition, once after the opacity transition on .video-element */
+		/* put a conditional in the eventlistener callback - done */
 	}
 
 	.video-container--show .video-element {
@@ -304,6 +305,7 @@ const backgroundImage = `url(/images/${videoBase}-lqip.jpg)`;
 		/* just a bit of an opacity transition before the filter: blur transition */
 		/* with a delay on the filter blur transition (on the container class) */
 		opacity: 0;
+		/* opacity: 1; */
 		transition: opacity var(--transitionDelay);
 
 		/* will-change: opacity; */

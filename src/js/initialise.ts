@@ -61,7 +61,7 @@ function initialise() {
 		// Number() won't work to extract 2000 from "2000ms", use parseInt()
 		// consider adding a bit to this to give the transition a bit of room
 		console.log("herotextTransitionDelay: ", heroTextTransitionDelay);
-		console.log("Number(herotextTransitionDuration): ", heroTextTransitionDelay);
+		console.log("parseInt(herotextTransitionDuration): ", heroTextTransitionDelay);
 		setTimeout(handleHeroTextTransition, heroTextTransitionDelay);
 		// }
 	}
@@ -106,6 +106,8 @@ function initialise() {
 			// in tests with throttling at 3G, there was a 1 millisecond difference between the
 			// loadedmetadata event and the canplay event, so this should be ok
 			heroVideo.addEventListener("loadedmetadata", handleVideoReady);
+			// try loadeddata, see if stops the delay between the event and the video showing - nope
+			// heroVideo.addEventListener("loadeddata", handleVideoReady);
 		}
 	}
 
@@ -144,11 +146,28 @@ function initialise() {
 		// add the --show class to video container
 		// this will fade the filter blur out (transition filter blur(1rem) to filter blur(0))
 		heroVideo.parentElement?.classList.add("video-container--show");
+		console.log("adding the --show class to the video container");
 
 		// we should hide the background image when the video is ready
 		// otherwise it has a nasty habit of showing when we leave the page
 		// i.e. on leaving the page, the video disappears first, leaving the ugly background image showing underneath
 		// think we can do this by putting a backgound-image: none on .video-container--show
+
+		// we need to leave the background image in for a moment because the video doesn't appear
+		// instantaneously, at least not in throttled simulations
+		// so we should listen for the transition end event on the video container
+		// and remove the background image once the transition has ended
+		// so we'll need another class, say --remove-bg
+
+		heroVideo.parentElement?.addEventListener("transitionend", (e) => {
+			// check this is the transitionend we're looking for
+			console.log("transitionend event from: ", e.target);
+			console.log("event target matches .video-container: ", (<HTMLElement>e.target).matches(".video-container"));
+			if (!(<HTMLElement>e.target).matches(".video-container")) return;
+
+			heroVideo.parentElement?.classList.add("video-container--remove-bg");
+			console.log("Adding --remove-bg class (because the transition ended) to: ", heroVideo.parentElement);
+		});
 
 		// show the hero text
 		console.log(`calling showHeroText function`);

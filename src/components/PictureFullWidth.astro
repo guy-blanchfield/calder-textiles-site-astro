@@ -323,6 +323,11 @@ const backgroundImagePortrait = `url(/images/${imageBase}-portrait-lqip.jpg)`;
 			// set timeout that will do the blurloading thing (if the load event hasn't fired within 25ms)
 			imgLoadTimer = setTimeout(() => {
 				console.log("timeout! so doing the blur load thing");
+				// clear the timeout and null it
+				console.log("clearing the timeout");
+				clearTimeout(imgLoadTimer);
+				imgLoadTimer = null;
+				console.log("value of timeout is: ", imgLoadTimer);
 				console.log(`${pictureImg.src} is NOT complete so adding picture--blur-loading`);
 				// if we're going through the blur-loading process we need to set the duration data attribute to its original
 				// value, so that the heroTextTransition can calculate the right duration for its transition
@@ -337,13 +342,18 @@ const backgroundImagePortrait = `url(/images/${imageBase}-portrait-lqip.jpg)`;
 			// if this fires before the timeout, we're assuming the image was cached and its cool to show it
 			// without going through the blur-loading process (i.e. no background image lqip and no filter blur)
 			pictureImg.addEventListener("load", () => {
+				// just for clarity
+				if (imgLoadTimer) {
+					console.log("load event beat the timeout: " + imgLoadTimer + ", image was probably cached");
+					// clear the timeout and null it
+					console.log("clearing the timeout because load event beat the timeout");
+					clearTimeout(imgLoadTimer);
+					imgLoadTimer = null;
+				}
 				// should probably have a function for adding --show
 				console.log("load event fired so doing the show picture thing for: ", pictureImg);
 				// console.log(`img load event fired so adding picture--show`);
 				pictureEl.classList.add("picture--show");
-				// clear the timeout
-				console.log("clearing the timeout");
-				clearTimeout(imgLoadTimer);
 			});
 
 			// otherwise we can assume the image has already loaded
