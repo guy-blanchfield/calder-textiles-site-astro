@@ -16,8 +16,11 @@ export interface Props {
 	// e.g. --sustainability-1, --sustainability-2
 	colModifier?: string;
 	sectionFixedHeight?: boolean;
+	// whether or not pageDownArrow is required
+	pageDownArrow?: boolean;
 	// also need to drill a prop down into the pageDownArrow if required (default is --white)
 	pageDownArrowFillColour?: string;
+	pageDownArrowHoverTip?: string;
 }
 
 const {
@@ -30,7 +33,9 @@ const {
 	bgColour = "var(--pageContentBgColour-1)",
 	colModifier = "",
 	sectionFixedHeight = true,
+	pageDownArrow = true,
 	pageDownArrowFillColour = "var(--white)",
+	pageDownArrowHoverTip = "<strong>Next:&nbsp;</strong> Contact Us",
 } = Astro.props;
 
 // tried this with img srcset sizes, no good, use picture instead
@@ -128,7 +133,16 @@ const diagramMediaMin = "(min-width: 577px)";
 				}
 			</div>
 		</div>
-		<PageDownArrow anchorLink="#contact" ariaLabel="Next section: Contact" fillColour={pageDownArrowFillColour} />
+		{
+			pageDownArrow && (
+				<PageDownArrow
+					anchorLink="#contact"
+					ariaLabel="Next section: Contact"
+					hoverTip={pageDownArrowHoverTip}
+					fillColour={pageDownArrowFillColour}
+				/>
+			)
+		}
 	</section>
 </div>
 

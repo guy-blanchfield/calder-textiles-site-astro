@@ -7,7 +7,11 @@ import ContactSection from "../components/ContactSection.astro";
 ---
 
 <Layout title="Development : Calder Textiles" heroImageBase="winding-image">
-	<Hero imageBase="winding-image" imageAlt="Man working at a winding machine">
+	<Hero
+		imageBase="winding-image"
+		imageAlt="Man working at a winding machine"
+		pageDownArrowHoverTip="<strong>Next: </strong> Development, new ranges, shades and textures"
+	>
 		<!-- using Fragment here, span also works, but fragment produces tidier markup -->
 		<Fragment slot="hero-heading">We work across all requirements with absolute dedication.</Fragment>
 		<!-- <Fragment slot="hero-para">One of the UK's foremost woollen yarn spinners with a world-wide reputation for excellence.</Fragment> -->
@@ -17,6 +21,7 @@ import ContactSection from "../components/ContactSection.astro";
 		heading="Development"
 		pageDownAnchorLink="#diagram"
 		pageDownAriaLabel="Next section: Development diagram"
+		pageDownArrowHoverTip="<strong>Next: </strong> Development in numbers"
 	>
 		<Fragment slot="page-content">
 			<p class="page-content__lead-para">
@@ -54,6 +59,7 @@ import ContactSection from "../components/ContactSection.astro";
 		bgColour="var(--pageContentBgColour-4)"
 		colModifier="--development"
 		pageDownArrowFillColour="var(--darkgrey)"
+		pageDownArrowHoverTip="<strong>Next: </strong> Contact Us"
 	/>
 
 	<ContactSection />

@@ -9,7 +9,11 @@ import ContactSection from "../components/ContactSection.astro";
 
 <Layout title="Products : Calder Textiles" heroImageBase="cream-yarn">
 	<main>
-		<Hero imageBase="cream-yarn" imageAlt="Cream coloured yarn">
+		<Hero
+			imageBase="cream-yarn"
+			imageAlt="Cream coloured yarn"
+			pageDownArrowHoverTip="<strong>Next: </strong> Products, uses and materials"
+		>
 			<!-- using Fragment here, span also works, but fragment produces tidier markup -->
 			<Fragment slot="hero-heading">
 				We pride ourselves on the quality we achieve, as well as <span class="nowrap">the versatility</span> of production.
@@ -17,7 +21,12 @@ import ContactSection from "../components/ContactSection.astro";
 			<!-- <Fragment slot="hero-para">Not One of the UK's foremost woollen yarn spinners with a world-wide reputation for excellence.</Fragment> -->
 		</Hero>
 
-		<PageContentSection heading="Products" bgColour="var(--pageContentBgColour-2)" pageDownAnchorLink="#diagram" ,>
+		<PageContentSection
+			heading="Products"
+			bgColour="var(--pageContentBgColour-2)"
+			pageDownAnchorLink="#diagram"
+			pageDownArrowHoverTip="<strong>Next: </strong> Ply, dyeing, finishing and packages"
+		>
 			<Fragment slot="page-content">
 				<p class="page-content__lead-para">Yarns made on the Woollen Spinning System</p>
 				<!-- fs-6 is 1rem, to match <p>, also the h3s used to have mb-0 -->
@@ -48,6 +57,7 @@ import ContactSection from "../components/ContactSection.astro";
 			numberOfDiagrams={4}
 			bgColour="var(--pageContentBgColour-4)"
 			pageDownArrowFillColour="var(--darkgrey)"
+			pageDownArrowHoverTip="<strong>Next: </strong> Contact Us"
 		/>
 
 		<PictureSection imageBase="pom-colour-samples" imageAlt="Pom Colour Samples" />

@@ -5,37 +5,95 @@ import { Icon } from "astro-icon";
 export interface Props {
 	anchorLink: string;
 	ariaLabel: string; // Page Content
-	className?: string;
+	hoverTip?: string; // this should probably be the same as ariaLabel, but let's have a separate prop, for flexibility
+	divClassName?: string;
+	linkClassName?: string; // not sure we need class names for both the div AND the link, but again flexibility
 	fillColour?: string;
 }
 
-const { anchorLink, ariaLabel, className = "page-down-link", fillColour = "var(--white)" } = Astro.props;
+const {
+	anchorLink,
+	ariaLabel,
+	hoverTip,
+	divClassName = "page-down",
+	linkClassName = "page-down-link",
+	fillColour = "var(--white)",
+} = Astro.props;
 ---
 
-<a class:list={[className]} href={anchorLink} aria-label={ariaLabel}>
-	<!-- was span, now using astro-icon -->
-	<!-- <span class="material-symbols-outlined"> -->
-	<!-- arrow_downward -->
-	<!-- try simple expand more chevron -->
-	<!-- expand_more -->
-	<!-- nah try expand_circle_down -->
-	<!-- expand_circle_down -->
-	<!-- </span> -->
-	<!-- gonna have to use the svg for this, bc we need the lighter weight -->
-	<!-- name was ic:outline-expand-circle-down -->
-	<Icon name="expand_circle_down_FILL0_wght200_GRAD0_opsz48" class="page-down-link__icon" alt="Arrow pointing down" />
-</a>
+<!-- div to contain the hovertip and the down arrow icon (icon is the link, hovertip is not clickable) -->
+<div class:list={[divClassName]}>
+	<!-- the hover tip --><!-- <span class="hover-tip">{hoverTip}</span> -->
+	<span class="hover-tip" set:html={hoverTip} aria-hidden="true" />
+
+	<a class:list={[linkClassName]} href={anchorLink} aria-label={ariaLabel}>
+		<!-- was span, now using astro-icon -->
+		<!-- <span class="material-symbols-outlined"> -->
+		<!-- arrow_downward -->
+		<!-- try simple expand more chevron -->
+		<!-- expand_more -->
+		<!-- nah try expand_circle_down -->
+		<!-- expand_circle_down -->
+		<!-- </span> -->
+		<!-- gonna have to use the svg for this, bc we need the lighter weight -->
+		<!-- name was ic:outline-expand-circle-down -->
+		<Icon name="expand_circle_down_FILL0_wght200_GRAD0_opsz48" class="page-down-link__icon" alt="Arrow pointing down" />
+	</a>
+</div>
 
 <style define:vars={{ fillColour }}>
-	.page-down-link {
+	.page-down {
+		display: flex;
+		align-items: center;
+		gap: 1.2rem;
 		position: absolute;
 		z-index: 1;
 		bottom: 1.5rem;
 		right: 2rem;
+	}
+
+	.page-down span {
+		font-size: 1.2rem;
+		color: hsl(var(--fillColour));
+
+		/* remove except for hover */
+		/* display: block; */
+		clip: rect(0 0 0 0);
+		clip-path: inset(50%);
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
+		position: relative;
+		transform: translate(0, 1.5rem);
+		white-space: nowrap;
+
+		opacity: 0;
+		/* border: 1px solid magenta; */
+		transition: opacity 0.4s ease-in, transform 0.2s linear;
+		/* transition: opacity 0.4s ease-in; */
+	}
+
+	@media (prefers-reduced-motion) {
+		.page-down span {
+			transform: translate(0, 0);
+		}
+	}
+
+	.page-down:hover span {
+		clip: initial;
+		clip-path: initial;
+		width: auto;
+		height: auto;
+		position: relative;
+		transform: translate(0, 0);
+
+		opacity: 1;
+	}
+	.page-down-link {
 		/* font-size: 3rem; */
 		/* color: hsl(var(--white)/0.7); */
+		display: block;
 		opacity: 0.7;
-
 		text-decoration: none;
 		transition: all 0.2s ease-in;
 	}
@@ -73,5 +131,11 @@ const { anchorLink, ariaLabel, className = "page-down-link", fillColour = "var(-
 		fill: hsl(var(--fillColour));
 		width: 3rem;
 		height: auto;
+	}
+
+	/* we might want to to put this in global, as a utility class */
+	.hover-tip {
+		/* font-size: 0.8rem; */
+		color: hsl(var(--white));
 	}
 </style>

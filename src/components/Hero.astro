@@ -32,13 +32,21 @@ export interface Props {
 	imageBase: string;
 	imageAlt: string;
 	overlayClass?: string;
-	anchorLink?: string;
+	pageDownArrowAnchorLink?: string;
+	// think we'll need to drill this prop through hero to pagedownarrow, bc it's page dependent
+	pageDownArrowHoverTip?: string;
 }
 
 // might need an extra prop here to determine whether hero image needs the gradient overlay
 // or maybe just a classlist to pass to the overlay div
 
-const { imageBase, imageAlt, overlayClass = "", anchorLink = "#content" } = Astro.props;
+const {
+	imageBase,
+	imageAlt,
+	overlayClass = "",
+	pageDownArrowAnchorLink = "#content",
+	pageDownArrowHoverTip = "",
+} = Astro.props;
 
 // const curentPath = new URL(Astro.request.url).pathname;
 // or shorthand
@@ -157,7 +165,7 @@ const currentPath = Astro.url.pathname;
 	<!-- from a11y -->
 	<!-- "A link is focusable and can be triggered by the enter key. -->
 	<!-- A link will redirect you to a new page or a section within the same page." -->
-	<PageDownArrow anchorLink={anchorLink} ariaLabel="Page Content" />
+	<PageDownArrow anchorLink={pageDownArrowAnchorLink} ariaLabel="Page Content" hoverTip={pageDownArrowHoverTip} />
 </div>
 
 <script>

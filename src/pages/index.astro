@@ -8,7 +8,12 @@ import EmptySection from "../components/EmptySection.astro";
 ---
 
 <Layout title="Calder Textiles : Home" heroImageBase="sheep-walking-mountain" heroVideo={true}>
-	<Hero imageBase="sheep-walking-mountain" imageAlt="Sheep walking on the mountain" anchorLink="#aboutus">
+	<Hero
+		imageBase="sheep-walking-mountain"
+		imageAlt="Sheep walking on the mountain"
+		anchorLink="#aboutus"
+		downArrowHoverTip="<strong>Next: </strong> About Us"
+	>
 		<!-- <Hero imageBase="pink-yarn" imageAlt="Sheep walking on the mountain" anchorLink="#aboutus"> -->
 		<!-- using Fragment here, span also works, but fragment produces tidier markup -->
 		<Fragment slot="hero-heading">Welcome to Calder Textiles</Fragment>
@@ -17,7 +22,12 @@ import EmptySection from "../components/EmptySection.astro";
 		</Fragment>
 	</Hero>
 
-	<PageContentSection heading="About Us" bgColour="var(--pageContentBgColour-1)" anchorId="aboutus">
+	<PageContentSection
+		heading="About Us"
+		bgColour="var(--pageContentBgColour-1)"
+		anchorId="aboutus"
+		pageDownArrowHoverTip="<strong>Next: </strong> Contact Us"
+	>
 		<Fragment slot="page-content">
 			<p class="page-content__lead-para">
 				Calder Textiles is a traditional family owned spinning mill located in Dewsbury, West Yorkshire, an area
