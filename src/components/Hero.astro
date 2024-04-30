@@ -165,7 +165,12 @@ const currentPath = Astro.url.pathname;
 	<!-- from a11y -->
 	<!-- "A link is focusable and can be triggered by the enter key. -->
 	<!-- A link will redirect you to a new page or a section within the same page." -->
-	<PageDownArrow anchorLink={pageDownArrowAnchorLink} ariaLabel="Page Content" hoverTip={pageDownArrowHoverTip} />
+	<PageDownArrow
+		anchorLink={pageDownArrowAnchorLink}
+		ariaLabel="Page Content"
+		hoverTip={pageDownArrowHoverTip}
+		fontSize="1.2rem"
+	/>
 </div>
 
 <script>

@@ -9,6 +9,7 @@ export interface Props {
 	divClassName?: string;
 	linkClassName?: string; // not sure we need class names for both the div AND the link, but again flexibility
 	fillColour?: string;
+	fontSize?: string;
 }
 
 const {
@@ -18,13 +19,13 @@ const {
 	divClassName = "page-down",
 	linkClassName = "page-down-link",
 	fillColour = "var(--white)",
+	fontSize = "1rem",
 } = Astro.props;
 ---
 
 <!-- div to contain the hovertip and the down arrow icon (icon is the link, hovertip is not clickable) -->
 <div class:list={[divClassName]}>
 	<!-- the hover tip --><!-- <span class="hover-tip">{hoverTip}</span> -->
-	<span class="hover-tip" set:html={hoverTip} aria-hidden="true" />
 
 	<a class:list={[linkClassName]} href={anchorLink} aria-label={ariaLabel}>
 		<!-- was span, now using astro-icon -->
@@ -39,53 +40,92 @@ const {
 		<!-- name was ic:outline-expand-circle-down -->
 		<Icon name="expand_circle_down_FILL0_wght200_GRAD0_opsz48" class="page-down-link__icon" alt="Arrow pointing down" />
 	</a>
+
+	<!-- put it here in the document and move it with css
+	(we need the adjacent siblinkg selector, so the hover-tip has to be after the link) -->
+	<span class="page-down__hover-tip" set:html={hoverTip} aria-hidden="true" />
 </div>
 
-<style define:vars={{ fillColour }}>
+<style define:vars={{ fillColour, fontSize, testVar: "5rem", xTransform: "calc(-100% - var(--fontSize))" }}>
+	/* calculate the horizontal transform required to get the hovertip
+	from one side of the link to the other (it's after in the document (next sibling)
+	but we want it to appear before) */
+
+	/* --x-transform: calc(100% + var(--fontSize)); */
+	/* --x-transform: 100%; */
+	/* --test-var: 5rem; */
+
 	.page-down {
 		display: flex;
 		align-items: center;
-		gap: 1.2rem;
+		/* gap: var(--fontSize); */
 		position: absolute;
 		z-index: 1;
 		bottom: 1.5rem;
 		right: 2rem;
+		/* right: var(--testVar); */
+
+		border: 1px solid green;
 	}
 
-	.page-down span {
-		font-size: 1.2rem;
+	.page-down__hover-tip {
+		/* font-size: 1.2rem; */
+		font-size: var(--fontSize);
 		color: hsl(var(--fillColour));
 
 		/* remove except for hover */
-		/* display: block; */
+		/* display: block;
 		clip: rect(0 0 0 0);
 		clip-path: inset(50%);
 		width: 1px;
-		height: 1px;
+		height: 1px; */
+
+		/* padding-right: var(--fontSize); nope! */
+
+		/* display flex so we can center the text */
+		/* display: flex; */
+		/* align-items: center; */
+
+		/* in the document it's after the link so use css to position it before
+		so we can select it with adjacent sibling selector */
+		position: absolute;
+		transform-origin: center right;
+		/* move it 4rem to the right (1rem gap, 3rem width of the icon) */
+		transform: translate(var(--xTransform), 1.5rem);
+		/* transform: translate(var(--x-transform), 1.5rem); */
+
 		overflow: hidden;
-		position: relative;
-		transform: translate(0, 1.5rem);
+		/* position: relative; */
+		/* transform: translate(0, 1.5rem); */
 		white-space: nowrap;
 
 		opacity: 0;
 		/* border: 1px solid magenta; */
-		transition: opacity 0.4s ease-in, transform 0.2s linear;
+		/* background-color: orange; */
+		transition: opacity 250ms ease-in, transform 250ms linear;
 		/* transition: opacity 0.4s ease-in; */
 	}
 
 	@media (prefers-reduced-motion) {
-		.page-down span {
-			transform: translate(0, 0);
+		.page-down__hover-tip {
+			transform: translate(var(--xTransform), 0);
 		}
 	}
 
-	.page-down:hover span {
+	/* no hoverTip for mobile */
+	@media (max-width: 576px) {
+		.page-down__hover-tip {
+			display: none;
+		}
+	}
+
+	.page-down-link:hover + .page-down__hover-tip {
 		clip: initial;
 		clip-path: initial;
 		width: auto;
 		height: auto;
-		position: relative;
-		transform: translate(0, 0);
+		/* position: relative; */
+		transform: translate(var(--xTransform), 0);
 
 		opacity: 1;
 	}
@@ -96,6 +136,8 @@ const {
 		opacity: 0.7;
 		text-decoration: none;
 		transition: all 0.2s ease-in;
+
+		border: 1px solid yellow;
 	}
 
 	/* .page-down-link:hover, */
