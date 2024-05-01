@@ -27,6 +27,7 @@ import EmptySection from "../components/EmptySection.astro";
 		bgColour="var(--pageContentBgColour-1)"
 		anchorId="aboutus"
 		pageDownArrowHoverTip="<strong>Next: </strong> Contact Us"
+		pageDownArrow={false}
 	>
 		<Fragment slot="page-content">
 			<p class="page-content__lead-para">
@@ -49,7 +50,6 @@ import EmptySection from "../components/EmptySection.astro";
 	<!-- just take this out for a while, till we get the webps for herd-in-field -->
 	<!-- <EmptySection />  -->
 	<PictureSection imageBase="spinning-image" imageAlt="Spinning machine" />
-	<ContactSection />
 </Layout>
 
 <style></style>
