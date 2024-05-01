@@ -46,14 +46,10 @@ const {
 	<span class="page-down__hover-tip" set:html={hoverTip} aria-hidden="true" />
 </div>
 
-<style define:vars={{ fillColour, fontSize, testVar: "5rem", xTransform: "calc(-100% - var(--fontSize))" }}>
+<style define:vars={{ fillColour, fontSize, xTransform: "calc(-100% - var(--fontSize))" }}>
 	/* calculate the horizontal transform required to get the hovertip
 	from one side of the link to the other (it's after in the document (next sibling)
 	but we want it to appear before) */
-
-	/* --x-transform: calc(100% + var(--fontSize)); */
-	/* --x-transform: 100%; */
-	/* --test-var: 5rem; */
 
 	.page-down {
 		display: flex;
@@ -65,7 +61,7 @@ const {
 		right: 2rem;
 		/* right: var(--testVar); */
 
-		border: 1px solid green;
+		/* border: 1px solid green; */
 	}
 
 	.page-down__hover-tip {
@@ -99,10 +95,15 @@ const {
 		/* transform: translate(0, 1.5rem); */
 		white-space: nowrap;
 
+		/* make it unselectable whilst invisible */
+		-webkit-user-select: none; /* Safari */
+		-ms-user-select: none; /* IE 10 and IE 11 */
+		user-select: none; /* Standard syntax */
+
 		opacity: 0;
 		/* border: 1px solid magenta; */
 		/* background-color: orange; */
-		transition: opacity 250ms ease-in, transform 250ms linear;
+		transition: opacity 0.2s ease-in, transform 0.2s linear;
 		/* transition: opacity 0.4s ease-in; */
 	}
 
@@ -124,6 +125,12 @@ const {
 		clip-path: initial;
 		width: auto;
 		height: auto;
+
+		/* reset user-select */
+		-webkit-user-select: auto; /* Safari */
+		-ms-user-select: auto; /* IE 10 and IE 11 */
+		user-select: auto; /* Standard syntax */
+
 		/* position: relative; */
 		transform: translate(var(--xTransform), 0);
 
@@ -137,7 +144,7 @@ const {
 		text-decoration: none;
 		transition: all 0.2s ease-in;
 
-		border: 1px solid yellow;
+		/* border: 1px solid yellow; */
 	}
 
 	/* .page-down-link:hover, */
