@@ -336,6 +336,23 @@ const backgroundImagePortrait = `url(/images/${imageBase}-portrait-lqip.jpg)`;
 				pictureEl.classList.add("picture--blur-loading");
 				// now that blur-loading has been added, we can allow the event listener to continue waiting for load
 				// it will add --show when the image loads
+
+				// not all pictures will be in hero (duh!) so we need to check that the parent has the loader-container
+				// before we add the loading animation (non-hero pictures don't need the loading animation)
+				// we could use optional chaining but just to keep things tight
+				if (pictureEl.parentNode.querySelector(".hero__loader-container")) {
+					console.log(
+						"parent element loader container is: ",
+						pictureEl.parentNode.querySelector(".hero__loader-container").querySelector(".loader")
+					);
+					// add loading animation
+					console.log("adding the loading animation");
+
+					pictureEl.parentNode
+						.querySelector(".hero__loader-container")
+						.querySelector(".loader")
+						.classList.add("loader--loading");
+				}
 			}, imgLoadTimerDuration);
 
 			// add listener for the load event
@@ -352,8 +369,7 @@ const backgroundImagePortrait = `url(/images/${imageBase}-portrait-lqip.jpg)`;
 				}
 				// should probably have a function for adding --show
 				console.log("load event fired so doing the show picture thing for: ", pictureImg);
-				// console.log(`img load event fired so adding picture--show`);
-				pictureEl.classList.add("picture--show");
+				showImage(pictureEl);
 			});
 
 			// otherwise we can assume the image has already loaded
@@ -361,7 +377,22 @@ const backgroundImagePortrait = `url(/images/${imageBase}-portrait-lqip.jpg)`;
 			console.log(`pictureImg.complete: ${pictureImg.complete}`);
 			console.log(`pictureImg.naturalWidth: ${pictureImg.naturalWidth}`);
 			console.log("image is already complete so adding --show");
+			showImage(pictureEl);
+		}
+
+		// function to execute when image is ready
+		function showImage(pictureEl: Element) {
+			console.log("showImage function called for ", pictureEl);
 			pictureEl.classList.add("picture--show");
+			// should we be removing picture--blur-loading here? unnecessary?
+
+			// remove loading animation
+			if (pictureEl.parentNode.querySelector(".hero__loader-container")) {
+				pictureEl.parentNode
+					.querySelector(".hero__loader-container")
+					.querySelector(".loader")
+					.classList.remove("loader--loading");
+			}
 		}
 	}
 </script>

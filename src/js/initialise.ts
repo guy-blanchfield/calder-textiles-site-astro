@@ -10,6 +10,11 @@ function initialise() {
 	const heroVideo: HTMLMediaElement = document.querySelector(".video-element") ?? undefined;
 	const heroTextDiv: HTMLDivElement = document.querySelector(".hero__text") ?? undefined;
 
+	// and a ref to the loading animation (which is in hero > hero__loader-container)
+	// think we need to add and remove the loader (for hero video) from here
+	// even though it's being handled from PictureFullWidth for hero image
+	const heroLoader: HTMLElement = document.querySelector(".hero__loader-container").querySelector(".loader");
+
 	// functions ---------------------------------------------
 
 	function handleHeroTextTransition() {
@@ -108,6 +113,10 @@ function initialise() {
 			heroVideo.addEventListener("loadedmetadata", handleVideoReady);
 			// try loadeddata, see if stops the delay between the event and the video showing - nope
 			// heroVideo.addEventListener("loadeddata", handleVideoReady);
+
+			// show the hero loading animation
+			console.log("adding loading animation for the hero video");
+			heroLoader.classList.add("loader--loading");
 		}
 	}
 
@@ -169,6 +178,9 @@ function initialise() {
 			console.log("Adding --remove-bg class (because the transition ended) to: ", heroVideo.parentElement);
 		});
 
+		// hide the hero loading animation
+		console.log("removing loading animation for the hero video");
+		heroLoader.classList.remove("loader--loading");
 		// show the hero text
 		console.log(`calling showHeroText function`);
 		showHeroText();

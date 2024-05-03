@@ -21,6 +21,7 @@ import VideoFullWidth from "../components/VideoFullWidth.astro";
 // is:inline is what you should use if you really do want to conditionally render a script."
 
 import PageDownArrow from "./PageDownArrow.astro";
+import LoadingAnimation from "./LoadingAnimation.astro";
 
 // some prop drilling required to get the imageBase from the page that calls it
 // through to the pictureFullWidth component
@@ -74,6 +75,11 @@ const currentPath = Astro.url.pathname;
 
 <!-- not using min-vh-100 now, using calc and header has sticky-top -->
 <div class="hero">
+	<!-- loading animation for the hero picture or video -->
+	<div class="hero__loader-container">
+		<LoadingAnimation />
+	</div>
+
 	<!-- if current page is home page, show the video, otherwise show the appropriate picture -->
 	<!-- maybe we should pass a prop to hero to define whether it's a video hero or picture hero -->
 	<!-- the currentpath is a bit limiting, clunky -->
@@ -433,6 +439,22 @@ const currentPath = Astro.url.pathname;
 		/* but mdn says experimental use with caution */
 		/* balance is no longer experimental so go for it */
 		text-wrap: balance;
+	}
+	/* because of the negative margin / padding positioning trick
+	we're using for .hero, we can't use position absolute   */
+	/*  */
+	.hero__loader-container {
+		position: absolute;
+		top: var(--header-height-calc);
+		left: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 100%;
+		/* the parent has the negative margin / padding trick so we don't want height 100%
+		we need to subtract the header height from 100% */
+		height: calc(100% - var(--header-height-calc));
+		/* border: 1px solid yellow; */
 	}
 
 	/* also add these settings to the css link tag in layout head */

@@ -72,6 +72,9 @@ const backgroundImage = `url(/images/${videoBase}-lqip.jpg)`;
 	// this script will run regardless of the conditional render in Hero component
 	// and there's quite a lot of it, so put all of it inside a condition
 
+	// NB this script does NOT do any load checking, add loading classes, blurs or loading animations
+	// that's all being done in initialise.ts
+
 	if (document.querySelector(".video-element")) {
 		console.log(`video component script actually running!!`);
 
