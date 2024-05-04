@@ -9,12 +9,20 @@ function initialise() {
 	const heroImage: HTMLImageElement = document.querySelector(".hero__image") ?? undefined;
 	const heroVideo: HTMLMediaElement = document.querySelector(".video-element") ?? undefined;
 	const heroTextDiv: HTMLDivElement = document.querySelector(".hero__text") ?? undefined;
+	// const heroElement: HTMLElement = document.querySelector(".hero") ?? undefined;
+	const heroOverlay: HTMLElement = document.querySelector(".hero__overlay") ?? undefined;
+
+	// and a ref to the loading animation (which is in hero > hero__loader-container)
+	// think we need to add and remove the loader (for hero video) from here
+	// even though it's being handled from PictureFullWidth for hero image
+	const heroLoader: HTMLElement = document.querySelector(".hero__loader-container").querySelector(".loader");
 
 	// functions ---------------------------------------------
 
 	function handleHeroTextTransition() {
 		heroTextDiv.classList.add("hero__text--visible");
 		console.log(`hero__text--visible class added!`);
+
 		// now add a listener for the transitionend so we can amend the transition property
 		// once the transition has run
 		// otherwise there's a tendency for chrome to try and transition it (fade it out and move it down)
@@ -61,7 +69,7 @@ function initialise() {
 		// Number() won't work to extract 2000 from "2000ms", use parseInt()
 		// consider adding a bit to this to give the transition a bit of room
 		console.log("herotextTransitionDelay: ", heroTextTransitionDelay);
-		console.log("Number(herotextTransitionDuration): ", heroTextTransitionDelay);
+		console.log("parseInt(herotextTransitionDuration): ", heroTextTransitionDelay);
 		setTimeout(handleHeroTextTransition, heroTextTransitionDelay);
 		// }
 	}
@@ -106,6 +114,12 @@ function initialise() {
 			// in tests with throttling at 3G, there was a 1 millisecond difference between the
 			// loadedmetadata event and the canplay event, so this should be ok
 			heroVideo.addEventListener("loadedmetadata", handleVideoReady);
+			// try loadeddata, see if stops the delay between the event and the video showing - nope
+			// heroVideo.addEventListener("loadeddata", handleVideoReady);
+
+			// show the hero loading animation
+			console.log("adding loading animation for the hero video");
+			heroLoader.classList.add("loader--loading");
 		}
 	}
 
@@ -143,16 +157,69 @@ function initialise() {
 
 		// add the --show class to video container
 		// this will fade the filter blur out (transition filter blur(1rem) to filter blur(0))
+
+		// NB! we need to make sure the video has full faded in before removing the blur
+		// otherwise we see the acky background image
+
+		// the video opacity fade is done through a descendant selector on video-container--show
+		// i.e. .video-container--show .video-element { opacity: 1; }
+
+		// so the 2 transitions (the video fade-in AND the blur fade-out) *are* happening at the same time
+		// BUT the blur fade-out has a delay matching the duration length of the opacity fade-in
+
+		// so the blur fade-out definitely shouldn't be happening before the video fades in
+
+		// Update!! decided to ditch the bg image placeholder and the blur because of the above issue
+		// so we don't need to add the video-container--show class - it was just for the blur transition
+		// we can also get rid of the eventlistener for the container transition end - that was just to remove the bg image
+		// but we will need to change the descendant selector for video-element to a dedicated class (say video-element--show)
+
+		// Update again!!! decided to keep the flter blur to cover up the ugly colour shift when the video starts
+		// (or after the transition ends if a transition is present) in chrome (it's caused by hardware acceleration)
+		// let's keep the separate class for video-element though - the descendant selector is a bit problematic
+
 		heroVideo.parentElement?.classList.add("video-container--show");
+		console.log("adding the --show class to the video container");
+		heroVideo.classList.add("video-element--show");
+
+		// we also need to show the hero_overlay, which now starts off hidden
+		// (so the gradient background doesn't show before the image loads)
+		if (heroOverlay) {
+			heroOverlay.classList.add("hero__overlay--show");
+		}
+
+		// hide the hero loading animation
+		console.log("removing loading animation for the hero video");
+		heroLoader.classList.remove("loader--loading");
+		// show the hero text
+		console.log(`calling showHeroText function`);
+		showHeroText();
 
 		// we should hide the background image when the video is ready
 		// otherwise it has a nasty habit of showing when we leave the page
 		// i.e. on leaving the page, the video disappears first, leaving the ugly background image showing underneath
 		// think we can do this by putting a backgound-image: none on .video-container--show
 
-		// show the hero text
-		console.log(`calling showHeroText function`);
-		showHeroText();
+		// we need to leave the background image in for a moment because the video doesn't appear
+		// instantaneously, at least not in throttled simulations
+		// so we should listen for the transition end event on the video container
+		// and remove the background image once the transition has ended
+		// so we'll need another class, say --remove-bg
+
+		/*
+		heroVideo.parentElement?.addEventListener("transitionend", (e) => {
+			// check this is the transitionend we're looking for
+			console.log("transitionend event from: ", e.target);
+			console.log("event target matches .video-container: ", (<HTMLElement>e.target).matches(".video-container"));
+			if (!(<HTMLElement>e.target).matches(".video-container")) return;
+
+			// tested this with a long delay - it is definitely not being
+			// applied until the video element opacity transition finishes
+			// i.e. it's working correctly (it's not the cause of any gap before the video shows)
+			heroVideo.parentElement?.classList.add("video-container--remove-bg");
+			console.log("Adding --remove-bg class (because the transition ended) to: ", heroVideo.parentElement);
+		});
+		*/
 	}
 
 	// check if fonts are ready then

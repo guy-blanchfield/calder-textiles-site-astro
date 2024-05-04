@@ -1,0 +1,55 @@
+---
+// what props?
+// something to control display / positioning?
+// default should probably be no positioning
+// with an option for placing the loader in the center of its parent div with a higher z-index
+
+// const { loaderContainerFillParent = false } = Astro.props;
+---
+
+<div class="loader"></div>
+
+<style>
+	/* 
+    .loader--loading show spinning animation
+    do we need any other states?
+    will .loader do it?
+    */
+
+	.loader {
+		/* temp styles so we can see what's happening */
+		/* width: 3rem; */
+		/* height: 3rem; */
+		/* border: 1px solid magenta; */
+		z-index: 100;
+		border: none;
+		/* maybe we should just display none */
+		display: none;
+	}
+
+	.loader--loading {
+		display: flex;
+		/* position: absolute; */
+		/* inset: 0; */
+		width: 50px;
+		height: 50px;
+		/* border: 3px solid hsl(0 0% 100% / 0); */
+		/* border-top-color: hsl(var(--white)); */
+		border: 3px solid hsl(var(--white) / 0.8);
+		border-top-color: hsl(0 0% 100% / 0);
+		/* border-right-color: hsl(0 0% 100% / 0); */
+		border-radius: 50%;
+
+		animation: loading 0.75s linear infinite;
+	}
+
+	@keyframes loading {
+		from {
+			transform: rotate(0turn);
+		}
+		/* 50% { transform: scale(0.75) } */
+		to {
+			transform: rotate(1turn);
+		}
+	}
+</style>

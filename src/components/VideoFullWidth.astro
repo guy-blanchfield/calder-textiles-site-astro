@@ -18,8 +18,17 @@ const {
 	videoAutoplay = "true",
 	videoDescription,
 	pictureClasses = "",
-	transitionDuration = "300ms",
-	transitionDelay = "100ms",
+	transitionDuration = "500ms", // was 300, 1000ms still not enough to avoid the acky flash occasionally
+	transitionDelay = "250ms", // was 100 (but video-element opacity fade was transitionDelay NOT transitionDelay/2)
+	// NB transitionDelay value is also being used as the
+	// duration for the video element opacity transition
+	// (currently transitionDelay/2)
+
+	// setting this much longer (e.g. 2000ms) tends to stop the flash of acky
+	// background image and blue background when throttling but it's not a viable option
+	// unless we have some kind of check to see if the video is loaded or cached before
+	// applying the blur (it's on as default, hard coded in the css)
+	// also, it might add 2s onto the lcp!
 } = Astro.props;
 
 const videoSourcePart = `/video/${videoBase}`;
@@ -31,10 +40,20 @@ const videoSourcePart = `/video/${videoBase}`;
 // const backgroundImageTiny = `url(/images/${videoBase}-20x11.jpg)`;
 
 // the LQIP, currently 1440 x 810
+// (NB! we're not currently using the bg image placeholder for the video
+// but leave this here for now )
 const backgroundImage = `url(/images/${videoBase}-lqip.jpg)`;
 
 // we don't need a portrait lqip for the video, bc there's no portrait version of the video
 // it just uses object-fit (i think!)
+
+// 07-04-2024
+
+// filter blur disappears too quickly
+// fix it, or lose the lqip, or blur the lqip
+
+// also check whether this has always happened
+// maybe there was something in preloader that was making it work properly?
 ---
 
 <!-- 
@@ -63,6 +82,12 @@ const backgroundImage = `url(/images/${videoBase}-lqip.jpg)`;
 <script>
 	// this script will run regardless of the conditional render in Hero component
 	// and there's quite a lot of it, so put all of it inside a condition
+
+	// NB this script does NOT do any load checking, add loading classes, blurs or loading animations
+	// that's all being done in initialise.ts
+
+	// However!! the initial filter blur is added in this component, it's in the default class of .video-container
+	// i.e. the blur is on from the start, it's not added by script
 
 	if (document.querySelector(".video-element")) {
 		console.log(`video component script actually running!!`);
@@ -157,7 +182,8 @@ const backgroundImage = `url(/images/${videoBase}-lqip.jpg)`;
 		// but now it's just called once after the vars are set
 		function setSource() {
 			// doSetSource();
-			console.log("setting video source (and adding --show class)");
+			// console.log("setting video source (and adding --show class)");
+			console.log("setting video source");
 			videoElement.src = videoSource;
 		}
 
@@ -203,32 +229,30 @@ const backgroundImage = `url(/images/${videoBase}-lqip.jpg)`;
 		/* background-image: image-set(var(--backgroundImageSet)); */
 
 		/* background-image: var(--backgroundImageLQIP), var(--backgroundImageTiny); */
-		background-image: var(--backgroundImage);
+
+		/* let's ditch the bg image placeholder for the video 
+		it's not really necessary now we've got a loader animation 
+		and the risk of a flash of the ugly pixelated image was too much */
+
+		/* background-image: var(--backgroundImage); */
+
 		/* background-color: #f0f; */
 		/* background-color: hsl(var(--offwhite)); */
-		/* position was top center but it's not lining up with the image, */
+		/* position was top center but it's not lining up with the background-image, */
 		/* try center center (just center should do it) - yeah that's it*/
-		background-position: center;
-		background-size: cover;
+		/* background-position: center; */
+		/* background-size: cover; */
+
+		/* best with no background, bc the blur makes things glowy and sketchy looking 
+		so we're doing the background in Hero instead*/
 
 		/* trying filter: blur instead of the opacity fade-in */
 		/* so we can get the placeholder bg image compressed more without it looking acky */
-		filter: blur(1rem);
 
-		/* from PictureFullWidth hero__picture */
-
-		/* video doesn't like any of these - probably bc its a flex item */
-		/* (it has a container div which is a flex item, unlike the image which has picture) */
-
-		/* width: 100%; */
-		/* height: 100%; */
-		/* display: block; */
-
-		/* keep as position absolute, even though section-picture__picture is position: relative - trust me */
-		/* position: absolute; */
-		/* z-index: 0; */
-
-		/* border: 1px solid #f00; */
+		/* don't need this filter transition bc we're not using the bg image placeholder */
+		/* update!! keeping this in to cover up the ugly colour shift in the video on chrome */
+		transition: filter var(--transitionDuration) var(--transitionDelay) ease;
+		filter: blur(0.5rem);
 	}
 
 	/* the --show modifier needs to go on the container now, bc that's where the filter blur is */
@@ -237,20 +261,38 @@ const backgroundImage = `url(/images/${videoBase}-lqip.jpg)`;
 	.video-container--show {
 		/* trying filter: blur instead of the opacity fade-in */
 		/* so we can get the placeholder bg image compressed more without it looking acky */
-		transition: filter var(--transitionDuration) var(--transitionDelay);
+		/* transition: filter var(--transitionDuration) var(--transitionDelay); */
 		/* transition: filter 5s; */
 		filter: blur(0rem);
+	}
 
+	/* remove the bg image in a separate class so it can be added by a transitionend callback */
+	/* if we remove it with --show, there's sometimes a brief flash of navy bg before the video shows */
+	.video-container--remove-bg {
 		/* we should hide the background image when the video is ready
 		otherwise it has a nasty habit of showing when we leave the page
 		i.e. on leaving the page, the video disappears first, leaving the ugly background image showing underneath */
+
+		/* ---------------------------------------------------------------------------------------------------------- */
+		/* fairly sure this is the cause of the brief flash of navy bg */
+		/* in testing, it never does it with when the bg-image none rule is commented out  */
+		/* yep, pretty confident it's this */
+		/* ---------------------------------------------------------------------------------------------------------- */
 		background-image: none;
+		/* border: 5px solid fuchsia; */
+
+		/* ok so this class is definitely not being applied at the right time i.e. after the blur transition */
+		/* the transitionend event fires twice */
+		/* once correctly at the end of the blur transition, once after the opacity transition on .video-element */
+		/* put a conditional in the eventlistener callback - done */
 	}
 
+	/* for the opacity transition */
+	/*
 	.video-container--show .video-element {
-		/* for the opacity transition */
 		opacity: 1;
 	}
+	*/
 
 	/* apply the background-images in a separate class, so we have the option to not use them if the video is already loaded */
 	/* not sure this is useful, if the video is in cache then so will the background-images */
@@ -294,11 +336,17 @@ const backgroundImage = `url(/images/${videoBase}-lqip.jpg)`;
 		/* just a bit of an opacity transition before the filter: blur transition */
 		/* with a delay on the filter blur transition (on the container class) */
 		opacity: 0;
-		transition: opacity var(--transitionDelay);
+		/* opacity: 1; */
+		transition: opacity calc(var(--transitionDelay) / 2);
+		/* transition: opacity var(--transitionDelay); */
 
 		/* will-change: opacity; */
 
 		/* from pictureFullWidth hero__image */
 		max-width: initial; /* keep this in for now, can't remember what it's doing! */
+	}
+
+	.video-element--show {
+		opacity: 1;
 	}
 </style>

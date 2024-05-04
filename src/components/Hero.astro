@@ -21,6 +21,7 @@ import VideoFullWidth from "../components/VideoFullWidth.astro";
 // is:inline is what you should use if you really do want to conditionally render a script."
 
 import PageDownArrow from "./PageDownArrow.astro";
+import LoadingAnimation from "./LoadingAnimation.astro";
 
 // some prop drilling required to get the imageBase from the page that calls it
 // through to the pictureFullWidth component
@@ -82,6 +83,11 @@ const currentPath = Astro.url.pathname;
 
 <!-- not using min-vh-100 now, using calc and header has sticky-top -->
 <div class="hero">
+	<!-- loading animation for the hero picture or video -->
+	<div class="hero__loader-container">
+		<LoadingAnimation />
+	</div>
+
 	<!-- if current page is home page, show the video, otherwise show the appropriate picture -->
 	<!-- maybe we should pass a prop to hero to define whether it's a video hero or picture hero -->
 	<!-- the currentpath is a bit limiting, clunky -->
@@ -239,6 +245,8 @@ const currentPath = Astro.url.pathname;
 		/* give this a background of --accent so it'll be forgiving if the image and overlay don't match up */
 		/* --accent is the nav bar colour */
 		background-color: var(--accent);
+		/* let's risk doing it a bit darker so the hero space is defined while video or image are loading */
+		background-color: hsl(var(--darknavy));
 
 		display: flex;
 	}
@@ -268,6 +276,15 @@ const currentPath = Astro.url.pathname;
 		/* remember to adjust if py value on navbar changes */
 		/* think this is redundant now, just let it center (or go to the top on mobile) */
 		/* padding-top: 6rem; */
+
+		/* now fading this in with transition */
+		/* maybe not! */
+		opacity: 0;
+		/* transition: opacity 100ms; */
+	}
+
+	.hero__overlay--show {
+		opacity: 1;
 	}
 
 	/* only apply the opacity gradient background if the hero is picture not video */
@@ -446,6 +463,22 @@ const currentPath = Astro.url.pathname;
 		/* but mdn says experimental use with caution */
 		/* balance is no longer experimental so go for it */
 		text-wrap: balance;
+	}
+	/* because of the negative margin / padding positioning trick
+	we're using for .hero, we can't use position absolute   */
+	/*  */
+	.hero__loader-container {
+		position: absolute;
+		top: var(--header-height-calc);
+		left: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 100%;
+		/* the parent has the negative margin / padding trick so we don't want height 100%
+		we need to subtract the header height from 100% */
+		height: calc(100% - var(--header-height-calc));
+		/* border: 1px solid yellow; */
 	}
 
 	/* also add these settings to the css link tag in layout head */
