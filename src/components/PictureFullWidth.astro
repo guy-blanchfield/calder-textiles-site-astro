@@ -263,6 +263,12 @@ const backgroundImagePortrait = `url(/images/${imageBase}-portrait-lqip.jpg)`;
 
 	// pictureElements.forEach((pictureEl) => {
 	for (const pictureEl of pictureElements) {
+		// first get a ref to the loading animation (in hero - the parent element if this is a hero picture)
+		// bc we're going to need it twice (if this is a hero picture)
+		const heroLoader = pictureEl.parentNode.querySelector(".hero__loader-container")?.querySelector(".loader");
+		//  same for the overlay
+		const heroOverlay = pictureEl.parentNode.querySelector(".hero__overlay");
+
 		// select picture source by media and by type
 
 		const sourcePortraitWebp: HTMLSourceElement = pictureEl.querySelector(
@@ -337,29 +343,29 @@ const backgroundImagePortrait = `url(/images/${imageBase}-portrait-lqip.jpg)`;
 				// now that blur-loading has been added, we can allow the event listener to continue waiting for load
 				// it will add --show when the image loads
 
+				// show the hero overlay (the gradient shading thing for hero images) if it's a hero image
+				if (heroOverlay) {
+					heroOverlay.classList.add("hero__overlay--show");
+				}
+
 				// not all pictures will be in hero (duh!) so we need to check that the parent has the loader-container
 				// before we add the loading animation (non-hero pictures don't need the loading animation)
 				// we could use optional chaining but just to keep things tight
-				if (pictureEl.parentNode.querySelector(".hero__loader-container")) {
-					console.log(
-						"parent element loader container is: ",
-						pictureEl.parentNode.querySelector(".hero__loader-container").querySelector(".loader")
-					);
+
+				if (heroLoader) {
+					console.log("parent element loader container is: ", heroLoader);
 					// add loading animation
 					console.log("adding the loading animation");
 
-					pictureEl.parentNode
-						.querySelector(".hero__loader-container")
-						.querySelector(".loader")
-						.classList.add("loader--loading");
+					heroLoader.classList.add("loader--loading");
 				}
 			}, imgLoadTimerDuration);
 
 			// add listener for the load event
-			// if this fires before the timeout, we're assuming the image was cached and its cool to show it
-			// without going through the blur-loading process (i.e. no background image lqip and no filter blur)
 			pictureImg.addEventListener("load", () => {
-				// just for clarity
+				// if this fires before the timeout, we're assuming the image was cached and its cool to show it
+				// without going through the blur-loading process (i.e. no background image lqip and no filter blur)
+				// so clear the timeout...
 				if (imgLoadTimer) {
 					console.log("load event beat the timeout: " + imgLoadTimer + ", image was probably cached");
 					// clear the timeout and null it
@@ -369,7 +375,9 @@ const backgroundImagePortrait = `url(/images/${imageBase}-portrait-lqip.jpg)`;
 				}
 				// should probably have a function for adding --show
 				console.log("load event fired so doing the show picture thing for: ", pictureImg);
-				showImage(pictureEl);
+				// ...then show the image
+				// showImage(pictureEl, heroLoader);
+				showImage();
 			});
 
 			// otherwise we can assume the image has already loaded
@@ -377,21 +385,27 @@ const backgroundImagePortrait = `url(/images/${imageBase}-portrait-lqip.jpg)`;
 			console.log(`pictureImg.complete: ${pictureImg.complete}`);
 			console.log(`pictureImg.naturalWidth: ${pictureImg.naturalWidth}`);
 			console.log("image is already complete so adding --show");
-			showImage(pictureEl);
+			// showImage(pictureEl);
+			showImage();
 		}
 
 		// function to execute when image is ready
-		function showImage(pictureEl: Element) {
+		// function showImage(pictureEl: Element, heroLoader: Element = null) {
+		function showImage() {
 			console.log("showImage function called for ", pictureEl);
 			pictureEl.classList.add("picture--show");
 			// should we be removing picture--blur-loading here? unnecessary?
 
 			// remove loading animation
-			if (pictureEl.parentNode.querySelector(".hero__loader-container")) {
-				pictureEl.parentNode
-					.querySelector(".hero__loader-container")
-					.querySelector(".loader")
-					.classList.remove("loader--loading");
+			if (heroLoader) {
+				heroLoader.classList.remove("loader--loading");
+			}
+
+			// show the hero overlay (the gradient shading thing for hero images) if it's a hero image
+			if (heroOverlay) {
+				// --show might already be present if this image has done the blu-loading thing
+				// but classList is smart enough not to add things twice
+				heroOverlay.classList.add("hero__overlay--show");
 			}
 		}
 	}

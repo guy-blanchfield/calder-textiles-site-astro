@@ -18,8 +18,17 @@ const {
 	videoAutoplay = "true",
 	videoDescription,
 	pictureClasses = "",
-	transitionDuration = "300ms",
-	transitionDelay = "100ms",
+	transitionDuration = "500ms", // was 300, 1000ms still not enough to avoid the acky flash occasionally
+	transitionDelay = "250ms", // was 100 (but video-element opacity fade was transitionDelay NOT transitionDelay/2)
+	// NB transitionDelay value is also being used as the
+	// duration for the video element opacity transition
+	// (currently transitionDelay/2)
+
+	// setting this much longer (e.g. 2000ms) tends to stop the flash of acky
+	// background image and blue background when throttling but it's not a viable option
+	// unless we have some kind of check to see if the video is loaded or cached before
+	// applying the blur (it's on as default, hard coded in the css)
+	// also, it might add 2s onto the lcp!
 } = Astro.props;
 
 const videoSourcePart = `/video/${videoBase}`;
@@ -31,6 +40,8 @@ const videoSourcePart = `/video/${videoBase}`;
 // const backgroundImageTiny = `url(/images/${videoBase}-20x11.jpg)`;
 
 // the LQIP, currently 1440 x 810
+// (NB! we're not currently using the bg image placeholder for the video
+// but leave this here for now )
 const backgroundImage = `url(/images/${videoBase}-lqip.jpg)`;
 
 // we don't need a portrait lqip for the video, bc there's no portrait version of the video
@@ -74,6 +85,9 @@ const backgroundImage = `url(/images/${videoBase}-lqip.jpg)`;
 
 	// NB this script does NOT do any load checking, add loading classes, blurs or loading animations
 	// that's all being done in initialise.ts
+
+	// However!! the initial filter blur is added in this component, it's in the default class of .video-container
+	// i.e. the blur is on from the start, it's not added by script
 
 	if (document.querySelector(".video-element")) {
 		console.log(`video component script actually running!!`);
@@ -215,18 +229,30 @@ const backgroundImage = `url(/images/${videoBase}-lqip.jpg)`;
 		/* background-image: image-set(var(--backgroundImageSet)); */
 
 		/* background-image: var(--backgroundImageLQIP), var(--backgroundImageTiny); */
-		background-image: var(--backgroundImage);
+
+		/* let's ditch the bg image placeholder for the video 
+		it's not really necessary now we've got a loader animation 
+		and the risk of a flash of the ugly pixelated image was too much */
+
+		/* background-image: var(--backgroundImage); */
+
 		/* background-color: #f0f; */
 		/* background-color: hsl(var(--offwhite)); */
 		/* position was top center but it's not lining up with the background-image, */
 		/* try center center (just center should do it) - yeah that's it*/
-		background-position: center;
-		background-size: cover;
+		/* background-position: center; */
+		/* background-size: cover; */
+
+		/* best with no background, bc the blur makes things glowy and sketchy looking 
+		so we're doing the background in Hero instead*/
 
 		/* trying filter: blur instead of the opacity fade-in */
 		/* so we can get the placeholder bg image compressed more without it looking acky */
+
+		/* don't need this filter transition bc we're not using the bg image placeholder */
+		/* update!! keeping this in to cover up the ugly colour shift in the video on chrome */
 		transition: filter var(--transitionDuration) var(--transitionDelay) ease;
-		filter: blur(1rem);
+		filter: blur(0.5rem);
 	}
 
 	/* the --show modifier needs to go on the container now, bc that's where the filter blur is */
@@ -261,10 +287,12 @@ const backgroundImage = `url(/images/${videoBase}-lqip.jpg)`;
 		/* put a conditional in the eventlistener callback - done */
 	}
 
+	/* for the opacity transition */
+	/*
 	.video-container--show .video-element {
-		/* for the opacity transition */
 		opacity: 1;
 	}
+	*/
 
 	/* apply the background-images in a separate class, so we have the option to not use them if the video is already loaded */
 	/* not sure this is useful, if the video is in cache then so will the background-images */
@@ -309,11 +337,16 @@ const backgroundImage = `url(/images/${videoBase}-lqip.jpg)`;
 		/* with a delay on the filter blur transition (on the container class) */
 		opacity: 0;
 		/* opacity: 1; */
-		transition: opacity var(--transitionDelay);
+		transition: opacity calc(var(--transitionDelay) / 2);
+		/* transition: opacity var(--transitionDelay); */
 
 		/* will-change: opacity; */
 
 		/* from pictureFullWidth hero__image */
 		max-width: initial; /* keep this in for now, can't remember what it's doing! */
+	}
+
+	.video-element--show {
+		opacity: 1;
 	}
 </style>

@@ -232,6 +232,8 @@ const currentPath = Astro.url.pathname;
 		/* give this a background of --accent so it'll be forgiving if the image and overlay don't match up */
 		/* --accent is the nav bar colour */
 		background-color: var(--accent);
+		/* let's risk doing it a bit darker so the hero space is defined while video or image are loading */
+		background-color: hsl(var(--darknavy));
 
 		display: flex;
 	}
@@ -261,6 +263,15 @@ const currentPath = Astro.url.pathname;
 		/* remember to adjust if py value on navbar changes */
 		/* think this is redundant now, just let it center (or go to the top on mobile) */
 		/* padding-top: 6rem; */
+
+		/* now fading this in with transition */
+		/* maybe not! */
+		opacity: 0;
+		/* transition: opacity 100ms; */
+	}
+
+	.hero__overlay--show {
+		opacity: 1;
 	}
 
 	/* only apply the opacity gradient background if the hero is picture not video */
