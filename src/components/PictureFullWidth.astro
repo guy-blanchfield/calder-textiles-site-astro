@@ -326,7 +326,7 @@ const backgroundImagePortrait = `url(/images/${imageBase}-portrait-lqip.jpg)`;
 		//  check complete and naturalWidth first
 		//  if either .complete or naturalWidth is false, assume the image is not yet loaded
 		if (!(pictureImg?.complete && pictureImg.naturalWidth)) {
-			// set timeout that will do the blurloading thing (if the load event hasn't fired within 25ms)
+			// set timeout that will do the blur loading thing (if the load event hasn't fired within 25ms)
 			imgLoadTimer = setTimeout(() => {
 				console.log("timeout! so doing the blur load thing");
 				// clear the timeout and null it
@@ -343,21 +343,19 @@ const backgroundImagePortrait = `url(/images/${imageBase}-portrait-lqip.jpg)`;
 				// now that blur-loading has been added, we can allow the event listener to continue waiting for load
 				// it will add --show when the image loads
 
-				// show the hero overlay (the gradient shading thing for hero images) if it's a hero image
-				if (heroOverlay) {
-					heroOverlay.classList.add("hero__overlay--show");
-				}
-
 				// not all pictures will be in hero (duh!) so we need to check that the parent has the loader-container
 				// before we add the loading animation (non-hero pictures don't need the loading animation)
-				// we could use optional chaining but just to keep things tight
-
 				if (heroLoader) {
 					console.log("parent element loader container is: ", heroLoader);
 					// add loading animation
 					console.log("adding the loading animation");
 
 					heroLoader.classList.add("loader--loading");
+				}
+
+				// show the hero overlay (the gradient shading thing for hero images) if it's a hero image
+				if (heroOverlay) {
+					heroOverlay.classList.add("hero__overlay--show");
 				}
 			}, imgLoadTimerDuration);
 
@@ -390,7 +388,6 @@ const backgroundImagePortrait = `url(/images/${imageBase}-portrait-lqip.jpg)`;
 		}
 
 		// function to execute when image is ready
-		// function showImage(pictureEl: Element, heroLoader: Element = null) {
 		function showImage() {
 			console.log("showImage function called for ", pictureEl);
 			pictureEl.classList.add("picture--show");
@@ -403,7 +400,7 @@ const backgroundImagePortrait = `url(/images/${imageBase}-portrait-lqip.jpg)`;
 
 			// show the hero overlay (the gradient shading thing for hero images) if it's a hero image
 			if (heroOverlay) {
-				// --show might already be present if this image has done the blu-loading thing
+				// --show might already be present if this image has done the blur-loading thing
 				// but classList is smart enough not to add things twice
 				heroOverlay.classList.add("hero__overlay--show");
 			}
