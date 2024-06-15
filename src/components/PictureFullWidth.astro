@@ -40,7 +40,7 @@ const {
 	pictureClasses,
 	imageClasses,
 	lazyLoad = true,
-	transitionDuration = "300ms", // these don't affect lightouse score
+	transitionDuration = "300ms", // these don't affect lighthouse score
 	transitionDelay = "100ms", // so set them to whatever looks best
 } = Astro.props;
 
@@ -122,7 +122,7 @@ const backgroundImagePortrait = `url(/images/${imageBase}-portrait-lqip.jpg)`;
 ---
 
 <!-- <img src={testHeroImage} alt="Testing the hero image" width="2360" height="1330" class="test-hero-image" /> -->
-<picture class:list={pictureClasses}>
+<picture class:list={pictureClasses} data-imagebase={imageBase}>
 	<!-- just use media min-width for now -->
 	<!-- add something for orientation (e.g. media="(orientation: portrait)") eventually -->
 
@@ -217,9 +217,7 @@ const backgroundImagePortrait = `url(/images/${imageBase}-portrait-lqip.jpg)`;
 	/>
 </picture>
 
-<!-- <script define:vars={{ fallbackSrc }}> -->
-<!-- <script define:vars={{landscapeSrcsetWebp, landscapeSrcset}}> -->
-<!-- nope, define:vars makes scripts inline, pass the vars as data-attributes instead -->
+<!-- define:vars makes scripts inline, pass the vars as data-attributes instead -->
 <script>
 	// console.log("PFW Script running!");
 
@@ -232,7 +230,7 @@ const backgroundImagePortrait = `url(/images/${imageBase}-portrait-lqip.jpg)`;
 	// for when you want to do the fancy promises version
 	// https://stackoverflow.com/questions/62603102/determine-if-an-image-is-cached-in-browser-either-memory-or-disk-cache-before
 
-	const pictureElements = document.querySelectorAll(".picture--blur-load");
+	const pictureElements: NodeListOf<HTMLPictureElement> = document.querySelectorAll(".picture--blur-load");
 
 	// right, think we need to cover the following possibilities:
 	// - image is in memory cache and so image.complete will be true when we check (get --show)
@@ -260,6 +258,53 @@ const backgroundImagePortrait = `url(/images/${imageBase}-portrait-lqip.jpg)`;
 
 	// so, either move the script (e.g. to layout)
 	// or ensure a reliable fallback/ failsafe
+
+	// function to execute when image is ready
+	function showImage(pictureEl: HTMLPictureElement, heroLoader: Element, heroOverlay: Element) {
+		console.log("showImage function called for ", pictureEl);
+
+		pictureEl.classList.add("picture--show");
+		// should we be removing picture--blur-loading here? unnecessary?
+
+		// remove loading animation
+		if (heroLoader) {
+			heroLoader.classList.remove("loader--loading");
+		}
+
+		// show the hero overlay (the gradient shading thing for hero images) if it's a hero image
+		if (heroOverlay) {
+			// --show might already be present if this image has done the blur-loading thing
+			// but classList is smart enough not to add things twice
+			heroOverlay.classList.add("hero__overlay--show");
+		}
+	}
+
+	// think we should have a function for loading the background image - it's a bit fiddly
+	function loadBGImage(pictureEl: HTMLPictureElement) {
+		// get imagebase from data attribute (we'll use this to create the path to the lqip background image)
+		const imageBase = pictureEl.dataset.imagebase;
+		// check for portrait or fall back to landscape
+		let backgroundImageSrc: string;
+		if (window.matchMedia("(orientation: portrait)").matches) {
+			backgroundImageSrc = `/images/${imageBase}-portrait-lqip.jpg`;
+		} else {
+			backgroundImageSrc = `/images/${imageBase}-lqip.jpg`;
+		}
+
+		// now we need to create an img element and load the background image into it
+		// so we can monitor its loading
+		// when it's loaded we know we can use it as background image
+		let preloadedBGImage = document.createElement("img");
+		preloadedBGImage.addEventListener("load", () => {
+			pictureEl.style.backgroundImage = `url(${backgroundImageSrc})`;
+			pictureEl.classList.add("picture--bg-loaded");
+
+			// get rid of the preloaded img element
+			preloadedBGImage = null;
+		});
+		// now the event listener's set up, set the src (start loading the image)
+		preloadedBGImage.src = backgroundImageSrc;
+	}
 
 	// pictureElements.forEach((pictureEl) => {
 	for (const pictureEl of pictureElements) {
@@ -290,13 +335,7 @@ const backgroundImagePortrait = `url(/images/${imageBase}-portrait-lqip.jpg)`;
 		sourceLandscapeWebp.srcset = sourceLandscapeWebp.dataset.srcset;
 		sourceLandscapeJpeg.srcset = sourceLandscapeJpeg.dataset.srcset;
 
-		// now see what we get
-		console.log(`sourcePortraitWebp srcset: ${sourcePortraitWebp.dataset.srcset}`);
-		console.log(`sourcePortraitJpeg srcset: ${sourcePortraitJpeg.dataset.srcset}`);
-		console.log(`sourceLandscapeWebp srcset: ${sourceLandscapeWebp.dataset.srcset}`);
-		console.log(`sourceLandscapeJpeg srcset: ${sourceLandscapeJpeg.dataset.srcset}`);
-
-		// for typesript typing...
+		// for typescript typing...
 		// MDN: The returned timeoutID is a positive integer value which identifies the timer created by the call to setTimeout().
 		let imgLoadTimer: number;
 		// how long to wait before initiating the blur-load process
@@ -308,14 +347,9 @@ const backgroundImagePortrait = `url(/images/${imageBase}-portrait-lqip.jpg)`;
 		const transitionDuration = pictureImg.dataset.transitionDuration;
 		// "0" will do it but go with "0ms" just for consistency
 		pictureImg.dataset.transitionDuration = "0ms";
-		console.log(`data-transition-duration: ${pictureImg.dataset.transitionDuration}`);
 
 		// once the source srcset is set, it's probably safe to set the src.. yep!
 		pictureImg.src = pictureImg.dataset.src;
-
-		console.log(`pictureImg.complete: ${pictureImg.complete}`);
-		console.log(`pictureImg.naturalWidth: ${pictureImg.naturalWidth}`);
-		console.log(`pictureImg.src: ${pictureImg.src}`);
 
 		// can't rely on .complete and naturalWidth because they might return false
 		// even if image is in cache
@@ -340,6 +374,8 @@ const backgroundImagePortrait = `url(/images/${imageBase}-portrait-lqip.jpg)`;
 				pictureImg.dataset.transitionDuration = transitionDuration;
 				console.log(`data-transition-duration: ${pictureImg.dataset.transitionDuration}`);
 				pictureEl.classList.add("picture--blur-loading");
+				// now add the lqip background image (it only needs to be applied to picture--blur-loading picture elements)
+				loadBGImage(pictureEl);
 				// now that blur-loading has been added, we can allow the event listener to continue waiting for load
 				// it will add --show when the image loads
 
@@ -374,8 +410,7 @@ const backgroundImagePortrait = `url(/images/${imageBase}-portrait-lqip.jpg)`;
 				// should probably have a function for adding --show
 				console.log("load event fired so doing the show picture thing for: ", pictureImg);
 				// ...then show the image
-				// showImage(pictureEl, heroLoader);
-				showImage();
+				showImage(pictureEl, heroLoader, heroOverlay);
 			});
 
 			// otherwise we can assume the image has already loaded
@@ -383,27 +418,7 @@ const backgroundImagePortrait = `url(/images/${imageBase}-portrait-lqip.jpg)`;
 			console.log(`pictureImg.complete: ${pictureImg.complete}`);
 			console.log(`pictureImg.naturalWidth: ${pictureImg.naturalWidth}`);
 			console.log("image is already complete so adding --show");
-			// showImage(pictureEl);
-			showImage();
-		}
-
-		// function to execute when image is ready
-		function showImage() {
-			console.log("showImage function called for ", pictureEl);
-			pictureEl.classList.add("picture--show");
-			// should we be removing picture--blur-loading here? unnecessary?
-
-			// remove loading animation
-			if (heroLoader) {
-				heroLoader.classList.remove("loader--loading");
-			}
-
-			// show the hero overlay (the gradient shading thing for hero images) if it's a hero image
-			if (heroOverlay) {
-				// --show might already be present if this image has done the blur-loading thing
-				// but classList is smart enough not to add things twice
-				heroOverlay.classList.add("hero__overlay--show");
-			}
+			showImage(pictureEl, heroLoader, heroOverlay);
 		}
 	}
 </script>
@@ -413,17 +428,11 @@ const backgroundImagePortrait = `url(/images/${imageBase}-portrait-lqip.jpg)`;
 	/* definitely need the width and height to make the picture */
 	/* (and hence the image) fill its container (section-picture or hero) */
 
-	/* picture's default display is not block, must be inline I suppose */
-	/* so the picture wasn't expanding to contain the img */
-	/* img was just overflowing it */
-	/* display:block this should fix that */
-
 	.hero__picture,
 	.section-picture__picture {
 		width: 100%;
 		height: 100%;
-		/* display:block replaced by vertical-align in the reset (added 12-11-2023) */
-		/* display: block; */
+		/* display: block replaced by vertical-align in the reset (added 12-11-2023) */
 
 		/* tried doing this as flex-grow: 1 (like the video container div), problematic, leave as is */
 	}
@@ -453,10 +462,9 @@ const backgroundImagePortrait = `url(/images/${imageBase}-portrait-lqip.jpg)`;
 		/* max-width: initial; */
 		width: 100%;
 		height: 100%;
-		/* https://developer.mozilla.org/en-US/docs/Web/CSS/object-fit */
-		/* please do some tests with this i need to understand it */
 
-		/* i think i get it */
+		/* https://developer.mozilla.org/en-US/docs/Web/CSS/object-fit */
+
 		/* "The object-fit CSS property sets how the content of a replaced element, such as an <img> or <video>, should be resized to fit its container." */
 		/* container in the case of a replaced element is the img or video box itself NOT the parent */
 		/* so you set some dimensions for the <img> and object fit determines how the actual image gets stretched or scaled to fit into its box */
@@ -466,9 +474,6 @@ const backgroundImagePortrait = `url(/images/${imageBase}-portrait-lqip.jpg)`;
 		/* then telling the image how to fit into that <img> box using the object-fit rule */
 
 		object-fit: cover;
-		/* position: relative; */
-		/* z-index: 9; */
-		/* border: 1px solid yellow; */
 	}
 
 	/* any picture element that we want to be preloaded, with blurred bg and pulsing overlay is given the class 'picture--blur-load' */
@@ -483,6 +488,7 @@ const backgroundImagePortrait = `url(/images/${imageBase}-portrait-lqip.jpg)`;
 	/*  - lqip as bg image  */
 	/*  - filter blur */
 	/*  - the pulsing overlay (using ::before) */
+	/* (we also add a class 'picture--bg-loaded' when the bg lqip image is ready to use) */
 
 	/* bc we don't want the blurred bg or transition or the pulsing overlay if the image is already loaded */
 
@@ -493,84 +499,45 @@ const backgroundImagePortrait = `url(/images/${imageBase}-portrait-lqip.jpg)`;
 	/* NB hero images *are* using the picture--blur-load class */
 	/* but the blur bg image is hardly ever seen because the hero images preload */
 	/* i.e. they're not lazy loaded, so they've usually loaded by the time the scripts get going */
-	/* at least I think that's what's happening! */
-	/* yeah, tested this plenty and the blur bg *will* be applied if the image takes long enough */
+	/* tested this plenty and the blur bg *will* be applied if the image takes long enough */
+
+	.picture--blur-load {
+		/* this class is mostly just to identify the elements that the blur loading
+		process is applied to */
+
+		/* both these properties are going to be transitioned so they need to be set at the start
+		otherwise the transition will mean that they transition FROM their default values TO these values
+		i.e. the image will start off unblur then blur before unblurring */
+		/* these are taken off by picture--show, so hopefully if picture--blur-loading *isn't*
+		applied they'll be taken off WITHOUT any transition, but the IMG will fade in bc
+		picture--blur-load>img has a transition */
+		opacity: 0;
+		filter: blur(0.5rem);
+	}
 
 	.picture--blur-loading {
-		/* background-image: -webkit-image-set(var(--backgroundImageSet)); */
-		/* background-image: image-set(var(--backgroundImageSet)); */
-
-		/* use background-image to stack/layer two images, 
-		/* one 20px (tiny, really blurred),  */
-		/* one the LQIP */
-		/* the tiny one will load first, the lqip will replace it (layer over the top of it) as soon as it's loaded */
-		/* NB!!!!! the image you want to be on top should go first */
-
-		/* hard code this for testing */
-		/* background-image: url("/images/pink-yarn-1440x810-lqip.jpg"), url("/images/pink-yarn-20x11.jpg"); */
-
-		/* not sure about having two blurred images, one following the other */
-		/* looks a bit odd, try without the tiny image, have to keep the lqip bc it's the lcp (tiny image doesn't qualify) */
-		/* thing is, lcp is only a concern for hero images but this component handles the section images as well... */
-		/* do we need some conditional? */
-
-		/* background-image: var(--backgroundImageLQIP), var(--backgroundImageTiny); */
-		/* only one backgroundImage now, which is set condtionally in the frontmatter */
-		/* depending on whether the component is Hero or pictureSection */
-		background-image: var(--backgroundImage);
-		/* media query for portrait orientation */
-
-		/* background-image: var(--backgroundImageLowRes), var(--backgroundImageMediumRes); */
+		/* now doing this with js - see loadBGImage() */
+		/* background-image: var(--backgroundImage); */
 
 		background-size: cover;
-		/* probably need background-position so the background-image aligns with the img when it fades in */
+		/* need background-position so the background-image aligns with the img when it fades in */
 		background-position: center center;
 
-		/* hero__picture already has position: absolute because of the overlay stuff to put text over the image */
-		/* position: relative won't work for hero__picture, it won't contain the img for a start */
-		/* so we'll have to apply position: relative specifically to section-picture__picture */
-		/* see below */
+		/* set filter here but opacity needs setting earlier 
+		- we'll set it in --picture-blur*/
 
-		/* filter: blur and associated transition needs to go on blur-load NOT blur-loading */
-		/* otherwise the blur will fade in when the blur-loading class is applied*/
+		/* so we need to apply the transition rule in one place, bc if we set it in
+		two places, one will overwrite the other */
 
-		/* try filter blur on --blur-load */
-		/* so the image always fades in fom blur */
-		/* otherwise it looks a bit acky and chrome sometimes appears to stretch it while its loading */
-		/* better to blur each time than to look sketchy */
-		/* filter: blur(1rem); */
-
-		/* transition here means that the filter will fade in - we don't want that */
-		/* we only want it to fade out, so transition should go on picture--show */
-		/* transition: filter var(--transitionDuration) ease-in; */
-
-		/* try filter here (--blur-loading) */
-		/* with transition on --show, so the blur shouldn't happen or transition unless it gets to --blur-loading */
-		/* essentially if image is already loaded, we skip the blur stage completely */
-		/* and just have the opacity transition */
-		/* (we only need the blur to cover up the lqip) */
-
-		filter: blur(0.5rem);
+		/* filter: blur(0.5rem); */
 
 		/* clip-path because the filter: blur bleeds over the previous section */
 		clip-path: inset(0);
-	}
 
-	@media (orientation: portrait) {
-		.picture--blur-loading {
-			background-image: var(--backgroundImagePortrait);
-		}
-	}
-
-	/* try this as blur-loading for now, see what happens */
-	/* not really sure was going on here, seems to be working ok without these */
-	.section-picture__picture.picture--blur-loading {
-		/* position: relative; */
-	}
-
-	.section-picture__picture {
-		/* position: relative; */
-		/* position: absolute; */
+		/* from MDN: */
+		/* The first value that can be parsed as a time is assigned to the transition-duration, 
+		and the second value that can be parsed as a time is assigned to transition-delay */
+		transition: filter var(--transitionDuration) var(--transitionDelay), opacity 250ms;
 	}
 
 	/* the pulsing overlay to indicate that something's happening */
@@ -580,17 +547,7 @@ const backgroundImagePortrait = `url(/images/${imageBase}-portrait-lqip.jpg)`;
 		/* inset 0 is eqivalent to top 0 right 0 bottom 0 left 0 */
 		/* so it fits the element to its parent */
 		inset: 0;
-		/* border: 1px solid fuchsia; */
-		/* background-color: hsl(var(--white) / 0.5); */
 		animation: pulsing-bg 2s ease-in-out infinite;
-
-		/* backdrop-filter: blur to blur the image so we can get away with lower quality?! */
-		/* maybe we should just use filter blur on the element?? */
-		/* backdrop-filter: blur(1rem) opacity(1); */
-
-		/* transition for the filter: blur */
-		/* needs to match the transition on the picture--blur-load img ruleset below */
-		/* transition: backdrop-filter var(--transitionDuration) ease-in; */
 	}
 
 	@keyframes pulsing-bg {
@@ -606,87 +563,40 @@ const backgroundImagePortrait = `url(/images/${imageBase}-portrait-lqip.jpg)`;
 	}
 
 	/* the show/hide class has to go on the containing element (picture) not img */
-
-	.picture--blur-load {
-		/* filter: blur(1rem); */
-		/* transition: filter var(--transitionDuration) ease-in; */
-
-		/* try filter blur on --blur-load */
-		/* so the image always fades in fom blur */
-		/* otherwise it looks a bit acky and chrome sometimes appears to stretch it while its loading */
-		/* filter: blur(0.5rem);
-
-		/* clip-path because the filter: blur bleeds over the previous section */
-		/* clip-path: inset(0); */
-	}
-
 	.picture--blur-load img {
-		/* just hides the image but doesn't set up a transition */
-
-		/* opacity: 0 causes an LCP issue */
-		/* see: https://www.debugbear.com/blog/opacity-animation-poor-lcp */
-		/* opacity: 0; */
-
-		/* opacity: 0.01; */
-		/* ok, 0.1 fixes the LCP thing but now we see the image loading in vertically and then fade in */
-		/* 0.01 seems to work ok and is pretty much invisible - 0.01 seems to be the lowest safe value for opacity (that isn't 0) */
-
-		/* if we want the image to always fade in, put the transition declaration here */
-		/* (and take it off blur-loading img - below) */
-		/* think it's probably a bit nicer here - there's a little flash anyway so at least this looks a bit smoother */
-		/* transition: opacity 250ms ease-in; */
-
-		/* transition: opacity var(--transitionDuration) ease-in; */
-
-		/* hopefully won't need the img opacity transtion now we're using filer blur */
-		/* delete those rules above, when this is all done */
-
-		/*  try hiding the image until its loaded so we don't see it loading in vertically */
 		opacity: 0.01;
-		/* temp try 1 for lighthouse - nah that didn't work */
-		/* opacity transition as well as filter blur transition seems like a bad idea cpu wise */
-		/* ok, delay the filter transition, while we do the opcaity transition */
+		/* delay the filter transition, while we do the opacity transition */
 		transition: opacity var(--transitionDelay);
+		/* transition: opacity 5000ms; */
 	}
 
 	.picture--blur-loading img {
-		/* opacity: 0; */
 		/* put the transition here if we only want it to fade on images that are loading for the first time */
-		/* transition: opacity 250ms ease-in; */
+	}
+
+	/* this class will be added by loadBGImage function in <script> */
+	/* NB! this has to be later in the cascade than wherever opacity
+	for the picture element is set to 0 */
+	.picture--bg-loaded {
+		opacity: 1;
 	}
 
 	.picture--show {
 		/* transition goes here, so it fades out but doesn't fade in */
 		/* let's try a delay on this transition (transitionDelay) */
-
-		/* from MDN: */
-		/* The first value that can be parsed as a time is assigned to the transition-duration, 
-		and the second value that can be parsed as a time is assigned to transition-delay */
-		transition: filter var(--transitionDuration) var(--transitionDelay);
 		filter: blur(0rem);
+		/* we'll also need to set opacity to 1 here
+		in case it hasn't had the picture--bg-loaded class added 
+		(i.e. if image was already loaded and didn't go through the blur loading process) */
+		opacity: 1;
 	}
 
 	.picture--show img {
-		/* hopefully won't need the img opacity transtion now we're using filter blur */
 		opacity: 1;
 	}
 
 	/* something to remove the pulsing ::before */
 	.picture--show::before {
-		/* content: none; */
 		animation: none;
-		/* backdrop-filter: blur stays the same but we transition the opacity */
-		/* backdrop-filter: blur(1rem) opacity(0); */
-	}
-
-	/* the height of section-picture needs to be set to 0 in PictureSection using the same media query */
-	/* Or maybe not! Taken the height rule out of PictureSection - keep an eye on it, see how it goes */
-
-	/* also, was 768, trying 576 */
-	/* on second thoughts, let's leave the section pictures in on mobile, for the time being */
-	@media (max-width: 576px) {
-		.section-picture__picture {
-			/* display: none; */
-		}
 	}
 </style>
