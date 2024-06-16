@@ -117,9 +117,23 @@ function initialise() {
 			// try loadeddata, see if stops the delay between the event and the video showing - nope
 			// heroVideo.addEventListener("loadeddata", handleVideoReady);
 
-			// show the hero loading animation
-			console.log("adding loading animation for the hero video");
-			heroLoader.classList.add("loader--loading");
+			// put a bit of a delay on the loading animation
+			// (without it, the loading animation often appears even if video is cached)
+			let videoLoadTimer: number = setTimeout(() => {
+				// check that video hasn't loaded yet
+				// (if it has the loadedmetadata event will have fired
+				// and handleVideoReady will have been called so we don't
+				// need to anything more here, just null the timer)
+				if (heroVideo.readyState < 1) {
+					// show the hero loading animation
+					console.log("adding loading animation for the hero video");
+					heroLoader.classList.add("loader--loading");
+				}
+
+				// null the timer
+				console.log("nulling the video load timer");
+				videoLoadTimer = null;
+			}, 25);
 		}
 	}
 
