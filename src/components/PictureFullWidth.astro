@@ -219,7 +219,7 @@ const backgroundImagePortrait = `url(/images/${imageBase}-portrait-lqip.jpg)`;
 
 <!-- define:vars makes scripts inline, pass the vars as data-attributes instead -->
 <script>
-	// console.log("PFW Script running!");
+	console.log("PFW Script running!");
 
 	// import { Image } from "astro:assets";
 
@@ -381,6 +381,11 @@ const backgroundImagePortrait = `url(/images/${imageBase}-portrait-lqip.jpg)`;
 
 				// not all pictures will be in hero (duh!) so we need to check that the parent has the loader-container
 				// before we add the loading animation (non-hero pictures don't need the loading animation)
+
+				// (if the loader seems like it's taking a long time to appear with Slow 3G throttling, it's because
+				// the script takes a long time to start, not because of where the loader--loading class is added
+				// in the script - i.e. it's fine here!
+
 				if (heroLoader) {
 					console.log("parent element loader container is: ", heroLoader);
 					// add loading animation
