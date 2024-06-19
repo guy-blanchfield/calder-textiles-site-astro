@@ -155,6 +155,9 @@ html {
 
 	/* try putting the calculation for the header height / hero height here as a global var */
 	--header-height-calc: calc(var(--navbar-brand-logo-height) + (var(--navbar-vertical-padding) * 2) + 0.5rem);
+
+	/* value for the footer height (more or less arbitrary but needed so we can calculate last section height) */
+	--footer-height: 4rem;
 }
 
 /* so the anchor link take into account the height of the sticky / fixed header */
@@ -277,6 +280,10 @@ footer {
 	margin-bottom: 1.1rem;
 }
 
+/* tried these section height rules in a media query
+but the section height thing applies to at least on section on the average mobile
+(usually the content in a section makes that section way higher than 100vh minus the header on mobile) */
+
 /* this is for the wrapper div around each section to give the section a min-height */
 /* that is the viewport height minus the header height with a little bit of wriggle room */
 .sectionFixedHeight {
@@ -308,6 +315,29 @@ footer {
 	/* if it needs to fill main, where main fills all the space between header & footer */
 	/* tbh, this might be redundant here because the wrapped section will fill the window anyway */
 	/* if it's got this sectionFixedHeight class on it */
+	display: flex;
+	flex: 1;
+}
+
+.lastSection {
+	/* for the last section on a page - full height minus the height of the header AND the footer */
+
+	/* first set height with both units (best supported one first) */
+	min-height: 100vh;
+	min-height: 100svh;
+
+	/* negative margin of the amount we want to subtract */
+	/* take off a bit extra to cover the bit of wriggle room we added on the scroll-padding-top */
+	/* the wriggle room in the scroll padding is 0.5rem */
+	margin-top: calc(calc(var(--header-height-calc) + var(--footer-height)) * -1);
+
+	/* padding of the amount we want to subtract */
+	/* and take off a bit extra to cover the bit of wriggle room we added on the scroll-padding-top */
+	/* this means that the content starts slightly higher than it should */
+	/* but better to start too high than too low otherwise a gap shows */
+	padding-top: calc(var(--header-height-calc) + var(--footer-height));
+
+	/* needs both display: flex AND flex: 1 */
 	display: flex;
 	flex: 1;
 }

@@ -4,11 +4,11 @@
 ---
 
 <!-- <footer class="footer-caldertextiles py-4 px-2"> -->
-<footer class="footer-caldertextiles">
+<footer class="footer-caldertextiles" id="footer">
 	<!-- put the logo in a component just in case we need it and delete it here -->
 
-	<div class="container-fluid px-4 py-4 footer-caldertextiles__panel panel--text">
-		<div class="row align-items-center">
+	<div class="container-fluid px-4 py-4 d-flex align-items-center footer-caldertextiles__panel panel--text">
+		<div class="row w-100 align-items-center">
 			<div class="col">UK Registered Company No. 1803068</div>
 
 			<!-- vertical margins here when not sm or above (i.e. mobile) because everything stacks -->
@@ -42,8 +42,16 @@
 		/* color: #f0f; */
 	}
 
+	/* this is effectively the footer */
 	.footer-caldertextiles__panel {
 		/* padding: 2rem; */
+		/* try setting a min-height for the footer so we can make 
+		the last section plus the footer plus the header equal 100vh 
+		--footer-height is set in global.css */
+
+		min-height: var(--footer-height);
+
+		/* NB layout styles are beign handled by bootstrap!!!! */
 	}
 
 	.panel--logo {
@@ -67,6 +75,9 @@
 		}
 	}
 
+	/* panel--text is a modifier for footer-caldertextiles__panel */
+	/* bg colour is on here because originally there was another modifier --logo
+	that had a different bg colour */
 	.panel--text {
 		background-color: var(--text);
 		color: hsl(var(--white));
@@ -111,7 +122,6 @@
 		transition: transform 200ms ease-in-out;
 	}
 
-	/* tried doing this with :is, ended up harder to read and still didn't work! */
 	.footer-caldertextiles__link:hover::after,
 	.footer-caldertextiles__dayeightagency-link:hover::after,
 	.footer-caldertextiles__link:focus-visible::after,
@@ -120,7 +130,6 @@
 	}
 
 	/* doing the background-color in separate ruleset in case we want different color underline for different links */
-	/* tried this with :is also nope */
 	.footer-caldertextiles__link::after,
 	.footer-caldertextiles__dayeightagency-link::after {
 		background-color: var(--muted);

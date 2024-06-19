@@ -16,6 +16,8 @@ export interface Props {
 	// e.g. --sustainability-1, --sustainability-2
 	colModifier?: string;
 	sectionFixedHeight?: boolean;
+	// if this section is the last section (adjust section height to incorporate the footer if so)
+	lastSection?: boolean;
 	// whether or not pageDownArrow is required
 	pageDownArrow?: boolean;
 	// also need to drill a prop down into the pageDownArrow if required (default is --white)
@@ -33,6 +35,7 @@ const {
 	bgColour = "var(--pageContentBgColour-1)",
 	colModifier = "",
 	sectionFixedHeight = true,
+	lastSection = false,
 	pageDownArrow = true,
 	pageDownArrowFillColour = "var(--white)",
 	pageDownArrowHoverTip = "<strong>Next:&nbsp;</strong> Contact Us",
@@ -98,7 +101,7 @@ const diagramMediaMin = "(min-width: 577px)";
 // so we can do it with Array.from()
 ---
 
-<div class="wrapper" class:list={[{ sectionFixedHeight }]}>
+<div class="wrapper" class:list={[{ sectionFixedHeight, lastSection }]}>
 	<!-- wrapper div uses the negative margin / padding fiddle to get round using calc with svh. 
 		No other padding or margin or any other styling should be used on it
 		if fixedHeight isn't true it'll do nothing at all, just wrap -->
