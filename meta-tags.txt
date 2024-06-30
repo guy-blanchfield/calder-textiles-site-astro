@@ -1,0 +1,11 @@
+from atlanticyarns.co.uk
+
+<meta http-equiv="description" content="A family-run British supplier of Woollen spun yarn for luxury quality contract and domestic floor covering. Based in the heartlands of West Yorkshire's textile industry, Atlantic Yarns has become one of the UK's foremost woollen yarn spinners for manufacturers of woven and tufted carpets; contract Graphics and Colortech flooring; Axminster and Wilton woven carpet; contract tiles and specialist sport materials.">
+<meta http-equiv="keywords" content="Woolen spun yarn, luxury yarns, high quality yarns spinners, woven and tufted carpet, domestic and contract flooring, quality exported yarn, Axminster woven carpet, UK, Yorkshire, British yarn">
+
+
+<meta name="geo.region" content="GB-KIR" />
+<meta name="geo.placename" content="Dewsbury" />
+<meta name="geo.position" content="53.682422;-1.639777" />
+<meta name="ICBM" content="53.682422, -1.639777" />
+<link rel="author" href="humans.txt" />

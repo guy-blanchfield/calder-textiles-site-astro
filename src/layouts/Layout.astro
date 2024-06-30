@@ -185,7 +185,10 @@ if (sectionImageBase) {
 		<!-- polyfill probably only required for ie support for google maps javascript api -->
 		<!-- this probably needs to be is:inline, because of the query parameter -->
 		<!-- and probably stick a defer on it while we're at it -->
-		<script is:inline src="https://polyfill.io/v3/polyfill.min.js?features=default" defer></script>
+		<!-- removed 29-06-2024 due to security concerns -->
+		<!-- From Google: -->
+		<!-- We have become aware of a security issue that may be affecting websites using specific third-party libraries (including polyfill.io). This issue can sometimes redirect visitors away from the intended website without website owner knowledge or permission, or potentially cause other malicious behavior. -->
+		<!-- <script is:inline src="https://polyfill.io/v3/polyfill.min.js?features=default" defer></script> -->
 
 		<!-- same goes for the bootstrap js -->
 		<!-- bootstrap js -->
