@@ -15,7 +15,8 @@ function initialise() {
 	// and a ref to the loading animation (which is in hero > hero__loader-container)
 	// think we need to add and remove the loader (for hero video) from here
 	// even though it's being handled from PictureFullWidth for hero image
-	const heroLoader: HTMLElement = document.querySelector(".hero__loader-container").querySelector(".loader");
+	const heroLoader: HTMLElement =
+		document.querySelector(".hero__loader-container")?.querySelector(".loader") ?? undefined;
 
 	// functions ---------------------------------------------
 
