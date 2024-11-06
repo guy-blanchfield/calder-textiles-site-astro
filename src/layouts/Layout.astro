@@ -44,6 +44,7 @@ export interface Props {
 	heroImageBase?: string; // so we can preload the lqip for the hero
 	sectionImageBase?: string; // so we can preload the lqip for the pictureSection (probably won't tbh)
 	heroVideo?: boolean; // so we can set the portrait lqip conditionally (see)
+	description?: string; // to go in the description meta tag
 	// bodyBgColour?: string;
 }
 
@@ -61,7 +62,14 @@ export interface Props {
 // (there's no portrait version of the video, hence no protrait lqip for the video placeholder)
 // we'll only pass it if it's true, it'll default to false)
 
-const { title, bodyClass = "", heroImageBase = "", sectionImageBase = "", heroVideo = false } = Astro.props;
+const {
+	title,
+	bodyClass = "",
+	heroImageBase = "",
+	sectionImageBase = "",
+	heroVideo = false,
+	description = "",
+} = Astro.props;
 
 // create the image paths for the preloads
 let heroImagePreloadPath: string;
@@ -84,10 +92,7 @@ if (sectionImageBase) {
 	<head>
 		<meta charset="UTF-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-		<meta
-			name="description"
-			content="Calder Textiles is one of the UK's foremost woollen yarn spinners with a world-wide reputation for excellence."
-		/>
+		{description && <meta name="description" content={description} />}
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<meta name="generator" content={Astro.generator} />
 
