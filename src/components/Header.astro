@@ -415,10 +415,25 @@ const currentPath = Astro.url.pathname;
 	.navbar-caldertextiles__container {
 	}
 
-	/* nav-item needs a position relative for the fancy link hover to work */
-	/* .navbar-caldertextiles .nav-item {
-    position: relative;
-} */
+	.navbar-caldertextiles .nav-link:is(:hover, :focus-visible) {
+		/* .navbar-caldertextiles .nav-link:hover, .navbar-caldertextiles .nav-link:focus-visible { */
+		/* this definitely works */
+		color: hsl(var(--white));
+		/* color: fuchsia; */
+	}
+
+	.navbar-caldertextiles .nav-link:focus-visible {
+		outline: none;
+		/* do we need mobile specific focus styles? yes, probably, 
+		but we also need to make the nav-toggle thing work with tabbing / focus */
+		background-color: hsl(var(--white) / 0.1);
+		/* get rid of the box-shadow otherwise there's still the default ugly blue outline on focus */
+		box-shadow: none;
+	}
+
+	.navbar-caldertextiles .nav-link[aria-current="page"] {
+		color: var(--muted);
+	}
 
 	/* the separators in the navmenu list */
 	/* use adjacent sibling selector (+) so that only the ::befores that immediately follow a nav-item get the separator */
@@ -475,7 +490,7 @@ const currentPath = Astro.url.pathname;
 			/* border: 1px solid red; */
 		}
 
-		.navbar-caldertextiles .nav-link:not([aria-current="page"])::after {
+		.navbar-caldertextiles .nav-link::after {
 			content: "";
 			position: absolute;
 			/* display: inline-block; */
@@ -493,25 +508,26 @@ const currentPath = Astro.url.pathname;
 			transition: transform 200ms ease-in-out;
 		}
 
-		.navbar-caldertextiles .nav-link:hover::after {
+		/* different color hover effect for the nav menu item of the current page */
+		.navbar-caldertextiles .nav-link:is([aria-current="page"])::after {
+			background-color: hsl(var(--darkgrey) / 0.5);
+		}
+
+		.navbar-caldertextiles .nav-link:is(:hover, :focus-visible) {
+			/* we only want the background-color hover/focus on mobile,
+			it gets set in the outside this media query (see above) */
+			background: none;
+		}
+
+		/* we want the hover effect to apply to any navlink except the current page */
+		.navbar-caldertextiles .nav-link:hover:not([aria-current="page"])::after {
 			transform: scaleX(1);
 		}
-	}
 
-	.navbar-caldertextiles .nav-link:is(:hover, :focus-visible) {
-		/* .navbar-caldertextiles .nav-link:hover, .navbar-caldertextiles .nav-link:focus-visible { */
-		/* this definitely works */
-		color: hsl(var(--white));
-		/* color: fuchsia; */
-	}
-
-	.navbar-caldertextiles .nav-link:focus-visible {
-		outline: none;
-		background-color: hsl(var(--white) / 0.1);
-	}
-
-	.navbar-caldertextiles .nav-link[aria-current="page"] {
-		color: var(--muted);
+		/* we want the focus-visible effect to apply to all nav-links, otherwise users who tab won't know what has focus */
+		.navbar-caldertextiles .nav-link:focus-visible::after {
+			transform: scaleX(1);
+		}
 	}
 
 	/* can't find an appropriate class with which to select the mobile nav */
@@ -563,8 +579,11 @@ const currentPath = Astro.url.pathname;
 
 	/* get rid of the border on the toggle button */
 	.navbar-caldertextiles .navbar-toggler {
+		aspect-ratio: 1 / 1;
 		border: none;
 		border-radius: 0;
+		/* bit of margin-end here to make the horizontal space more like the vertical space */
+		margin-inline-end: 0.3rem;
 	}
 
 	/* to make the focus outline thinner */
@@ -573,9 +592,9 @@ const currentPath = Astro.url.pathname;
 	}
 
 	.navbar-caldertextiles .navbar-toggler:focus-visible {
-		box-shadow: 0 0 0 0.1rem hsl(var(--lightbluegrey) / 0.5);
-		/* use a thin border instead */
-		/* nah, border shifts it on focus */
+		color: var(--accent);
+		background-color: var(--muted);
+		background-color: hsl(var(--white) / 0.5);
 	}
 
 	.navbar-caldertextiles__logo {
@@ -595,7 +614,8 @@ const currentPath = Astro.url.pathname;
 	}
 
 	.navbar-caldertextiles__logo:focus-visible {
-		outline: 1px dotted hsl(var(--lightbluegrey));
+		/* outline: 1px dotted hsl(var(--white)); */
+		outline: 1px solid hsl(var(--white) / 0.5);
 	}
 
 	.navbar-caldertextiles__logo:is(:hover, :focus-visible) {
