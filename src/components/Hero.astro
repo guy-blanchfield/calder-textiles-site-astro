@@ -323,6 +323,7 @@ const currentPath = Astro.url.pathname;
 		opacity: 0;
 
 		/* for the fade up */
+		/* this transform is removed with a media query for prefes reduced motion - see below */
 		transform: translateY(200px);
 
 		/* transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out; */
@@ -364,6 +365,19 @@ const currentPath = Astro.url.pathname;
 		/* visibility: visible; */
 		opacity: 1;
 		transform: translateY(0);
+	}
+
+	/* remove the translate transition if user prefers reduced motion */
+	@media (prefers-reduced-motion) {
+		.hero__text {
+			/* for the fade up */
+			transform: none;
+		}
+
+		/* not sure we need this but just for tidiness */
+		.hero__text--visible {
+			transform: none;
+		}
 	}
 
 	/* to remove the transition from hero__text */
