@@ -4,7 +4,7 @@ import frontendistahtmlMinify from "@frontendista/astro-html-minify";
 
 // https://astro.build/config
 export default defineConfig({
-	site: "https://caldertextiles.guyblanchfield.co.uk/",
+	site: "https://www.caldertextiles.co.uk",
 	// site: 'https://www.my-site.dev'
 	// Astro uses this full URL to generate your sitemap and canonical URLs in your final build.
 	// It is strongly recommended that you set this configuration to get the most out of Astro.
