@@ -128,7 +128,8 @@ const currentPath = Astro.url.pathname;
 				<span class="visually-hidden">Menu</span>
 			</button>
 			<!-- NB! id="navmenu" not #navmenu! -->
-			<div class="collapse navbar-collapse" id="navmenu" aria-hidden="true">
+			<div class="collapse navbar-collapse" id="navmenu">
+				<!-- <div id="navmenu"> -->
 				<!-- ul with a class of navbar-nav bc it's the navbar navigation -->
 				<!-- and ms-auto (margin-start auto) pushes it right with the magic of margin auto -->
 				<!-- add a lg to the margin-auto, we don't need it for the mobile nav -->
@@ -210,6 +211,38 @@ const currentPath = Astro.url.pathname;
 	const navbarToggler: HTMLButtonElement = document.querySelector(".navbar-toggler");
 	const toggleTarget = navbarToggler.dataset.bsTarget;
 	const navMenu: HTMLDivElement = document.querySelector(toggleTarget);
+
+	// set navMenu aria-hidden to false if min-width is desktop size
+	// we could do it the other way round and set aria-hidden to true once we know
+	// min-width is mobile size but seeing as we're doing mobile first it makes sense
+	// to set aria-hidden true in the html and set it false once the js runs
+	// either way if the mobile menu is collapsed then navMenu aria-hidden needs to be true
+	const queryMinWidthDesktop: MediaQueryList = window.matchMedia("(min-width: 992px)");
+
+	// NB!!! do we need something to check for resize? if navmenu is set to aria-hidden false
+	// by this media query, what happens if the window is resized to mobile width?
+	// it remain aria-hidden false until the toggle button is clicked (even though it should be aria-hidden true)
+	// we don't really but do it anyway
+	queryMinWidthDesktop.addEventListener("change", handleMinWidthChange);
+
+	function handleMinWidthChange(e: MediaQueryListEvent) {
+		if (e.matches) {
+			// if minwidth is 992 the nav menu is always showing, so aria-hidden should be false
+			navMenu.setAttribute("aria-hidden", "false");
+		} else {
+			// if min-width is not 992, we're in mobile view and can toggle menu
+			// so check if navbar toggler expanded status and set aria-hidden accordingly
+			if (navbarToggler.getAttribute("aria-expanded") === "true") {
+				navMenu.setAttribute("aria-hidden", "false");
+			} else {
+				navMenu.setAttribute("aria-hidden", "true");
+			}
+		}
+	}
+
+	if (queryMinWidthDesktop.matches) {
+		navMenu.setAttribute("aria-hidden", "false");
+	}
 
 	// detect hash change
 	window.addEventListener("hashchange", () => {
