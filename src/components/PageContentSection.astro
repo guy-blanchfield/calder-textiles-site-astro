@@ -93,7 +93,12 @@ const {
 		</div>
 		{
 			pageDownArrow && (
-				<PageDownArrow anchorLink={pageDownAnchorLink} ariaLabel={pageDownAriaLabel} hoverTip={pageDownArrowHoverTip} />
+				<PageDownArrow
+					anchorLink={pageDownAnchorLink}
+					ariaLabel={pageDownAriaLabel}
+					hoverTip={pageDownArrowHoverTip}
+					transitionDelay="750ms"
+				/>
 			)
 		}
 	</section>

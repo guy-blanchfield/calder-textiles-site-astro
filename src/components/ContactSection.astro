@@ -126,8 +126,17 @@ const { sectionFixedHeight = true } = Astro.props;
 		color: var(--text);
 		text-decoration: none;
 	}
-	:global(.section-contact__email):is(:hover, :focus-visible),
-	.section-contact__phone:is(:hover, :focus-visible) {
+	/* just for the hover */
+	:global(.section-contact__email):hover,
+	.section-contact__phone:hover {
 		color: var(--accent-2);
+	}
+
+	/* just for the focus-visible */
+	:global(.section-contact__email):focus-visible,
+	.section-contact__phone:focus-visible {
+		outline: none;
+		color: hsl(var(--white));
+		background-color: var(--accent);
 	}
 </style>

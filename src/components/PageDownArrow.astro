@@ -10,6 +10,7 @@ export interface Props {
 	linkClassName?: string; // not sure we need class names for both the div AND the link, but again flexibility
 	fillColour?: string;
 	fontSize?: string;
+	transitionDelay?: string;
 }
 
 const {
@@ -20,6 +21,7 @@ const {
 	linkClassName = "page-down-link",
 	fillColour = "var(--white)",
 	fontSize = "1rem",
+	transitionDelay = "0s",
 } = Astro.props;
 ---
 
@@ -51,7 +53,7 @@ const {
 	<span class="page-down__hover-tip" set:html={hoverTip} aria-hidden="true" />
 </div>
 
-<style define:vars={{ fillColour, fontSize, xTransform: "calc(-100% - var(--fontSize))" }}>
+<style define:vars={{ fillColour, fontSize, transitionDelay, xTransform: "calc(-100% - var(--fontSize))" }}>
 	/* calculate the horizontal transform required to get the hovertip
 	from one side of the link to the other (it's after in the document (next sibling)
 	but we want it to appear before) */
@@ -125,7 +127,7 @@ const {
 		}
 	}
 
-	.page-down-link:hover + .page-down__hover-tip {
+	.page-down-link:is(:hover, :focus-visible) + .page-down__hover-tip {
 		clip: initial;
 		clip-path: initial;
 		width: auto;
@@ -141,15 +143,33 @@ const {
 
 		opacity: 1;
 	}
+
+	/* transition-delay when adjacent sibling is :focus only */
+	.page-down-link:focus-visible + .page-down__hover-tip {
+		transition-delay: var(--transitionDelay);
+	}
+
 	.page-down-link {
 		/* font-size: 3rem; */
 		/* color: hsl(var(--white)/0.7); */
 		display: block;
 		opacity: 0.7;
 		text-decoration: none;
+		/* NB transition: all delays the focus outline as well */
 		transition: all 0.2s ease-in;
+		/* transition: opacity 0.2s ease-in, transform 0.2s ease-in; */
 
 		/* border: 1px solid yellow; */
+	}
+
+	/* delay transition if page down link is focused */
+	/* because in the time it takes the page to scroll down the transition will have finished */
+	/* and the user won't notice the focus happening */
+	/* use a prop, bc we only need the delay on pagedown links that are off screen (i.e. not the first one) */
+	/* (we can't easily select for pagedownarrows that aren't in hero bc scoping!) */
+	.page-down-link:focus-visible {
+		transition-delay: var(--transitionDelay);
+		outline: 1px solid hsl(var(--white) / 0.5);
 	}
 
 	/* .page-down-link:hover, */
@@ -159,7 +179,7 @@ const {
 		/* border-color: hsl(var(--white)); */
 		opacity: 1;
 		transform: scale(1.2);
-		outline: none;
+		/* outline: none; */
 		/* animation: icon-pop 0.5s ease-in-out forwards; */
 	}
 
