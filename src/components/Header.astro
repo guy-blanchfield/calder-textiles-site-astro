@@ -127,9 +127,11 @@ const currentPath = Astro.url.pathname;
 				<!--non-icon button content for screen-readers -->
 				<span class="visually-hidden">Menu</span>
 			</button>
-			<!-- NB! id="navmenu" not #navmenu! -->
-			<div class="collapse navbar-collapse" id="navmenu">
-				<!-- <div id="navmenu"> -->
+
+			<div class="collapse navbar-collapse" id="navmenu" aria-hidden="true">
+				<!-- navmenu should be aria-hidden true by default (mobile view) -->
+				<!-- the script will set it to false if min-width is 992 -->
+
 				<!-- ul with a class of navbar-nav bc it's the navbar navigation -->
 				<!-- and ms-auto (margin-start auto) pushes it right with the magic of margin auto -->
 				<!-- add a lg to the margin-auto, we don't need it for the mobile nav -->
@@ -221,22 +223,19 @@ const currentPath = Astro.url.pathname;
 
 	// NB!!! do we need something to check for resize? if navmenu is set to aria-hidden false
 	// by this media query, what happens if the window is resized to mobile width?
-	// it remain aria-hidden false until the toggle button is clicked (even though it should be aria-hidden true)
+	// it remains aria-hidden false until the toggle button is clicked (even though it should be aria-hidden true)
 	// we don't really but do it anyway
 	queryMinWidthDesktop.addEventListener("change", handleMinWidthChange);
 
 	function handleMinWidthChange(e: MediaQueryListEvent) {
-		if (e.matches) {
-			// if minwidth is 992 the nav menu is always showing, so aria-hidden should be false
+		if (e.matches || navbarToggler.getAttribute("aria-expanded") === "true") {
+			// if minwidth is 992 OR if toggler aria-expanded is true,
+			// the nav menu will be showing, so aria-hidden should be false
 			navMenu.setAttribute("aria-hidden", "false");
 		} else {
-			// if min-width is not 992, we're in mobile view and can toggle menu
-			// so check if navbar toggler expanded status and set aria-hidden accordingly
-			if (navbarToggler.getAttribute("aria-expanded") === "true") {
-				navMenu.setAttribute("aria-hidden", "false");
-			} else {
-				navMenu.setAttribute("aria-hidden", "true");
-			}
+			// if min-width is not 992 AND if navbar toggler expanded is false
+			// menu will not be showing so aria-hidden should be true
+			navMenu.setAttribute("aria-hidden", "true");
 		}
 	}
 
