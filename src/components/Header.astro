@@ -243,14 +243,21 @@ const currentPath = Astro.url.pathname;
 		navMenu.setAttribute("aria-hidden", "false");
 	}
 
+	// clicking #aboutus link from home page stays on same page,
+	// so we need to manually change the 'about us' nav-link's aria-current value
+
+	// we need to do this on hashchange AND also on reload
+	// so eventlisteners for hashchange and domcontentloaded
+	// both call the handleURLChange function, which is specifically for this task
+
 	// detect hash change
 	window.addEventListener("hashchange", () => {
 		// console.log("hashchange!");
 		handleURLChange();
-		// clicking #aboutus link from home page stays on same page,
-		// so we need to close the mobile nav menu manually
-		// but toggle it conditional on the menu already being open
-		if (navMenu.getAttribute("aria-hidden") === "false") {
+		// we also need to close the mobile nav menu manually
+		// so toggle it conditional on the menu already being open
+
+		if (navbarToggler.getAttribute("aria-expanded") === "true") {
 			toggleMobileNavMenu();
 		}
 	});
