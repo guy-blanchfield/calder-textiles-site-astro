@@ -253,6 +253,7 @@ const backgroundImage = `url(/images/${videoBase}-lqip.jpg)`;
 		/* don't need this filter transition bc we're not using the bg image placeholder */
 		/* update!! keeping this in to cover up the ugly colour shift in the video on chrome */
 		transition: filter var(--transitionDuration) var(--transitionDelay) ease;
+		/* transition: filter 1s 1s ease; */
 		filter: blur(0.5rem);
 	}
 
@@ -340,7 +341,7 @@ const backgroundImage = `url(/images/${videoBase}-lqip.jpg)`;
 		/* opacity: 1; */
 		transition: opacity calc(var(--transitionDelay) / 2);
 		/* transition: opacity var(--transitionDelay); */
-
+		/* background-color: fuchsia; */
 		/* will-change: opacity; */
 
 		/* from pictureFullWidth hero__image */

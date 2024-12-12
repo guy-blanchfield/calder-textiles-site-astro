@@ -18,6 +18,10 @@ function initialise() {
 	const heroLoader: HTMLElement =
 		document.querySelector(".hero__loader-container")?.querySelector(".loader") ?? undefined;
 
+	// a variable calculated from the time taken to load the video (like a measure of the connection speed)
+	// see heroVideoReady(), and showHeroText()
+	let totalVideoLoadTime: number = 0;
+
 	// functions ---------------------------------------------
 
 	function handleHeroTextTransition() {
@@ -64,13 +68,28 @@ function initialise() {
 		// currently the video always gets the filter blur so it should use both delay and duration
 		// but the image only needs duration if it's gone to blur-loading
 		// (filter transition is duration, opacity transition is delay!)
+
+		// NB!! if hero is video add a bit more to the transitionDelay
+		// which we calculate from the time taken to load the video (like a measure of the connection speed)
+		// totalVideoLoadTime is calculated in heroVideoReady()
+
+		// tbh we could lose all this by using canplaythrough instead of loadedmetadata
+		// but it would need testing on different browsers / os etc
+		console.log("totalVideoLoadTime: ", totalVideoLoadTime);
+		// but limit the added delay to 2-3 secs
+		const delayCalc: number = Math.round(totalVideoLoadTime / 10);
+		const maxDelay: number = 2000;
+		const addedVideoDelay = delayCalc < maxDelay ? delayCalc : maxDelay;
+		console.log("addedVideoDelay", addedVideoDelay);
 		const heroTextTransitionDelay: number = heroImage
 			? parseInt(heroImage.dataset.transitionDuration) + parseInt(heroImage.dataset.transitionDelay)
-			: parseInt(heroVideo.dataset.transitionDuration) + parseInt(heroVideo.dataset.transitionDelay);
+			: parseInt(heroVideo.dataset.transitionDuration) + parseInt(heroVideo.dataset.transitionDelay) + addedVideoDelay;
 		// Number() won't work to extract 2000 from "2000ms", use parseInt()
 		// consider adding a bit to this to give the transition a bit of room
 		console.log("herotextTransitionDelay: ", heroTextTransitionDelay);
 		console.log("parseInt(herotextTransitionDuration): ", heroTextTransitionDelay);
+		console.log("Using herovideo data because heroImage is: ", heroImage);
+
 		setTimeout(handleHeroTextTransition, heroTextTransitionDelay);
 		// }
 	}
@@ -108,13 +127,31 @@ function initialise() {
 			// canPlayCallback();
 			handleVideoReady();
 		} else {
-			// otherwise set an event listener for the canplay event
+			// otherwise set an event listener for the loadedmetadata event
 			console.log(`adding video event listener because readystate was ${heroVideo.readyState}`);
-			// heroVideo.addEventListener("canplay", canPlayCallback);
+
 			// try loadedmetadata event instead of canplay event (because safari)
 			// in tests with throttling at 3G, there was a 1 millisecond difference between the
 			// loadedmetadata event and the canplay event, so this should be ok
-			heroVideo.addEventListener("loadedmetadata", handleVideoReady);
+
+			// right, we're gonna calculate the length of time taken for the video to load
+			// so that we can add a delay to the showHeroText relative to the load time, to account
+			// for the delay between the loadedmetadata event firing and the video appearing
+
+			// the delay we add will be proportional to the time it takes for the event to fire
+			// so first, set the start time
+			const startVideoLoadTime = Date.now();
+
+			// tbh we could probably use canplaythrough instead of loadedmetadata
+			// then we wouldn't need to add a delay to showHeroText
+			// but it would need testing on different browsers / os etc
+
+			heroVideo.addEventListener("loadedmetadata", () => {
+				const endVideoLoadTime = Date.now();
+				totalVideoLoadTime = endVideoLoadTime - startVideoLoadTime;
+				handleVideoReady();
+			});
+
 			// try loadeddata, see if stops the delay between the event and the video showing - nope
 			// heroVideo.addEventListener("loadeddata", handleVideoReady);
 
@@ -153,6 +190,8 @@ function initialise() {
 	}
 
 	function handleVideoReady() {
+		// check readystate to test
+		// console.log("handleVideoReady: ", heroVideo.readyState); // readystate: 3
 		// const eventTime = new Date();
 		console.log(`Video ready: ${heroVideo.src}`);
 		// console.log(
